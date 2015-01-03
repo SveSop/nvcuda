@@ -1,0 +1,6 @@
+MODULE    = nvcuda.dll
+EXTRADLLFLAGS = -mcygwin
+
+C_SRCS = \
+	nvcuda.c
+
