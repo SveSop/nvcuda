@@ -29,6 +29,7 @@
 
 #include "windef.h"
 #include "winbase.h"
+#include "winnls.h"
 #include "wine/debug.h"
 #include "wine/list.h"
 #include "wine/wgl.h"
@@ -260,6 +261,7 @@ static CUresult (*pcuModuleGetGlobal)(CUdeviceptr *dptr, size_t *bytes, CUmodule
 static CUresult (*pcuModuleGetGlobal_v2)(CUdeviceptr *dptr, size_t *bytes, CUmodule hmod, const char *name);
 static CUresult (*pcuModuleGetSurfRef)(CUsurfref *pSurfRef, CUmodule hmod, const char *name);
 static CUresult (*pcuModuleGetTexRef)(CUtexref *pTexRef, CUmodule hmod, const char *name);
+static CUresult (*pcuModuleLoad)(CUmodule *module, const char *fname);
 static CUresult (*pcuModuleLoadData)(CUmodule *module, const void *image);
 static CUresult (*pcuModuleLoadDataEx)(CUmodule *module, const void *image, unsigned int numOptions, CUjit_option *options, void **optionValues);
 static CUresult (*pcuModuleLoadFatBinary)(CUmodule *module, const void *fatCubin);
@@ -605,6 +607,7 @@ static BOOL load_functions(void)
     LOAD_FUNCPTR(cuModuleGetGlobal_v2);
     LOAD_FUNCPTR(cuModuleGetSurfRef);
     LOAD_FUNCPTR(cuModuleGetTexRef);
+    LOAD_FUNCPTR(cuModuleLoad);
     LOAD_FUNCPTR(cuModuleLoadData);
     LOAD_FUNCPTR(cuModuleLoadDataEx);
     LOAD_FUNCPTR(cuModuleLoadFatBinary);
@@ -1880,6 +1883,25 @@ CUresult WINAPI wine_cuModuleGetTexRef(CUtexref *pTexRef, CUmodule hmod, const c
 {
     TRACE("(%p, %p, %s)\n", pTexRef, hmod, name);
     return pcuModuleGetTexRef(pTexRef, hmod, name);
+}
+
+CUresult WINAPI wine_cuModuleLoad(CUmodule *module, const char *fname)
+{
+    WCHAR filenameW[MAX_PATH];
+    char *unix_name;
+    CUresult ret;
+
+    TRACE("(%p, %s)\n", module, fname);
+
+    if (!fname)
+        return CUDA_ERROR_INVALID_VALUE;
+
+    MultiByteToWideChar(CP_ACP, 0, fname, -1, filenameW, ARRAY_SIZE(filenameW));
+    unix_name = wine_get_unix_file_name( filenameW );
+
+    ret = pcuModuleLoad(module, unix_name);
+    HeapFree(GetProcessHeap(), 0, unix_name);
+    return ret;
 }
 
 CUresult WINAPI wine_cuModuleLoadData(CUmodule *module, const void *image)
