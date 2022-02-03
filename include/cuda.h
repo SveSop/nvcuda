@@ -54,6 +54,7 @@ typedef int CUresourceViewFormat;
 typedef int CUresourcetype;
 typedef int CUresult;
 typedef int CUsharedconfig;
+typedef int CUstreamCaptureStatus;
 
 typedef void *CUDA_ARRAY3D_DESCRIPTOR;
 typedef void *CUDA_ARRAY_DESCRIPTOR;
