@@ -22,12 +22,12 @@
 #include "winver.h"
 
 #define WINE_FILENAME_STR "nvcuda.dll"
-#define WINE_FILEDESCRIPTION_STR "NVIDIA CUDA Driver, Version 337.88"
+#define WINE_FILEDESCRIPTION_STR "NVIDIA CUDA Driver, Version 510.54"
 
-#define WINE_FILEVERSION      8,17,13,3788
-#define WINE_FILEVERSION_STR "8.17.13.3788"
+#define WINE_FILEVERSION      30,0,15,1054
+#define WINE_FILEVERSION_STR "30.0.15.1054"
 
-#define WINE_PRODUCTVERSION      8,17,13,3788
-#define WINE_PRODUCTVERSION_STR "8.17.13.3788"
+#define WINE_PRODUCTVERSION      30,0,15,1054
+#define WINE_PRODUCTVERSION_STR "30.0.15.1054"
 
 #include "wine/wine_common_ver.rc"
