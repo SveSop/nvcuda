@@ -55,6 +55,9 @@ typedef int CUresourcetype;
 typedef int CUresult;
 typedef int CUsharedconfig;
 typedef int CUstreamCaptureStatus;
+typedef int CUstreamCaptureMode;
+typedef int CUgraphMem_attribute;
+typedef int CUmemPool_attribute;
 
 typedef void *CUDA_ARRAY3D_DESCRIPTOR;
 typedef void *CUDA_ARRAY_DESCRIPTOR;
@@ -64,6 +67,7 @@ typedef void *CUDA_MEMCPY3D_PEER;
 typedef void *CUDA_RESOURCE_DESC;
 typedef void *CUDA_RESOURCE_VIEW_DESC;
 typedef void *CUDA_TEXTURE_DESC;
+typedef void *CUDA_NODE_PARAMS;
 typedef void *CUarray;
 typedef void *CUcontext;
 typedef void *CUdevprop;
@@ -76,6 +80,10 @@ typedef void *CUmodule;
 typedef void *CUstream;
 typedef void *CUsurfref;
 typedef void *CUtexref;
+typedef void *CUgraph;
+typedef void *CUgraphExec;
+typedef void *CUgraphNode;
+typedef void *CUmemoryPool;
 
 typedef unsigned long long CUsurfObject;
 typedef unsigned long long CUtexObject;
