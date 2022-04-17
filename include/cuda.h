@@ -19,6 +19,12 @@
 #ifndef __WINE_CUDA_H
 #define __WINE_CUDA_H
 
+#ifdef _WIN32
+#define CUDA_CB __stdcall
+#else
+#define CUDA_CB
+#endif
+
 #define CUDA_SUCCESS                0
 #define CUDA_ERROR_INVALID_VALUE    1
 #define CUDA_ERROR_OUT_OF_MEMORY    2
@@ -58,6 +64,7 @@ typedef int CUstreamCaptureStatus;
 typedef int CUstreamCaptureMode;
 typedef int CUgraphMem_attribute;
 typedef int CUmemPool_attribute;
+typedef int CUmemAllocationGranularity_flags;
 
 typedef void *CUDA_ARRAY3D_DESCRIPTOR;
 typedef void *CUDA_ARRAY_DESCRIPTOR;
@@ -84,6 +91,8 @@ typedef void *CUgraph;
 typedef void *CUgraphExec;
 typedef void *CUgraphNode;
 typedef void *CUmemoryPool;
+typedef void *CUmemAllocationProp;
+typedef void (CUDA_CB *CUhostFn)(void *userData);
 
 typedef unsigned long long CUsurfObject;
 typedef unsigned long long CUtexObject;
