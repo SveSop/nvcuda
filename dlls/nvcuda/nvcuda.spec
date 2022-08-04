@@ -355,6 +355,7 @@
 @ stdcall cuModuleGetFunction(ptr ptr str) wine_cuModuleGetFunction
 @ stdcall cuModuleGetGlobal(ptr ptr ptr str) wine_cuModuleGetGlobal
 @ stdcall cuModuleGetGlobal_v2(ptr ptr ptr str) wine_cuModuleGetGlobal_v2
+@ stdcall cuModuleGetLoadingMode(ptr) wine_cuModuleGetLoadingMode
 @ stdcall cuModuleGetSurfRef(ptr ptr str) wine_cuModuleGetSurfRef
 @ stdcall cuModuleGetTexRef(ptr ptr str) wine_cuModuleGetTexRef
 @ stdcall cuModuleLoad(ptr str) wine_cuModuleLoad

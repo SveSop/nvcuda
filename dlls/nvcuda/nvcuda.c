@@ -441,6 +441,9 @@ static CUresult (*pcuDeviceGraphMemTrim)(CUdevice device);
 static CUresult (*pcuDeviceGetDefaultMemPool)(CUmemoryPool *pool_out, CUdevice dev);
 static CUresult (*pcuMemPoolSetAttribute)(CUmemoryPool pool, CUmemPool_attribute attr, void *value);
 
+/* Cuda 11.7 */
+static CUresult (*pcuModuleGetLoadingMode)(CUmoduleLoadingMode *mode);
+
 static void *cuda_handle = NULL;
 
 static BOOL load_functions(void)
@@ -823,6 +826,9 @@ static BOOL load_functions(void)
     TRY_LOAD_FUNCPTR(cuDeviceGraphMemTrim);
     TRY_LOAD_FUNCPTR(cuDeviceGetDefaultMemPool);
     TRY_LOAD_FUNCPTR(cuMemPoolSetAttribute);
+
+    /* CUDA 11.7 */
+    TRY_LOAD_FUNCPTR(cuModuleGetLoadingMode);
 
     #undef LOAD_FUNCPTR
     #undef TRY_LOAD_FUNCPTR
@@ -3186,6 +3192,17 @@ CUresult WINAPI wine_cuMemPoolSetAttribute(CUmemoryPool pool, CUmemPool_attribut
     TRACE("(%p, %d, %p)\n", pool, attr, value);
     CHECK_FUNCPTR(cuMemPoolSetAttribute);
     return pcuMemPoolSetAttribute(pool, attr, value);
+}
+
+/*
+ * Additions in CUDA 11.7
+ */
+
+CUresult WINAPI wine_cuModuleGetLoadingMode(CUmoduleLoadingMode *mode)
+{
+    TRACE("(%p)\n", mode);
+    CHECK_FUNCPTR(cuModuleGetLoadingMode);
+    return pcuModuleGetLoadingMode(mode);
 }
 
 #undef CHECK_FUNCPTR

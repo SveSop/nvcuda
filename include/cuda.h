@@ -92,6 +92,7 @@ typedef void *CUgraphExec;
 typedef void *CUgraphNode;
 typedef void *CUmemoryPool;
 typedef void *CUmemAllocationProp;
+typedef void *CUmoduleLoadingMode;
 typedef void (CUDA_CB *CUhostFn)(void *userData);
 
 typedef unsigned long long CUsurfObject;
