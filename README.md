@@ -1,9 +1,6 @@
 # nvcuda
-[Devel branch]  
-Standalone version of nvcuda based from Wine-Staging  
-
-[Master branch]  
-Upstream wine-staging implementation of nvcuda.  
+[Bottles branch]  
+This branch is a slimmer version of nvcuda meant to be used with bottles.  
 
 ## Build requirements:  
 - [WINE] (version >= 9.0) [https://www.winehq.org/](https://www.winehq.org/)  
@@ -13,3 +10,8 @@ Upstream wine-staging implementation of nvcuda.
 
 Build by running the included script:  
 `./package-release.sh destdir`  
+
+The resulting binaries from x32 and x64 can be copied directly into the bottles  
+prefix, and should run without overrides.  
+This CAN be subject to changes with different runners.  
+
