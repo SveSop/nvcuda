@@ -1,0 +1,40 @@
+name: Artifacts (Package)
+
+on:
+  push:
+    tags: [ v* ]
+  workflow_dispatch:
+
+jobs:
+  build-artifacts:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: Prepare environment (tag)
+      if: github.ref_type == 'tag'
+      run: |
+        export VERSION=$(git describe --always --tags --dirty=+)
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+        echo "ARTIFACT=build/nvcuda-${VERSION}" >> $GITHUB_ENV
+
+    - name: Setup problem matcher
+      uses: Joshua-Ashton/gcc-problem-matcher@v3
+
+    - name: Build
+      uses: Joshua-Ashton/arch-mingw-github-action@9cdb815264bce7a6346927521b176f578982679d
+      with:
+        command: |
+          ./package-release.sh "${{ env.VERSION }}" build
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: nvcuda-${{ env.VERSION }}
+        path: ${{ env.ARTIFACT }}
+        if-no-files-found: error
