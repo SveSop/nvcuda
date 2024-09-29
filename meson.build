@@ -1,4 +1,4 @@
-project('nvcuda', ['c'], version: 'v0.0', license: 'mixed')
+project('nvcuda', ['c'], version: 'v0.1', license: 'mixed')
 
 include_path = include_directories('./include')
 
