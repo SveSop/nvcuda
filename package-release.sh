@@ -27,7 +27,7 @@ function build_arch {
   meson --cross-file "$NVCUDA_SRC_DIR/build-wine$1.txt"  \
         --buildtype release                              \
         --prefix "$NVCUDA_BUILD_DIR"                     \
-        --libdir lib$1                                   \
+        --libdir "x$1"                                   \
 	--strip                                          \
         "$NVCUDA_BUILD_DIR/build.$1"
 
@@ -43,5 +43,5 @@ build_arch 32
 # cleanup
 cd $NVCUDA_BUILD_DIR
 find . -name \*.a -type f -delete
-mv lib32 lib
+find . -name "*.dll.so" -type f -exec bash -c 'mv "$0" "${0%.so}"' {} \;
 echo "Done building!"
