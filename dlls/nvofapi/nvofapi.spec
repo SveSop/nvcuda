@@ -1,0 +1,3 @@
+@ stdcall NvOFAPICreateInstanceCuda(long ptr) wine_NvOFAPICreateInstanceCuda
+@ stdcall NvOFAPICreateInstanceVk(long ptr) wine_NvOFAPICreateInstanceVk
+@ stdcall NvOFGetMaxSupportedApiVersion(ptr) wine_NvOFGetMaxSupportedApiVersion
