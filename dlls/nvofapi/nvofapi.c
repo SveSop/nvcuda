@@ -66,7 +66,7 @@ static BOOL load_functions(void)
 struct ofCuda_table
 {
     NV_OF_STATUS (WINAPI *nvCreateOpticalFlowCuda)(CUcontext device, NvOFHandle *hOf);
-    NV_OF_STATUS (WINAPI *nvOFInit)(NvOFHandle hOf, const void *initParams);
+    NV_OF_STATUS (WINAPI *nvOFInitCuda)(NvOFHandle hOf, const void *initParams);
     NV_OF_STATUS (WINAPI *nvOFCreateGPUBufferCuda)(NvOFHandle hOf, const void *bufferDesc, void *bufferType, NvOFGPUBufferHandle *hOfGpuBuffer);
     CUarray (WINAPI *nvOFGPUBufferGetCUarray)(NvOFGPUBufferHandle ofGpuBuffer);
     CUdeviceptr (WINAPI *nvOFGPUBufferGetCUdeviceptr)(NvOFGPUBufferHandle ofGpuBuffer);
@@ -74,14 +74,14 @@ struct ofCuda_table
     NV_OF_STATUS (WINAPI *nvOFSetIOCudaStreams)(NvOFHandle hOf, CUstream inputStream, CUstream outputStream);
     NV_OF_STATUS (WINAPI *nvOFExecute)(NvOFHandle hOf, const void *executeInParams, void *executeOutParams);
     NV_OF_STATUS (WINAPI *nvOFDestroyGPUBufferCuda)(NvOFGPUBufferHandle buffer);
-    NV_OF_STATUS (WINAPI *nvOFDestroy)(NvOFHandle hOf);
-    NV_OF_STATUS (WINAPI *nvOFGetLastError)(NvOFHandle hOf, char lastError[], uint32_t *size);
-    NV_OF_STATUS (WINAPI *nvOFGetCaps)(NvOFHandle hOf, void *capsParam, uint32_t *capsVal, uint32_t *size);
+    NV_OF_STATUS (WINAPI *nvOFDestroyCuda)(NvOFHandle hOf);
+    NV_OF_STATUS (WINAPI *nvOFGetLastErrorCuda)(NvOFHandle hOf, char lastError[], uint32_t *size);
+    NV_OF_STATUS (WINAPI *nvOFGetCapsCuda)(NvOFHandle hOf, void *capsParam, uint32_t *capsVal, uint32_t *size);
 };
 static struct
 {
     NV_OF_STATUS (*nvCreateOpticalFlowCuda)(CUcontext device, NvOFHandle *hOf);
-    NV_OF_STATUS (*nvOFInit)(NvOFHandle hOf, const void *initParams);
+    NV_OF_STATUS (*nvOFInitCuda)(NvOFHandle hOf, const void *initParams);
     NV_OF_STATUS (*nvOFCreateGPUBufferCuda)(NvOFHandle hOf, const void *bufferDesc, void *bufferType, NvOFGPUBufferHandle *hOfGpuBuffer);
     CUarray (*nvOFGPUBufferGetCUarray)(NvOFGPUBufferHandle ofGpuBuffer);
     CUdeviceptr (*nvOFGPUBufferGetCUdeviceptr)(NvOFGPUBufferHandle ofGpuBuffer);
@@ -89,10 +89,37 @@ static struct
     NV_OF_STATUS (*nvOFSetIOCudaStreams)(NvOFHandle hOf, CUstream inputStream, CUstream outputStream);
     NV_OF_STATUS (*nvOFExecute)(NvOFHandle hOf, const void *executeInParams, void *executeOutParams);
     NV_OF_STATUS (*nvOFDestroyGPUBufferCuda)(NvOFGPUBufferHandle buffer);
-    NV_OF_STATUS (*nvOFDestroy)(NvOFHandle hOf);
-    NV_OF_STATUS (*nvOFGetLastError)(NvOFHandle hOf, char lastError[], uint32_t *size);
-    NV_OF_STATUS (*nvOFGetCaps)(NvOFHandle hOf, void *capsParam, uint32_t *capsVal, uint32_t *size);
+    NV_OF_STATUS (*nvOFDestroyCuda)(NvOFHandle hOf);
+    NV_OF_STATUS (*nvOFGetLastErrorCuda)(NvOFHandle hOf, char lastError[], uint32_t *size);
+    NV_OF_STATUS (*nvOFGetCapsCuda)(NvOFHandle hOf, void *capsParam, uint32_t *capsVal, uint32_t *size);
 } *ofCuda_orig = NULL;
+
+struct ofVK_table
+{
+    NV_OF_STATUS (WINAPI *nvCreateOpticalFlowVk)(void *instance, void *physicalDevice, void *device, NvOFHandle *hOFInstance);
+    NV_OF_STATUS (WINAPI *nvOFInitVk)(NvOFHandle hOf, const void *initParams);
+    NV_OF_STATUS (WINAPI *nvOFGetSurfaceFormatCountVk)(NvOFHandle hOf, const void *bufUsage, const void *ofMode, uint32_t *const pCount);
+    NV_OF_STATUS (WINAPI *nvOFGetSurfaceFormatVk)(NvOFHandle hOf, const void *bufUsage, const void *ofMode, VkFormat *const pFormat);
+    NV_OF_STATUS (WINAPI *nvOFRegisterResourceVk)(NvOFHandle hOf, void *registerParams);
+    NV_OF_STATUS (WINAPI *nvOFUnregisterResourceVk)(void *unregisterParams);
+    NV_OF_STATUS (WINAPI *nvOFExecuteVk)(NvOFHandle hOf, const void *executeInParams, void *executeOutParams);
+    NV_OF_STATUS (WINAPI *nvOFDestroyVk)(NvOFHandle hOf);
+    NV_OF_STATUS (WINAPI *nvOFGetLastErrorVk)(NvOFHandle hOf, char lastError[], uint32_t *size);
+    NV_OF_STATUS (WINAPI *nvOFGetCapsVk)(NvOFHandle hOf, void *capsParam, uint32_t *capsVal, uint32_t *size);
+};
+static struct
+{
+    NV_OF_STATUS (*nvCreateOpticalFlowVk)(void *instance, void *physicalDevice, void *device, void *hOFInstance);
+    NV_OF_STATUS (*nvOFInitVk)(NvOFHandle hOf, const void *initParams);
+    NV_OF_STATUS (*nvOFGetSurfaceFormatCountVk)(NvOFHandle hOf, const void *bufUsage, const void *ofMode, uint32_t *const pCount);
+    NV_OF_STATUS (*nvOFGetSurfaceFormatVk)(NvOFHandle hOf, const void *bufUsage, const void *ofMode, VkFormat *const pFormat);
+    NV_OF_STATUS (*nvOFRegisterResourceVk)(NvOFHandle hOf, void *registerParams);
+    NV_OF_STATUS (*nvOFUnregisterResourceVk)(void *unregisterParams);
+    NV_OF_STATUS (*nvOFExecuteVk)(NvOFHandle hOf, const void *executeInParams, void *executeOutParams);
+    NV_OF_STATUS (*nvOFDestroyVk)(NvOFHandle hOf);
+    NV_OF_STATUS (*nvOFGetLastErrorVk)(NvOFHandle hOf, char lastError[], uint32_t *size);
+    NV_OF_STATUS (*nvOFGetCapsVk)(NvOFHandle hOf, void* capsParam, uint32_t *capsVal, uint32_t *size);
+} *ofVK_orig = NULL;
 
 static NV_OF_STATUS WINAPI nvCreateOpticalFlowCuda(CUcontext device, NvOFHandle *hOf)
 {
@@ -100,10 +127,10 @@ static NV_OF_STATUS WINAPI nvCreateOpticalFlowCuda(CUcontext device, NvOFHandle 
     return ofCuda_orig->nvCreateOpticalFlowCuda(device, hOf);
 }
 
-static NV_OF_STATUS WINAPI nvOFInit(NvOFHandle hOf, const void *initParams)
+static NV_OF_STATUS WINAPI nvOFInitCuda(NvOFHandle hOf, const void *initParams)
 {
     TRACE("(%p, %p)\n", hOf, initParams);
-    return ofCuda_orig->nvOFInit(hOf, initParams);
+    return ofCuda_orig->nvOFInitCuda(hOf, initParams);
 }
 
 static NV_OF_STATUS WINAPI nvOFCreateGPUBufferCuda(NvOFHandle hOf, const void *bufferDesc, void *bufferType, NvOFGPUBufferHandle *hOfGpuBuffer)
@@ -148,29 +175,29 @@ static NV_OF_STATUS WINAPI nvOFDestroyGPUBufferCuda(NvOFGPUBufferHandle buffer)
     return ofCuda_orig->nvOFDestroyGPUBufferCuda(buffer);
 }
 
-static NV_OF_STATUS WINAPI nvOFDestroy(NvOFHandle hOf)
+static NV_OF_STATUS WINAPI nvOFDestroyCuda(NvOFHandle hOf)
 {
     TRACE("(%p)\n", hOf);
-    return ofCuda_orig->nvOFDestroy(hOf);
+    return ofCuda_orig->nvOFDestroyCuda(hOf);
 }
 
-static NV_OF_STATUS WINAPI nvOFGetLastError(NvOFHandle hOf, char lastError[], uint32_t *size)
+static NV_OF_STATUS WINAPI nvOFGetLastErrorCuda(NvOFHandle hOf, char lastError[], uint32_t *size)
 {
-    NV_OF_STATUS ret = ofCuda_orig->nvOFGetLastError(hOf, lastError, size);
+    NV_OF_STATUS ret = ofCuda_orig->nvOFGetLastErrorCuda(hOf, lastError, size);
     TRACE("(%p, %s, %u)\n", hOf, lastError, *size);
     return ret;
 }
 
-static NV_OF_STATUS WINAPI nvOFGetCaps(NvOFHandle hOf, void *capsParam, uint32_t *capsVal, uint32_t *size)
+static NV_OF_STATUS WINAPI nvOFGetCapsCuda(NvOFHandle hOf, void *capsParam, uint32_t *capsVal, uint32_t *size)
 {
     TRACE("(%p, %p, %p, %p)\n", hOf, capsParam, capsVal, size);
-    return ofCuda_orig->nvOFGetCaps(hOf, capsParam, capsVal, size);
+    return ofCuda_orig->nvOFGetCapsCuda(hOf, capsParam, capsVal, size);
 }
 
 static struct ofCuda_table ofCuda_Impl =
 {
     nvCreateOpticalFlowCuda,
-    nvOFInit,
+    nvOFInitCuda,
     nvOFCreateGPUBufferCuda,
     nvOFGPUBufferGetCUarray,
     nvOFGPUBufferGetCUdeviceptr,
@@ -178,9 +205,84 @@ static struct ofCuda_table ofCuda_Impl =
     nvOFSetIOCudaStreams,
     nvOFExecute,
     nvOFDestroyGPUBufferCuda,
-    nvOFDestroy,
-    nvOFGetLastError,
-    nvOFGetCaps,
+    nvOFDestroyCuda,
+    nvOFGetLastErrorCuda,
+    nvOFGetCapsCuda,
+};
+
+static NV_OF_STATUS WINAPI nvCreateOpticalFlowVk(void *instance, void *physicalDevice, void *device, NvOFHandle *hOFInstance)
+{
+    TRACE("(%p, %p, %p, %p)\n", instance, physicalDevice, device, hOFInstance);
+    return ofVK_orig->nvCreateOpticalFlowVk(instance, physicalDevice, device, hOFInstance);
+}
+
+static NV_OF_STATUS WINAPI nvOFInitVk(NvOFHandle hOf, const void *initParams)
+{
+    TRACE("(%p, %p)\n", hOf, initParams);
+    return ofVK_orig->nvOFInitVk(hOf, initParams);
+}
+
+static NV_OF_STATUS WINAPI nvOFGetSurfaceFormatCountVk(NvOFHandle hOf, const void *bufUsage, const void *ofMode, uint32_t *const pCount)
+{
+    TRACE("(%p, %p, %p, %p)\n", hOf, bufUsage, ofMode, pCount);
+    return ofVK_orig->nvOFGetSurfaceFormatCountVk(hOf, bufUsage, ofMode, pCount);
+}
+
+static NV_OF_STATUS WINAPI nvOFGetSurfaceFormatVk(NvOFHandle hOf, const void *bufUsage, const void *ofMode, VkFormat *const pFormat)
+{
+    TRACE("(%p, %p, %p, %p)\n", hOf, bufUsage, ofMode, pFormat);
+    return ofVK_orig->nvOFGetSurfaceFormatVk(hOf, bufUsage, ofMode, pFormat);
+}
+
+static NV_OF_STATUS WINAPI nvOFRegisterResourceVk(NvOFHandle hOf, void *registerParams)
+{
+    TRACE("(%p, %p)\n", hOf, registerParams);
+    return ofVK_orig->nvOFRegisterResourceVk(hOf, registerParams);
+}
+
+static NV_OF_STATUS WINAPI nvOFUnregisterResourceVk(void *unregisterParams)
+{
+    TRACE("(%p)\n", unregisterParams);
+    return ofVK_orig->nvOFUnregisterResourceVk(unregisterParams);
+}
+
+static NV_OF_STATUS WINAPI nvOFExecuteVk(NvOFHandle hOf, const void *executeInParams, void *executeOutParams)
+{
+    TRACE("(%p, %p, %p)\n", hOf, executeInParams, executeOutParams);
+    return ofVK_orig->nvOFExecuteVk(hOf, executeInParams, executeOutParams);
+}
+
+static NV_OF_STATUS WINAPI nvOFDestroyVk(NvOFHandle hOf)
+{
+    TRACE("(%p)\n", hOf);
+    return ofVK_orig->nvOFDestroyVk(hOf);
+}
+
+static NV_OF_STATUS WINAPI nvOFGetLastErrorVk(NvOFHandle hOf, char lastError[], uint32_t *size)
+{
+    NV_OF_STATUS ret = ofVK_orig->nvOFGetLastErrorVk(hOf, lastError, size);
+    TRACE("(%p, %s, %u)\n", hOf, lastError, *size);
+    return ret;
+}
+
+static NV_OF_STATUS WINAPI nvOFGetCapsVk(NvOFHandle hOf, void *capsParam, uint32_t *capsVal, uint32_t *size)
+{
+    TRACE("(%p, %p, %p, %p)\n", hOf, capsParam, capsVal, size);
+    return ofVK_orig->nvOFGetCapsVk(hOf, capsParam, capsVal, size);
+}
+
+static struct ofVK_table ofVK_Impl =
+{
+    nvCreateOpticalFlowVk,
+    nvOFInitVk,
+    nvOFGetSurfaceFormatCountVk,
+    nvOFGetSurfaceFormatVk,
+    nvOFRegisterResourceVk,
+    nvOFUnregisterResourceVk,
+    nvOFExecuteVk,
+    nvOFDestroyVk,
+    nvOFGetLastErrorVk,
+    nvOFGetCapsVk,
 };
 
 /* Main functions */
@@ -201,8 +303,17 @@ NV_OF_STATUS WINAPI wine_NvOFAPICreateInstanceCuda(uint32_t apiVer, void *functi
 
 NV_OF_STATUS WINAPI wine_NvOFAPICreateInstanceVk(uint32_t apiVer, void *functionList)
 {
+    ofVK_orig = HeapAlloc(GetProcessHeap(), 0, sizeof(*ofVK_orig));
+
     TRACE("(%u, %p)\n", apiVer, functionList);
-    return pNvOFAPICreateInstanceVk(apiVer, functionList);
+    NV_OF_STATUS ret = pNvOFAPICreateInstanceVk(apiVer, functionList);
+    if(!ret) memcpy(functionList, &ofVK_Impl, sizeof(ofVK_Impl));
+    else
+    {
+        TRACE("Failed to create instanceVK: %d\n", ret);
+        HeapFree(GetProcessHeap(), 0, ofVK_orig);
+    }
+    return ret;
 }
 
 NV_OF_STATUS WINAPI wine_NvOFGetMaxSupportedApiVersion(uint32_t *version)

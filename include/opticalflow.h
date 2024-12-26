@@ -19,6 +19,7 @@
 #ifndef __WINE_OPTICALFLOW_H
 #define __WINE_OPTICALFLOW_H
 
+typedef int VkFormat;
 typedef enum _NV_OF_STATUS
 {
     NV_OF_SUCCESS,
