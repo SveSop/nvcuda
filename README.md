@@ -1,9 +1,13 @@
 # nvcuda
-[Devel branch]  
 Standalone version of nvcuda based from Wine-Staging  
 
-[Master branch]  
-Upstream wine-staging implementation of nvcuda.  
+The master branch is meant for keeping up-to-date with  
+current driver implementation of nvcuda, but are a work in  
+progress and not all functions are implemented.  
+
+The DirectX implementation in the CUDA driver for linux is not  
+available for this relay.  
+The recommended driver is always most recent. (565+).  
 
 ## Build requirements:  
 - [WINE] (version >= 9.0) [https://www.winehq.org/](https://www.winehq.org/)  
