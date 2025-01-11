@@ -107,7 +107,7 @@ HANDLE get_shared_resource_kmt_handle(HANDLE shared_resource)
     if (NtDeviceIoControlFile(shared_resource, NULL, NULL, NULL, &iosb, IOCTL_SHARED_GPU_RESOURCE_GETKMT,
             NULL, 0, &kmt_handle, sizeof(kmt_handle)))
     {
-        ERR("NtDeviceIoControlFile failed for ktm object %p\n", shared_resource);
+        ERR("NtDeviceIoControlFile failed for kmt object %p\n", shared_resource);
         return INVALID_HANDLE_VALUE;
     }
 
@@ -120,23 +120,28 @@ int get_shared_resource_fd(HANDLE win32_handle)
     obj_handle_t unix_resource;
     NTSTATUS status;
     int unix_fd = -1;
+    HANDLE new_handle = NULL;
 
-    if (NtDeviceIoControlFile(win32_handle, NULL, NULL, NULL, &iosb, IOCTL_SHARED_GPU_RESOURCE_GET_UNIX_RESOURCE,
+    if(NtDuplicateObject(NtCurrentProcess(), win32_handle, NtCurrentProcess(), &new_handle, 0, 0, DUPLICATE_SAME_ACCESS))
+    {
+       ERR("NtDuplicateObject failed to create handle for %p\n", win32_handle);
+       return -1;
+    }
+
+    if (NtDeviceIoControlFile(new_handle, NULL, NULL, NULL, &iosb, IOCTL_SHARED_GPU_RESOURCE_GET_UNIX_RESOURCE,
                               NULL, 0, &unix_resource, sizeof(unix_resource)))
     {
-        ERR("NtDeviceIoControlFile failed for handle %p\n", win32_handle);
+        ERR("NtDeviceIoControlFile failed for handle %p\n", new_handle);
         return -1;
     }
-    if(NtClose(win32_handle)) FIXME("Failed to close handle %p\n", win32_handle);
 
     status = wine_server_handle_to_fd(wine_server_ptr_handle(unix_resource), FILE_READ_DATA, &unix_fd, NULL);
-    if(NtClose(wine_server_ptr_handle(unix_resource))) FIXME("Failed to close resource %p\n", wine_server_ptr_handle(unix_resource));
-
     if (status != STATUS_SUCCESS || unix_fd < 0)
     {
         ERR("Failed to convert Unix resource to FD for handle %p - Status: 0x%x\n", win32_handle, status);
         return -1;
     }
+    NtClose(wine_server_ptr_handle(unix_resource));
 
     return unix_fd;
 }
