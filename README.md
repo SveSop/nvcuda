@@ -1,8 +1,10 @@
 # nvcuda
 Standalone version of nvcuda from Wine-Staging  
 
-The master branch is meant for keeping up-to-date with  
-upstream wine-staging implementation of nvcuda.  
+This staging branch is meant for keeping history from  
+upstream wine-staging implementation of nvencodeapi.  
+There has not been recent development in the wine-staging  
+tree for this since 2022.  
 
 ## Build requirements:  
 - [WINE] (version >= 7.2) [https://www.winehq.org/](https://www.winehq.org/)  
