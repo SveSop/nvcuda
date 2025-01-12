@@ -69,6 +69,7 @@ typedef enum CUdriverProcAddressQueryResult_enum {
     CU_GET_PROC_ADDRESS_VERSION_NOT_SUFFICIENT = 2
 }  CUdriverProcAddressQueryResult;
 
+typedef struct CUextSemaphore_st *CUexternalSemaphore;
 typedef unsigned long long CUmemGenericAllocationHandle_v1;
 typedef CUmemGenericAllocationHandle_v1 CUmemGenericAllocationHandle;
 typedef unsigned int CUdeviceptr_v1;

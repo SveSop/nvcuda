@@ -527,12 +527,12 @@ static CUresult (*pcuImportExternalMemory)(void *extMem_out, const CUDA_EXTERNAL
 static CUresult (*pcuExternalMemoryGetMappedBuffer)(CUdeviceptr_v2 *devPtr, void *extMem, const void *bufferDesc);
 static CUresult (*pcuExternalMemoryGetMappedMipmappedArray)(CUmipmappedArray *mipmap, void *extMem, const void *mipmapDesc);
 static CUresult (*pcuDestroyExternalMemory)(void *extMem);
-static CUresult (*pcuImportExternalSemaphore)(void *extSem_out, const CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC *semHandleDesc);
-static CUresult (*pcuSignalExternalSemaphoresAsync)(const void *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream);
-static CUresult (*pcuSignalExternalSemaphoresAsync_ptsz)(const void *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream);
-static CUresult (*pcuWaitExternalSemaphoresAsync)(const void *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream);
-static CUresult (*pcuWaitExternalSemaphoresAsync_ptsz)(const void *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream);
-static CUresult (*pcuDestroyExternalSemaphore)(void *extSem);
+static CUresult (*pcuImportExternalSemaphore)(CUexternalSemaphore *extSem_out, const CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC *semHandleDesc);
+static CUresult (*pcuSignalExternalSemaphoresAsync)(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream);
+static CUresult (*pcuSignalExternalSemaphoresAsync_ptsz)(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream);
+static CUresult (*pcuWaitExternalSemaphoresAsync)(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream);
+static CUresult (*pcuWaitExternalSemaphoresAsync_ptsz)(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream);
+static CUresult (*pcuDestroyExternalSemaphore)(CUexternalSemaphore extSem);
 static CUresult (*pcuOccupancyAvailableDynamicSMemPerBlock)(size_t *dynamicSmemSize, CUfunction func, int numBlocks, int blockSize);
 static CUresult (*pcuGraphKernelNodeGetParams)(CUgraphNode hNode, void *nodeParams);
 static CUresult (*pcuGraphKernelNodeSetParams)(CUgraphNode hNode, const void *nodeParams);
@@ -3950,7 +3950,26 @@ CUresult WINAPI wine_cuDestroyExternalMemory(void *extMem)
     return pcuDestroyExternalMemory(extMem);
 }
 
-CUresult WINAPI wine_cuImportExternalSemaphore(void *extSem_out, const CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC *semHandleDesc)
+static pthread_mutex_t semMutex = PTHREAD_MUTEX_INITIALIZER;
+static int semCounter = 0;
+static CUexternalSemaphore semList[4] = {0};
+
+static void semaphoreHandling(CUexternalSemaphore *extSem_out)
+{
+    pthread_mutex_lock(&semMutex);
+    if(semCounter >= 4) semCounter = 0;
+    if(semList[semCounter])
+    {
+        CUresult ret = pcuDestroyExternalSemaphore(semList[semCounter]);
+        if(ret) FIXME("Failed to destroy semaphore: %p: %d\n", semList[semCounter], ret);
+    }
+
+    semList[semCounter] = *extSem_out;
+    semCounter++;
+    pthread_mutex_unlock(&semMutex);
+}
+
+CUresult WINAPI wine_cuImportExternalSemaphore(CUexternalSemaphore *extSem_out, const CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC *semHandleDesc)
 {
     TRACE("(%p, %p, %d)\n", extSem_out, semHandleDesc, semHandleDesc->type);
 
@@ -3977,35 +3996,37 @@ CUresult WINAPI wine_cuImportExternalSemaphore(void *extSem_out, const CUDA_EXTE
     }
 
     CUresult ret = pcuImportExternalSemaphore(extSem_out, &linuxHandleDesc);
-    if(ret) ERR("Returned error: %d\n", ret);
+    if(!ret) semaphoreHandling(extSem_out);
+    else ERR("Returned error: %d\n", ret);
+
     return ret;
 }
 
-CUresult WINAPI wine_cuSignalExternalSemaphoresAsync(const void *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream)
+CUresult WINAPI wine_cuSignalExternalSemaphoresAsync(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream)
 {
     TRACE("(%p, %p, %u, %p)\n", extSemArray, paramsArray, numExtSems, stream);
     return pcuSignalExternalSemaphoresAsync(extSemArray, paramsArray, numExtSems, stream);
 }
 
-CUresult WINAPI wine_cuSignalExternalSemaphoresAsync_ptsz(const void *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream)
+CUresult WINAPI wine_cuSignalExternalSemaphoresAsync_ptsz(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream)
 {
     TRACE("(%p, %p, %u, %p)\n", extSemArray, paramsArray, numExtSems, stream);
     return pcuSignalExternalSemaphoresAsync_ptsz(extSemArray, paramsArray, numExtSems, stream);
 }
 
-CUresult WINAPI wine_cuWaitExternalSemaphoresAsync(const void *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream)
+CUresult WINAPI wine_cuWaitExternalSemaphoresAsync(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream)
 {
     TRACE("(%p, %p, %u, %p)\n", extSemArray, paramsArray, numExtSems, stream);
     return pcuWaitExternalSemaphoresAsync(extSemArray, paramsArray, numExtSems, stream);
 }
 
-CUresult WINAPI wine_cuWaitExternalSemaphoresAsync_ptsz(const void *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream)
+CUresult WINAPI wine_cuWaitExternalSemaphoresAsync_ptsz(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream)
 {
     TRACE("(%p, %p, %u, %p)\n", extSemArray, paramsArray, numExtSems, stream);
     return pcuWaitExternalSemaphoresAsync_ptsz(extSemArray, paramsArray, numExtSems, stream);
 }
 
-CUresult WINAPI wine_cuDestroyExternalSemaphore(void *extSem)
+CUresult WINAPI wine_cuDestroyExternalSemaphore(CUexternalSemaphore extSem)
 {
     TRACE("(%p)\n", extSem);
     return pcuDestroyExternalSemaphore(extSem);
