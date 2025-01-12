@@ -726,10 +726,10 @@ struct OpticalFlow_table
     int size;
     void* (WINAPI* func0)(void *param0);
     void* (WINAPI* func1)(void *param0, void *param1);
-    void* (WINAPI* func2)(void *param0, void *param1);
+    void* (WINAPI* func2)(void *param0, void *param1, void *param2);
     void* (WINAPI* func3)(void *param0, void *param1);
-    void* (WINAPI* func4)(void *param0, void *param1);
-    void* (WINAPI* func5)(void *param0, void *param1);
+    void* (WINAPI* func4)(void *param0);
+    void* (WINAPI* func5)(void *param0);
     void* (WINAPI* func6)(void *param0);
     void* (WINAPI* func7)(void *param0);
     void* (WINAPI* func8)(void *param0, void *param1, void *param2);
@@ -740,7 +740,7 @@ struct OpticalFlow_table
     void* (WINAPI* func13)(void *param0, void *param1);
     void* (WINAPI* func14)(void *param0, void *param1);
     void* (WINAPI* func15)(void *param0, void *param1);
-    void* (WINAPI* func16)(void *param0, void *param1);
+    void* (WINAPI* func16)(void *param0, void *param1, void* param2, void* param3, void* param4);
     void* (WINAPI* func17)(void *param0, void *param1);
     void* (WINAPI* func18)(void *param0, void *param1, void *param2);
     void* (WINAPI* func19)(void *param0, void *param1);
@@ -752,10 +752,10 @@ static const struct
     int size;
     void* (*func0)(void *param0);
     void* (*func1)(void *param0, void *param1);
-    void* (*func2)(void *param0, void *param1);
+    void* (*func2)(void *param0, void *param1, void *param2);
     void* (*func3)(void *param0, void *param1);
-    void* (*func4)(void *param0, void *param1);
-    void* (*func5)(void *param0, void *param1);
+    void* (*func4)(void *param0);
+    void* (*func5)(void *param0);
     void* (*func6)(void *param0);
     void* (*func7)(void *param0);
     void* (*func8)(void *param0, void *param1, void *param2);
@@ -766,7 +766,7 @@ static const struct
     void* (*func13)(void *param0, void *param1);
     void* (*func14)(void *param0, void *param1);
     void* (*func15)(void *param0, void *param1);
-    void* (*func16)(void *param0, void *param1);
+    void* (*func16)(void *param0, void *param1, void* param2, void* param3, void* param4);
     void* (*func17)(void *param0, void *param1);
     void* (*func18)(void *param0, void *param1, void *param2);
     void* (*func19)(void *param0, void *param1);
@@ -2461,10 +2461,10 @@ static void* WINAPI OpticalFlow_func1(void *param0, void *param1)
     return OpticalFlow_orig->func1(param0, param1);
 }
 
-static void* WINAPI OpticalFlow_func2(void *param0, void *param1)
+static void* WINAPI OpticalFlow_func2(void *param0, void *param1, void* param2)
 {
-    TRACE("(%p, %p)\n", param0, param1);
-    return OpticalFlow_orig->func2(param0, param1);
+    TRACE("(%p, %p, %p)\n", param0, param1, param2);
+    return OpticalFlow_orig->func2(param0, param1, param2);
 }
 
 static void* WINAPI OpticalFlow_func3(void *param0, void *param1)
@@ -2473,16 +2473,16 @@ static void* WINAPI OpticalFlow_func3(void *param0, void *param1)
     return OpticalFlow_orig->func3(param0, param1);
 }
 
-static void* WINAPI OpticalFlow_func4(void *param0, void *param1)
+static void* WINAPI OpticalFlow_func4(void *param0)
 {
-    TRACE("(%p, %p)\n", param0, param1);
-    return OpticalFlow_orig->func4(param0, param1);
+    TRACE("(%p)\n", param0);
+    return OpticalFlow_orig->func4(param0);
 }
 
-static void* WINAPI OpticalFlow_func5(void *param0, void *param1)
+static void* WINAPI OpticalFlow_func5(void *param0)
 {
-    TRACE("(%p, %p)\n", param0, param1);
-    return OpticalFlow_orig->func5(param0, param1);
+    TRACE("(%p)\n", param0);
+    return OpticalFlow_orig->func5(param0);
 }
 
 static void* WINAPI OpticalFlow_func6(void *param0)
@@ -2545,10 +2545,10 @@ static void* WINAPI OpticalFlow_func15(void *param0, void *param1)
     return OpticalFlow_orig->func15(param0, param1);
 }
 
-static void* WINAPI OpticalFlow_func16(void *param0, void *param1)
+static void* WINAPI OpticalFlow_func16(void *param0, void *param1, void* param2, void* param3, void* param4)
 {
-    TRACE("(%p, %p)\n", param0, param1);
-    return OpticalFlow_orig->func16(param0, param1);
+    TRACE("(%p, %p, %p, %p, %p)\n", param0, param1, param2, param3, param4);
+    return OpticalFlow_orig->func16(param0, param1, param2, param3, param4);
 }
 
 static void* WINAPI OpticalFlow_func17(void *param0, void *param1)
