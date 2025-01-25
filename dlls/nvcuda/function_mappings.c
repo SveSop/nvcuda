@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024 Sveinar Søpler
+ * Copyright (C) 2023-2025 Sveinar Søpler
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -631,6 +631,22 @@ extern void wine_cuMulticastCreate(void);
 extern void wine_cuMulticastGetGranularity(void);
 extern void wine_cuMulticastUnbind(void);
 extern void wine_cuStreamGetGreenCtx(void);
+extern void wine_cuMemBatchDecompressAsync(void);
+extern void wine_cuMemBatchDecompressAsync_ptsz(void);
+extern void wine_cuMemcpyBatchAsync(void);
+extern void wine_cuMemcpyBatchAsync_ptsz(void);
+extern void wine_cuMemcpy3DBatchAsync(void);
+extern void wine_cuMemcpy3DBatchAsync_ptsz(void);
+extern void wine_cuStreamGetDevice(void);
+extern void wine_cuStreamGetDevice_ptsz(void);
+extern void wine_cuEventElapsedTime_v2(void);
+extern void wine_cuTensorMapEncodeIm2colWide(void);
+extern void wine_cuCheckpointProcessGetRestoreThreadId(void);
+extern void wine_cuCheckpointProcessGetState(void);
+extern void wine_cuCheckpointProcessLock(void);
+extern void wine_cuCheckpointProcessCheckpoint(void);
+extern void wine_cuCheckpointProcessRestore(void);
+extern void wine_cuCheckpointProcessUnlock(void);
 
 const FunctionMapping mappings[] = {
     {"cuGetProcAddress", 11030, 0, wine_cuGetProcAddress},
@@ -1248,6 +1264,21 @@ const FunctionMapping mappings[] = {
     {"cuMulticastGetGranularity", 12010, 0, wine_cuMulticastGetGranularity},
     {"cuMulticastUnbind", 12010, 0, wine_cuMulticastUnbind},
     {"cuStreamGetGreenCtx", 12040, 0, wine_cuStreamGetGreenCtx},
+    {"cuMemBatchDecompressAsync", 12060, 0, wine_cuMemBatchDecompressAsync},
+    {"cuMemBatchDecompressAsync", 12060, 2, wine_cuMemBatchDecompressAsync_ptsz},
+    {"cuMemcpyBatchAsync", 12080, 0, wine_cuMemcpyBatchAsync},
+    {"cuMemcpyBatchAsync", 12080, 2, wine_cuMemcpyBatchAsync_ptsz},
+    {"cuMemcpy3DBatchAsync", 12080, 0, wine_cuMemcpy3DBatchAsync},
+    {"cuMemcpy3DBatchAsync", 12080, 2, wine_cuMemcpy3DBatchAsync_ptsz},
+    {"cuStreamGetDevice", 12080, 0, wine_cuStreamGetDevice},
+    {"cuStreamGetDevice", 12080, 2, wine_cuStreamGetDevice_ptsz},
+    {"cuTensorMapEncodeIm2colWide", 12080, 0, wine_cuTensorMapEncodeIm2colWide},
+    {"cuCheckpointProcessGetRestoreThreadId", 12080, 0, wine_cuCheckpointProcessGetRestoreThreadId},
+    {"cuCheckpointProcessGetState", 12080, 0, wine_cuCheckpointProcessGetState},
+    {"cuCheckpointProcessLock", 12080, 0, wine_cuCheckpointProcessLock},
+    {"cuCheckpointProcessCheckpoint", 12080, 0, wine_cuCheckpointProcessCheckpoint},
+    {"cuCheckpointProcessRestore", 12080, 0, wine_cuCheckpointProcessRestore},
+    {"cuCheckpointProcessUnlock", 12080, 0, wine_cuCheckpointProcessUnlock},
 };
 
 const size_t mappings_count = sizeof(mappings) / sizeof(mappings[0]);

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2014-2015 Michael Müller
  * Copyright (C) 2014-2015 Sebastian Lackner
- * Copyright (C) 2022-2024 Sveinar Søpler
+ * Copyright (C) 2022-2025 Sveinar Søpler
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -783,6 +783,24 @@ static CUresult (*pcuTensorMapEncodeIm2col)(void** tensorMap, void* tensorDataTy
                                                    const int* pixelBoxLowerCorner, const int* pixelBoxUpperCorner, cuuint32_t channelsPerPixel, cuuint32_t pixelsPerColumn, const cuuint32_t* elementStrides,
                                                    void* interleave, void* swizzle, void* l2Promotion, void* oobFill);
 static CUresult (*pcuTensorMapReplaceAddress)(void** tensorMap, void* globalAddress);
+static CUresult (*pcuMemBatchDecompressAsync)(CUmemDecompressParams* paramsArray, size_t count, unsigned int flags, size_t* errorIndex, CUstream stream);
+static CUresult (*pcuMemBatchDecompressAsync_ptsz)(CUmemDecompressParams* paramsArray, size_t count, unsigned int flags, size_t* errorIndex, CUstream stream);
+static CUresult (*pcuMemcpyBatchAsync)(CUdeviceptr* dsts, CUdeviceptr* srcs, size_t* sizes, size_t count, CUmemcpyAttributes* attrs, size_t* attrsIdxs, size_t numAttrs, size_t* failIdx, CUstream hStream);
+static CUresult (*pcuMemcpyBatchAsync_ptsz)(CUdeviceptr* dsts, CUdeviceptr* srcs, size_t* sizes, size_t count, CUmemcpyAttributes* attrs, size_t* attrsIdxs, size_t numAttrs, size_t* failIdx, CUstream hStream);
+static CUresult (*pcuMemcpy3DBatchAsync)(size_t numOps, CUDA_MEMCPY3D_BATCH_OP* opList, size_t* failIdx, unsigned long long flags, CUstream hStream);
+static CUresult (*pcuMemcpy3DBatchAsync_ptsz)(size_t numOps, CUDA_MEMCPY3D_BATCH_OP* opList, size_t* failIdx, unsigned long long flags, CUstream hStream);
+static CUresult (*pcuStreamGetDevice)(CUstream hStream, CUdevice* device);
+static CUresult (*pcuStreamGetDevice_ptsz)(CUstream hStream, CUdevice* device);
+static CUresult (*pcuEventElapsedTime_v2)(float* pMilliseconds, CUevent hStart, CUevent hEnd);
+static CUresult (*pcuTensorMapEncodeIm2colWide)(CUtensorMap* tensorMap, CUtensorMapDataType tensorDataType, cuuint32_t tensorRank, void* globalAddress, const cuuint64_t* globalDim, const cuuint64_t* globalStrides,
+                                                int pixelBoxLowerCornerWidth, int pixelBoxUpperCornerWidth, cuuint32_t channelsPerPixel, cuuint32_t pixelsPerColumn, const cuuint32_t* elementStrides, CUtensorMapInterleave interleave,
+                                                CUtensorMapIm2ColWideMode mode, CUtensorMapSwizzle swizzle, CUtensorMapL2promotion l2Promotion, CUtensorMapFloatOOBfill oobFill);
+static CUresult (*pcuCheckpointProcessGetRestoreThreadId)(int pid, int* tid);
+static CUresult (*pcuCheckpointProcessGetState)(int pid, CUprocessState* state);
+static CUresult (*pcuCheckpointProcessLock)(int pid, CUcheckpointLockArgs* args);
+static CUresult (*pcuCheckpointProcessCheckpoint)(int pid, CUcheckpointCheckpointArgs* args);
+static CUresult (*pcuCheckpointProcessRestore)(int pid, CUcheckpointRestoreArgs* args);
+static CUresult (*pcuCheckpointProcessUnlock)(int pid, CUcheckpointUnlockArgs* args);
 
 static void *cuda_handle = NULL;
 
@@ -1421,6 +1439,20 @@ static BOOL load_functions(void)
     TRY_LOAD_FUNCPTR(cuTensorMapEncodeTiled);
     TRY_LOAD_FUNCPTR(cuTensorMapEncodeIm2col);
     TRY_LOAD_FUNCPTR(cuTensorMapReplaceAddress);
+    TRY_LOAD_FUNCPTR(cuMemcpyBatchAsync);
+    TRY_LOAD_FUNCPTR(cuMemcpyBatchAsync_ptsz);
+    TRY_LOAD_FUNCPTR(cuMemcpy3DBatchAsync);
+    TRY_LOAD_FUNCPTR(cuMemcpy3DBatchAsync_ptsz);
+    TRY_LOAD_FUNCPTR(cuStreamGetDevice);
+    TRY_LOAD_FUNCPTR(cuStreamGetDevice_ptsz);
+    TRY_LOAD_FUNCPTR(cuEventElapsedTime_v2);
+    TRY_LOAD_FUNCPTR(cuTensorMapEncodeIm2colWide);
+    TRY_LOAD_FUNCPTR(cuCheckpointProcessGetRestoreThreadId);
+    TRY_LOAD_FUNCPTR(cuCheckpointProcessGetState);
+    TRY_LOAD_FUNCPTR(cuCheckpointProcessLock);
+    TRY_LOAD_FUNCPTR(cuCheckpointProcessCheckpoint);
+    TRY_LOAD_FUNCPTR(cuCheckpointProcessRestore);
+    TRY_LOAD_FUNCPTR(cuCheckpointProcessUnlock);
 
     #undef LOAD_FUNCPTR
     #undef TRY_LOAD_FUNCPTR
@@ -5683,6 +5715,7 @@ CUresult WINAPI wine_cuTensorMapEncodeIm2col(void** tensorMap, void* tensorDataT
 {
     TRACE("(%p, %p, %u, %p, %p, %p, %p, %p, %u, %u, %p, %p, %p, %p, %p)\n", tensorMap, tensorDataType, tensorRank, globalAddress, globalDim, globalStrides, pixelBoxLowerCorner, pixelBoxUpperCorner, channelsPerPixel,
                                                                             pixelsPerColumn, elementStrides, interleave, swizzle, l2Promotion, oobFill);
+    CHECK_FUNCPTR(cuTensorMapEncodeIm2col);
     return pcuTensorMapEncodeIm2col(tensorMap, tensorDataType, tensorRank, globalAddress, globalDim, globalStrides, pixelBoxLowerCorner, pixelBoxUpperCorner,
                                     channelsPerPixel, pixelsPerColumn, elementStrides, interleave, swizzle, l2Promotion, oobFill);
 }
@@ -5690,7 +5723,124 @@ CUresult WINAPI wine_cuTensorMapEncodeIm2col(void** tensorMap, void* tensorDataT
 CUresult WINAPI wine_cuTensorMapReplaceAddress(void** tensorMap, void* globalAddress)
 {
     TRACE("(%p, %p)\n", tensorMap, globalAddress);
+    CHECK_FUNCPTR(cuTensorMapReplaceAddress);
     return pcuTensorMapReplaceAddress(tensorMap, globalAddress);
+}
+
+CUresult WINAPI wine_cuMemBatchDecompressAsync(CUmemDecompressParams* paramsArray, size_t count, unsigned int flags, size_t* errorIndex, CUstream stream)
+{
+    TRACE("(%p, %zu, %u, %p, %p)\n", paramsArray, count, flags, errorIndex, stream);
+    CHECK_FUNCPTR(cuMemBatchDecompressAsync);
+    return pcuMemBatchDecompressAsync(paramsArray, count, flags, errorIndex, stream);
+}
+
+CUresult WINAPI wine_cuMemBatchDecompressAsync_ptsz(CUmemDecompressParams* paramsArray, size_t count, unsigned int flags, size_t* errorIndex, CUstream stream)
+{
+    TRACE("(%p, %zu, %u, %p, %p)\n", paramsArray, count, flags, errorIndex, stream);
+    CHECK_FUNCPTR(cuMemBatchDecompressAsync_ptsz);
+    return pcuMemBatchDecompressAsync_ptsz(paramsArray, count, flags, errorIndex, stream);
+}
+
+CUresult WINAPI wine_cuMemcpyBatchAsync(CUdeviceptr* dsts, CUdeviceptr* srcs, size_t* sizes, size_t count, CUmemcpyAttributes* attrs, size_t* attrsIdxs, size_t numAttrs, size_t* failIdx, CUstream hStream)
+{
+    TRACE("(%p, %p, %p, %zu, %p, %p, %zu, %p, %p)\n", dsts, srcs, sizes, count, attrs, attrsIdxs, numAttrs, failIdx, hStream);
+    CHECK_FUNCPTR(cuMemcpyBatchAsync);
+    return pcuMemcpyBatchAsync(dsts, srcs, sizes, count, attrs, attrsIdxs, numAttrs, failIdx, hStream);
+}
+
+CUresult WINAPI wine_cuMemcpyBatchAsync_ptsz(CUdeviceptr* dsts, CUdeviceptr* srcs, size_t* sizes, size_t count, CUmemcpyAttributes* attrs, size_t* attrsIdxs, size_t numAttrs, size_t* failIdx, CUstream hStream)
+{
+    TRACE("(%p, %p, %p, %zu, %p, %p, %zu, %p, %p)\n", dsts, srcs, sizes, count, attrs, attrsIdxs, numAttrs, failIdx, hStream);
+    CHECK_FUNCPTR(cuMemcpyBatchAsync_ptsz);
+    return pcuMemcpyBatchAsync_ptsz(dsts, srcs, sizes, count, attrs, attrsIdxs, numAttrs, failIdx, hStream);
+}
+
+CUresult WINAPI wine_cuMemcpy3DBatchAsync(size_t numOps, CUDA_MEMCPY3D_BATCH_OP* opList, size_t* failIdx, unsigned long long flags, CUstream hStream)
+{
+    TRACE("(%zu, %p, %p, %llu, %p)\n", numOps, opList, failIdx, flags, hStream);
+    CHECK_FUNCPTR(cuMemcpy3DBatchAsync);
+    return pcuMemcpy3DBatchAsync(numOps, opList, failIdx, flags, hStream);
+}
+
+CUresult WINAPI wine_cuMemcpy3DBatchAsync_ptsz(size_t numOps, CUDA_MEMCPY3D_BATCH_OP* opList, size_t* failIdx, unsigned long long flags, CUstream hStream)
+{
+    TRACE("(%zu, %p, %p, %llu, %p)\n", numOps, opList, failIdx, flags, hStream);
+    CHECK_FUNCPTR(cuMemcpy3DBatchAsync_ptsz);
+    return pcuMemcpy3DBatchAsync_ptsz(numOps, opList, failIdx, flags, hStream);
+}
+
+CUresult WINAPI wine_cuStreamGetDevice(CUstream hStream, CUdevice* device)
+{
+    TRACE("(%p, %p)\n", hStream, device);
+    CHECK_FUNCPTR(cuStreamGetDevice);
+    return pcuStreamGetDevice(hStream, device);
+}
+
+CUresult WINAPI wine_cuStreamGetDevice_ptsz(CUstream hStream, CUdevice* device)
+{
+    TRACE("(%p, %p)\n", hStream, device);
+    CHECK_FUNCPTR(cuStreamGetDevice_ptsz);
+    return pcuStreamGetDevice_ptsz(hStream, device);
+}
+
+CUresult WINAPI wine_cuEventElapsedTime_v2(float* pMilliseconds, CUevent hStart, CUevent hEnd)
+{
+    TRACE("(%p, %p, %p)\n", pMilliseconds, hStart, hEnd);
+    CHECK_FUNCPTR(cuEventElapsedTime_v2);
+    return pcuEventElapsedTime_v2(pMilliseconds, hStart, hEnd);
+}
+
+CUresult WINAPI wine_cuTensorMapEncodeIm2colWide(CUtensorMap* tensorMap, CUtensorMapDataType tensorDataType, cuuint32_t tensorRank, void* globalAddress, const cuuint64_t* globalDim, const cuuint64_t* globalStrides,
+                                              int pixelBoxLowerCornerWidth, int pixelBoxUpperCornerWidth, cuuint32_t channelsPerPixel, cuuint32_t pixelsPerColumn, const cuuint32_t* elementStrides, CUtensorMapInterleave interleave,
+                                              CUtensorMapIm2ColWideMode mode, CUtensorMapSwizzle swizzle, CUtensorMapL2promotion l2Promotion, CUtensorMapFloatOOBfill oobFill)
+{
+    TRACE("(%p, %d, %u, %p, %p, %p, %d, %d, %u, %u, %p, %d, %d, %d, %d, %d)\n", tensorMap, tensorDataType, tensorRank, globalAddress, globalDim, globalStrides, pixelBoxLowerCornerWidth,
+                                                                                pixelBoxUpperCornerWidth, channelsPerPixel, pixelsPerColumn, elementStrides, interleave, mode, swizzle, l2Promotion, oobFill);
+    CHECK_FUNCPTR(cuTensorMapEncodeIm2colWide);
+    return pcuTensorMapEncodeIm2colWide(tensorMap, tensorDataType, tensorRank, globalAddress, globalDim, globalStrides, pixelBoxLowerCornerWidth,
+                                        pixelBoxUpperCornerWidth, channelsPerPixel, pixelsPerColumn, elementStrides, interleave, mode, swizzle, l2Promotion, oobFill);
+}
+
+CUresult WINAPI wine_cuCheckpointProcessGetRestoreThreadId(int pid, int* tid)
+{
+    TRACE("(%d, %p)\n", pid, tid);
+    CHECK_FUNCPTR(cuCheckpointProcessGetRestoreThreadId);
+    return pcuCheckpointProcessGetRestoreThreadId(pid, tid);
+}
+
+CUresult WINAPI wine_cuCheckpointProcessGetState(int pid, CUprocessState* state)
+{
+    TRACE("(%d, %p)\n", pid, state);
+    CHECK_FUNCPTR(cuCheckpointProcessGetState);
+    return pcuCheckpointProcessGetState(pid, state);
+}
+
+CUresult WINAPI wine_cuCheckpointProcessLock(int pid, CUcheckpointLockArgs* args)
+{
+    TRACE("(%d, %p)\n", pid, args);
+    CHECK_FUNCPTR(cuCheckpointProcessLock);
+    return pcuCheckpointProcessLock(pid, args);
+}
+
+CUresult WINAPI wine_cuCheckpointProcessCheckpoint(int pid, CUcheckpointCheckpointArgs* args)
+{
+    TRACE("(%d, %p)\n", pid, args);
+    CHECK_FUNCPTR(cuCheckpointProcessCheckpoint);
+    return pcuCheckpointProcessCheckpoint(pid, args);
+}
+
+CUresult WINAPI wine_cuCheckpointProcessRestore(int pid, CUcheckpointRestoreArgs* args)
+{
+    TRACE("(%d, %p)\n", pid, args);
+    CHECK_FUNCPTR(cuCheckpointProcessRestore);
+    return pcuCheckpointProcessRestore(pid, args);
+}
+
+CUresult WINAPI wine_cuCheckpointProcessUnlock(int pid, CUcheckpointUnlockArgs* args)
+{
+    TRACE("(%d, %p)\n", pid, args);
+    CHECK_FUNCPTR(cuCheckpointProcessUnlock);
+    return pcuCheckpointProcessUnlock(pid, args);
 }
 
 #undef CHECK_FUNCPTR

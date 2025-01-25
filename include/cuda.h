@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2015 Sebastian Lackner
+ * Copyright (C) 2022-2025 Sveinar Søpler
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -98,6 +99,13 @@ typedef int CUgraphMem_attribute;
 typedef int CUmemPool_attribute;
 typedef int CUmemAllocationGranularity_flags;
 typedef int CUmemRangeHandleType;
+typedef int CUtensorMapIm2ColWideMode;
+typedef int CUtensorMapDataType;
+typedef int CUtensorMapInterleave;
+typedef int CUtensorMapSwizzle;
+typedef int CUtensorMapL2promotion;
+typedef int CUtensorMapFloatOOBfill;
+typedef int CUprocessState;
 
 typedef void *CUDA_ARRAY_DESCRIPTOR;
 typedef void *CUDA_MEMCPY3D_PEER;
@@ -128,6 +136,14 @@ typedef void (CUDA_CB *CUhostFn)(void *userData);
 typedef void *CUlaunchConfig;
 typedef void *CUkernel;
 typedef void *CUgreenCtx;
+typedef void *CUmemcpyAttributes;
+typedef void *CUDA_MEMCPY3D_BATCH_OP;
+typedef void *CUtensorMap;
+typedef void *CUmemDecompressParams;
+typedef void *CUcheckpointLockArgs;
+typedef void *CUcheckpointCheckpointArgs;
+typedef void *CUcheckpointRestoreArgs;
+typedef void *CUcheckpointUnlockArgs;
 
 typedef unsigned long long CUsurfObject;
 typedef unsigned long long CUtexObject;
