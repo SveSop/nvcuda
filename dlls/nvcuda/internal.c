@@ -407,6 +407,7 @@ struct Relay8_table
     void* (WINAPI *func87)(void *param0, void *param1);
     void* (WINAPI *func88)(void *param0, void *param1);
     void* (WINAPI *func89)(void *param0, void *param1);
+    void* (WINAPI *func90)(void *param0, void *param1);
 };
 static const struct
 {
@@ -501,6 +502,7 @@ static const struct
     void* (*func87)(void *param0, void *param1);
     void* (*func88)(void *param0, void *param1);
     void* (*func89)(void *param0, void *param1);
+    void* (*func90)(void *param0, void *param1);
 } *Relay8_orig = NULL;
 
 /*
@@ -1649,6 +1651,12 @@ static void* WINAPI Relay8_func89(void *param0, void *param1)
     return Relay8_orig->func89(param0, param1);
 }
 
+static void* WINAPI Relay8_func90(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay8_orig->func90(param0, param1);
+}
+
 static struct Relay8_table Relay8_Impl =
 {
     sizeof(struct Relay8_table),
@@ -1742,6 +1750,7 @@ static struct Relay8_table Relay8_Impl =
     Relay8_func87,
     Relay8_func88,
     Relay8_func89,
+    Relay8_func90,
 };
 
 static void* WINAPI Relay9_func0(void *param0, void *param1)
