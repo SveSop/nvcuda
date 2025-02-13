@@ -1,4 +1,6 @@
 # nvcuda
+Version: v0.2  
+
 Standalone version of nvcuda based from Wine-Staging  
 
 The master branch is meant for keeping up-to-date with  
