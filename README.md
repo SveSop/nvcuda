@@ -7,7 +7,8 @@ progress and not all functions are implemented.
 
 The DirectX implementation in the CUDA driver for linux is not  
 available for this relay.  
-The recommended driver is always most recent. (565+).  
+Required driver is 525 series or newer.  
+The recommended driver is always most recent. (570+).  
 
 ## Build requirements:  
 - [WINE] (version >= 9.0) [https://www.winehq.org/](https://www.winehq.org/)  
