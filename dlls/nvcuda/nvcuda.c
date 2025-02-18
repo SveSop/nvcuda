@@ -1341,7 +1341,6 @@ static BOOL load_functions(void)
     LOAD_FUNCPTR(cuStreamBatchMemOp_ptsz);
     LOAD_FUNCPTR(cuStreamBatchMemOp_v2_ptsz);
     LOAD_FUNCPTR(cuOccupancyMaxPotentialClusterSize);
-    LOAD_FUNCPTR(cuGraphGetEdges_v2);
     LOAD_FUNCPTR(cuDeviceGetUuid_v2);
     LOAD_FUNCPTR(cuFuncGetModule);
     LOAD_FUNCPTR(cuDevicePrimaryCtxSetFlags_v2);
@@ -1396,6 +1395,7 @@ static BOOL load_functions(void)
     TRY_LOAD_FUNCPTR(cuGraphExecNodeSetParams);
     TRY_LOAD_FUNCPTR(cuKernelGetName);
     TRY_LOAD_FUNCPTR(cuFuncGetName);
+    TRY_LOAD_FUNCPTR(cuGraphGetEdges_v2);
     TRY_LOAD_FUNCPTR(cuGraphNodeGetDependencies_v2);
     TRY_LOAD_FUNCPTR(cuGraphNodeGetDependentNodes_v2);
     TRY_LOAD_FUNCPTR(cuGraphAddDependencies_v2);
