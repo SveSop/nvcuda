@@ -1056,7 +1056,7 @@ static BOOL load_functions(void)
     LOAD_FUNCPTR(cuTexRefSetAddress2D_v3);
     LOAD_FUNCPTR(cuTexRefSetAddressMode);
     LOAD_FUNCPTR(cuTexRefSetAddress_v2);
-    LOAD_FUNCPTR(cuTexRefSetArray)
+    LOAD_FUNCPTR(cuTexRefSetArray);
     LOAD_FUNCPTR(cuTexRefSetFilterMode);
     LOAD_FUNCPTR(cuTexRefSetFlags);
     LOAD_FUNCPTR(cuTexRefSetFormat);
