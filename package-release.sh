@@ -29,7 +29,7 @@ function build_arch {
         --cross-file "$NVCUDA_SRC_DIR/build-wine$1.txt"  \
         --buildtype release                              \
         --prefix "$NVCUDA_BUILD_DIR"                     \
-        --libdir x$1                                     \
+        --libdir lib                                     \
 	--strip                                          \
         "$NVCUDA_BUILD_DIR/build.$1"
 
@@ -45,5 +45,4 @@ build_arch 32
 # cleanup
 cd $NVCUDA_BUILD_DIR
 find . -name \*.a -type f -delete
-find . -name '*.dll.so' -type f -exec sh -c 'mv "$1" "${1%.so}"' _ {} \;
 echo "Done building!"
