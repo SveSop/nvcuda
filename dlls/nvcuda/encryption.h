@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024 Sveinar Søpler
+ * Copyright (C) 2023-2025 Sveinar Søpler
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,8 @@
 
 #include <time.h>
 
-struct EncryptInput1_st {
+struct EncryptInput1_st
+{
     unsigned int driverVersion;
     unsigned int cudaVersion;
     unsigned int processID;
@@ -32,7 +33,8 @@ struct EncryptInput1_st {
 };
 typedef struct EncryptInput1_st EncryptInput1;
 
-struct EncryptInput2_st {
+struct EncryptInput2_st
+{
     CUuuid uuid;
     int pciDomain;
     int pciBus;

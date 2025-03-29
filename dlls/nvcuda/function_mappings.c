@@ -648,7 +648,8 @@ extern void wine_cuCheckpointProcessCheckpoint(void);
 extern void wine_cuCheckpointProcessRestore(void);
 extern void wine_cuCheckpointProcessUnlock(void);
 
-const FunctionMapping mappings[] = {
+const FunctionMapping mappings[] =
+{
     {"cuGetProcAddress", 11030, 0, wine_cuGetProcAddress},
     {"cuGetProcAddress", 12000, 0, wine_cuGetProcAddress_v2},
     {"cuInit", 2000, 0, wine_cuInit},

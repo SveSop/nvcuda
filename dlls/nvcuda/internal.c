@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2014-2015 Michael Müller
  * Copyright (C) 2014-2015 Sebastian Lackner
- * Copyright (C) 2022-2024 Sveinar Søpler
+ * Copyright (C) 2022-2025 Sveinar Søpler
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -67,10 +67,9 @@ static RTL_CRITICAL_SECTION tls_callback_section = { &critsect_debug, -1, 0, 0, 
 void cuda_process_tls_callbacks(DWORD reason)
 {
     // Check if the list is empty before entering the critical section
-    if (list_empty(&tls_callbacks)) {
+    if (list_empty(&tls_callbacks))
         return;
-    }
-
+    
     struct list *ptr;
 
     TRACE("(%d)\n", reason);
@@ -1085,7 +1084,8 @@ static CUresult WINAPI Encryption_encrypt0(unsigned int cudaVersion, time_t time
     int version;
     if (wine_cuDriverGetVersion(&version)) return CUDA_ERROR_UNKNOWN;
 
-    EncryptInput1 input1 = {
+    EncryptInput1 input1 =
+    {
         .driverVersion = (unsigned int)version,
         .cudaVersion = cudaVersion,
         .processID = (unsigned int)GetCurrentProcessId(),

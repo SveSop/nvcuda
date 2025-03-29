@@ -25,12 +25,14 @@ typedef uint32_t cuuint32_t;
 typedef uint64_t cuuint64_t;
 
 #if defined(__i386)
-typedef struct {
+typedef struct
+{
     uint64_t low;
     uint64_t high;
 } __uint128_t;
 
-typedef struct {
+typedef struct
+{
     int64_t low;
     int64_t high;
 } __int128_t;
@@ -64,7 +66,8 @@ typedef unsigned int CUdeviceptr_v2;
 #endif
 typedef CUdeviceptr_v2 CUdeviceptr;
 
-typedef enum CUdriverProcAddressQueryResult_enum {
+typedef enum CUdriverProcAddressQueryResult_enum
+{
     CU_GET_PROC_ADDRESS_SUCCESS                = 0,
     CU_GET_PROC_ADDRESS_SYMBOL_NOT_FOUND       = 1,
     CU_GET_PROC_ADDRESS_VERSION_NOT_SUFFICIENT = 2
@@ -148,7 +151,8 @@ typedef void *CUcheckpointUnlockArgs;
 typedef unsigned long long CUsurfObject;
 typedef unsigned long long CUtexObject;
 
-typedef enum CUexternalMemoryHandleType_enum {
+typedef enum CUexternalMemoryHandleType_enum
+{
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD          = 1,
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32       = 2,
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT   = 3,
@@ -159,7 +163,8 @@ typedef enum CUexternalMemoryHandleType_enum {
     CU_EXTERNAL_MEMORY_HANDLE_TYPE_NVSCIBUF = 8
 } CUexternalMemoryHandleType;
 
-typedef enum CUexternalSemaphoreHandleType_enum {
+typedef enum CUexternalSemaphoreHandleType_enum
+{
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD             = 1,
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32          = 2,
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT      = 3,
@@ -187,7 +192,8 @@ typedef struct CUuuid_st
     char bytes[16];
 } CUuuid;
 
-typedef struct CUDA_MEMCPY2D_st {
+typedef struct CUDA_MEMCPY2D_st
+{
     size_t srcXInBytes;
     size_t srcY;
     CUmemorytype srcMemoryType;
@@ -207,7 +213,8 @@ typedef struct CUDA_MEMCPY2D_st {
 } CUDA_MEMCPY2D_v2;
 typedef CUDA_MEMCPY2D_v2 CUDA_MEMCPY2D;
 
-typedef struct CUDA_MEMCPY3D_st {
+typedef struct CUDA_MEMCPY3D_st
+{
     size_t srcXInBytes;
     size_t srcY;
     size_t srcZ;
@@ -247,11 +254,14 @@ typedef struct CUDA_ARRAY3D_DESCRIPTOR_st
 } CUDA_ARRAY3D_DESCRIPTOR_v2;
 typedef CUDA_ARRAY3D_DESCRIPTOR_v2 CUDA_ARRAY3D_DESCRIPTOR;
 
-typedef struct CUDA_EXTERNAL_MEMORY_HANDLE_DESC_st {
+typedef struct CUDA_EXTERNAL_MEMORY_HANDLE_DESC_st
+{
     CUexternalMemoryHandleType type;
-    union {
+    union
+    {
         int fd;
-        struct {
+        struct
+        {
             void *handle;
             const void *name;
         } win32;
@@ -263,11 +273,14 @@ typedef struct CUDA_EXTERNAL_MEMORY_HANDLE_DESC_st {
 } CUDA_EXTERNAL_MEMORY_HANDLE_DESC_v1;
 typedef CUDA_EXTERNAL_MEMORY_HANDLE_DESC_v1 CUDA_EXTERNAL_MEMORY_HANDLE_DESC;
 
-typedef struct CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_st {
+typedef struct CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_st
+{
     CUexternalSemaphoreHandleType type;
-    union {
+    union
+    {
         int fd;
-        struct {
+        struct
+        {
             void *handle;
             const void *name;
         } win32;

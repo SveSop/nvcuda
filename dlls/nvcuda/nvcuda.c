@@ -3724,7 +3724,8 @@ CUresult WINAPI wine_cuDeviceGetUuid(CUuuid *uuid, CUdevice dev)
     char buffer[128];
 
     CUresult ret = pcuDeviceGetUuid(uuid, dev);
-    if(ret == CUDA_SUCCESS){
+    if(ret == CUDA_SUCCESS)
+    {
         TRACE("(UUID: %s, Device: %d)\n", cuda_print_uuid(uuid, buffer, sizeof(buffer)), dev);
         return ret;
     }
@@ -4921,7 +4922,8 @@ CUresult WINAPI wine_cuDeviceGetUuid_v2(CUuuid *uuid, CUdevice dev)
     char buffer[128];
 
     CUresult ret = pcuDeviceGetUuid_v2(uuid, dev);
-    if(ret == CUDA_SUCCESS){
+    if(ret == CUDA_SUCCESS)
+    {
         TRACE("(UUID: %s, Device: %d)\n", cuda_print_uuid(uuid, buffer, sizeof(buffer)), dev);
         return ret;
     }
@@ -5813,18 +5815,22 @@ CUresult WINAPI wine_cuGraphicsD3D11RegisterResource(CUgraphicsResource *pCudaRe
 static void get_addr(const char* symbol, int driverVersion, size_t flags, void** pfn)
 {
     const FunctionMapping* bestMapping = NULL;
-    for (size_t i = 0; i < mappings_count; ++i) {
+    for (size_t i = 0; i < mappings_count; ++i)
+    {
         const FunctionMapping* mapping = &mappings[i];
-        if (strcmp(mapping->symbol, symbol) == 0 && driverVersion == mapping->minVersion && flags == mapping->flags) {
-            if (bestMapping == NULL || (mapping->minVersion == bestMapping->minVersion && mapping->minVersion == bestMapping->flags)){
+        if (strcmp(mapping->symbol, symbol) == 0 && driverVersion == mapping->minVersion && flags == mapping->flags)
+        {
+            if (bestMapping == NULL || (mapping->minVersion == bestMapping->minVersion && mapping->minVersion == bestMapping->flags))
                 bestMapping = mapping;
-            }
         }
     }
 
-    if (bestMapping != NULL) {
+    if (bestMapping != NULL)
+    {
         *pfn = bestMapping->function;
-    } else {
+    }
+    else
+    {
         *pfn = NULL;
     }
 }
