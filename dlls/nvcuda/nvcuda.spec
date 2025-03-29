@@ -54,7 +54,7 @@
 @ stub cuD3D10ResourceSetMapFlags
 @ stub cuD3D10UnmapResources
 @ stub cuD3D10UnregisterResource
-@ stub cuD3D11CtxCreate
+@ stdcall cuD3D11CtxCreate(ptr ptr long ptr) wine_cuD3D11CtxCreate
 @ stub cuD3D11CtxCreateOnDevice
 @ stub cuD3D11CtxCreate_v2
 @ stdcall cuD3D11GetDevice(ptr ptr) wine_cuD3D11GetDevice

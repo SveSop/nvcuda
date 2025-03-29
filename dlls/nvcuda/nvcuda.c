@@ -5856,6 +5856,19 @@ CUresult WINAPI wine_cuGraphicsD3D11RegisterResource(CUgraphicsResource *pCudaRe
     return CUDA_ERROR_UNKNOWN;
 }
 
+CUresult WINAPI wine_cuD3D11CtxCreate(CUcontext* pCtx, CUdevice* pCudaDevice, unsigned int Flags, ID3D11Device* pD3DDevice)
+{
+    FIXME("(%p, %p, %u, %p) - semi-stub\n", pCtx, pCudaDevice, Flags, pD3DDevice);
+    /* Create a cuda context on the device - This will NOT actually be registered to the D3D11 device. */
+    CUresult ret = pcuCtxCreate(pCtx, Flags, *pCudaDevice);
+    if (ret)
+    {
+        ERR("Failed to create cuda context!\n");
+        return CUDA_ERROR_NOT_SUPPORTED;
+    }
+    return ret;
+}
+
 /* Function checker used by CUDA Runtime API */
 static void get_addr(const char* symbol, int driverVersion, size_t flags, void** pfn)
 {
