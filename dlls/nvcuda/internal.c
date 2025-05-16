@@ -178,6 +178,9 @@ static const CUuuid UUID_Relay10                    = {{0x26, 0x3E, 0x88, 0x60, 
 static const CUuuid UUID_OpticalFlow                = {{0x9A, 0xF0, 0x70, 0x7B, 0x8E, 0x2D, 0xD8, 0x4C,
                                                         0x8E, 0x4E, 0xB9, 0x94, 0xC8, 0x2D, 0xDC, 0x35}};
                                                     // {9af0707b-8e2d-d84c-8e4e-b994c82ddc35}
+static const CUuuid UUID_Relay12                    = {{0xF8, 0xCF, 0xF9, 0x51, 0x21, 0x46, 0x8B, 0x4E,
+                                                        0xB9, 0xE2, 0xFB, 0x46, 0x9E, 0x7C, 0x0D, 0xD9}};
+                                                    // {f8cff951-2146-8b4e-b9e2-fb469e7c0dd9}
 
 struct cuda_table
 {
@@ -779,6 +782,22 @@ static const struct
     void* (*func20)(void *param0, void *param1);
     void* (*func21)(void *param0, void *param1);
 } *OpticalFlow_orig = NULL;
+
+/*
+ * Relay12
+ */
+struct Relay12_table
+{
+    int size;
+    void* (WINAPI* func0)(void *param0, void *param1);
+    void* (WINAPI* func1)(void *param0, void *param1);
+};
+static const struct
+{
+    int size;
+    void* (*func0)(void *param0, void *param1);
+    void* (*func1)(void *param0, void *param1);
+} *Relay12_orig = NULL;
 
 static void* WINAPI Relay1_func0(void *param0, void *param1)
 {
@@ -2622,6 +2641,25 @@ static struct OpticalFlow_table OpticalFlow_Impl =
     OpticalFlow_func21,
 };
 
+static void* WINAPI Relay12_func0(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay12_orig->func0(param0, param1);
+}
+
+static void* WINAPI Relay12_func1(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay12_orig->func1(param0, param1);
+}
+
+static struct Relay12_table Relay12_Impl =
+{
+    sizeof(struct Relay12_table),
+    Relay12_func0,
+    Relay12_func1,
+};
+
 static BOOL cuda_check_table(const struct cuda_table *orig, struct cuda_table *impl, const char *name)
 {
     if (!orig)
@@ -2784,6 +2822,18 @@ CUresult cuda_get_table(const void **table, const CUuuid *uuid, const void *orig
 
         OpticalFlow_orig = orig_table;
         *table = (void *)&OpticalFlow_Impl;
+        return CUDA_SUCCESS;
+    }
+    else if (cuda_equal_uuid(uuid, &UUID_Relay12))
+    {
+        TRACE("(%p, Relay12_UUID: %s)\n", table, cuda_print_uuid(uuid, buffer, sizeof(buffer)));
+        if (orig_result)
+            return orig_result;
+        if (!cuda_check_table(orig_table, (void *)&Relay12_Impl, "Relay12"))
+            return CUDA_ERROR_UNKNOWN;
+
+        Relay12_orig = orig_table;
+        *table = (void *)&Relay12_Impl;
         return CUDA_SUCCESS;
     }
 
