@@ -55,7 +55,7 @@ static const char      devpropkey_gpu_vulkan_uuidA[] = "Properties\\{233A9EF3-AF
 static const char      devpropkey_gpu_luidA[]        = "Properties\\{60B193CB-5276-4D0F-96FC-F173ABAD3EC6}\\0002";
 static LONG            num_stream_callbacks;
 
-static void get_addr();
+static void get_addr(const char* symbol, int driverVersion, size_t flags, void** pfn);
 
 struct stream_callback_entry
 {
