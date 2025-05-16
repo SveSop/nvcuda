@@ -801,6 +801,11 @@ static CUresult (*pcuCheckpointProcessLock)(int pid, CUcheckpointLockArgs* args)
 static CUresult (*pcuCheckpointProcessCheckpoint)(int pid, CUcheckpointCheckpointArgs* args);
 static CUresult (*pcuCheckpointProcessRestore)(int pid, CUcheckpointRestoreArgs* args);
 static CUresult (*pcuCheckpointProcessUnlock)(int pid, CUcheckpointUnlockArgs* args);
+static CUresult (*pcuLogsRegisterCallback)(CUlogsCallback callbackFunc, void* userData, CUlogsCallbackHandle* callback);
+static CUresult (*pcuLogsUnregisterCallback)(CUlogsCallbackHandle callback);
+static CUresult (*pcuLogsCurrent)(CUlogIterator* iterator, unsigned int flags);
+static CUresult (*pcuLogsDumpToFile)(CUlogIterator* iterator, const char* pathToFile, unsigned int flags);
+static CUresult (*pcuLogsDumpToMemory)(CUlogIterator* iterator, char* buffer, size_t* size, unsigned int flags);
 
 static void *cuda_handle = NULL;
 
@@ -1453,6 +1458,11 @@ static BOOL load_functions(void)
     TRY_LOAD_FUNCPTR(cuCheckpointProcessCheckpoint);
     TRY_LOAD_FUNCPTR(cuCheckpointProcessRestore);
     TRY_LOAD_FUNCPTR(cuCheckpointProcessUnlock);
+    TRY_LOAD_FUNCPTR(cuLogsRegisterCallback);
+    TRY_LOAD_FUNCPTR(cuLogsUnregisterCallback);
+    TRY_LOAD_FUNCPTR(cuLogsCurrent);
+    TRY_LOAD_FUNCPTR(cuLogsDumpToFile);
+    TRY_LOAD_FUNCPTR(cuLogsDumpToMemory);
 
     #undef LOAD_FUNCPTR
     #undef TRY_LOAD_FUNCPTR
@@ -5730,6 +5740,41 @@ CUresult WINAPI wine_cuCheckpointProcessUnlock(int pid, CUcheckpointUnlockArgs* 
     TRACE("(%d, %p)\n", pid, args);
     CHECK_FUNCPTR(cuCheckpointProcessUnlock);
     return pcuCheckpointProcessUnlock(pid, args);
+}
+
+CUresult WINAPI wine_cuLogsRegisterCallback(CUlogsCallback callbackFunc, void* userData, CUlogsCallbackHandle* callback)
+{
+    TRACE("(%p, %p, %p)\n", callbackFunc, userData, callback);
+    CHECK_FUNCPTR(cuLogsRegisterCallback);
+    return pcuLogsRegisterCallback(callbackFunc, userData, callback);
+}
+
+CUresult WINAPI wine_cuLogsUnregisterCallback(CUlogsCallbackHandle callback)
+{
+    TRACE("(%p)\n", callback);
+    CHECK_FUNCPTR(cuLogsUnregisterCallback);
+    return pcuLogsUnregisterCallback(callback);
+}
+
+CUresult WINAPI wine_cuLogsCurrent(CUlogIterator* iterator, unsigned int flags)
+{
+    TRACE("(%p, %u)\n", iterator, flags);
+    CHECK_FUNCPTR(cuLogsCurrent);
+    return pcuLogsCurrent(iterator, flags);
+}
+
+CUresult WINAPI wine_cuLogsDumpToFile(CUlogIterator* iterator, const char* pathToFile, unsigned int flags)
+{
+    TRACE("(%p, %p, %u)\n", iterator, pathToFile, flags);
+    CHECK_FUNCPTR(cuLogsDumpToFile);
+    return pcuLogsDumpToFile(iterator, pathToFile, flags);
+}
+
+CUresult WINAPI wine_cuLogsDumpToMemory(CUlogIterator* iterator, char* buffer, size_t* size, unsigned int flags)
+{
+    TRACE("(%p, %p, %p, %u)\n", iterator, buffer, size, flags);
+    CHECK_FUNCPTR(cuLogsDumpToMemory);
+    return pcuLogsDumpToMemory(iterator, buffer, size, flags);
 }
 
 #undef CHECK_FUNCPTR

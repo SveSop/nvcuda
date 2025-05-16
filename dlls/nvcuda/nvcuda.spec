@@ -735,3 +735,8 @@
 @ stdcall cuCheckpointProcessCheckpoint(long ptr) wine_cuCheckpointProcessCheckpoint
 @ stdcall cuCheckpointProcessRestore(long ptr) wine_cuCheckpointProcessRestore
 @ stdcall cuCheckpointProcessUnlock(long ptr) wine_cuCheckpointProcessUnlock
+@ stdcall cuLogsRegisterCallback(ptr ptr ptr) wine_cuLogsRegisterCallback
+@ stdcall cuLogsUnregisterCallback(ptr) wine_cuLogsUnregisterCallback
+@ stdcall cuLogsCurrent(ptr long) wine_cuLogsCurrent
+@ stdcall cuLogsDumpToFile(ptr ptr long) wine_cuLogsDumpToFile
+@ stdcall cuLogsDumpToMemory(ptr ptr ptr long) wine_cuLogsDumpToMemory

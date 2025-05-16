@@ -647,6 +647,11 @@ extern void wine_cuCheckpointProcessLock(void);
 extern void wine_cuCheckpointProcessCheckpoint(void);
 extern void wine_cuCheckpointProcessRestore(void);
 extern void wine_cuCheckpointProcessUnlock(void);
+extern void wine_cuLogsRegisterCallback(void);
+extern void wine_cuLogsUnregisterCallback(void);
+extern void wine_cuLogsCurrent(void);
+extern void wine_cuLogsDumpToFile(void);
+extern void wine_cuLogsDumpToMemory(void);
 
 const FunctionMapping mappings[] =
 {
@@ -1283,6 +1288,11 @@ const FunctionMapping mappings[] =
     {"cuCheckpointProcessCheckpoint", 12080, 0, wine_cuCheckpointProcessCheckpoint},
     {"cuCheckpointProcessRestore", 12080, 0, wine_cuCheckpointProcessRestore},
     {"cuCheckpointProcessUnlock", 12080, 0, wine_cuCheckpointProcessUnlock},
+    {"cuLogsRegisterCallback", 12090, 0, wine_cuLogsRegisterCallback},
+    {"cuLogsUnregisterCallback", 12090, 0, wine_cuLogsUnregisterCallback},
+    {"cuLogsCurrent", 12090, 0, wine_cuLogsCurrent},
+    {"cuLogsDumpToFile", 12090, 0, wine_cuLogsDumpToFile},
+    {"cuLogsDumpToMemory", 12090, 0, wine_cuLogsDumpToMemory},
 };
 
 const size_t mappings_count = sizeof(mappings) / sizeof(mappings[0]);

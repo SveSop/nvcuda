@@ -109,6 +109,7 @@ typedef int CUtensorMapSwizzle;
 typedef int CUtensorMapL2promotion;
 typedef int CUtensorMapFloatOOBfill;
 typedef int CUprocessState;
+typedef unsigned int CUlogIterator;
 
 typedef void *CUDA_ARRAY_DESCRIPTOR;
 typedef void *CUDA_MEMCPY3D_PEER;
@@ -147,6 +148,8 @@ typedef void *CUcheckpointLockArgs;
 typedef void *CUcheckpointCheckpointArgs;
 typedef void *CUcheckpointRestoreArgs;
 typedef void *CUcheckpointUnlockArgs;
+typedef void *CUlogsCallback;
+typedef void *CUlogsCallbackHandle;
 
 typedef unsigned long long CUsurfObject;
 typedef unsigned long long CUtexObject;
