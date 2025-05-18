@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "cuda.h"
 
 typedef CUresult (*pcuInit)(unsigned int flags);
