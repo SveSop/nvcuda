@@ -652,6 +652,8 @@ extern void wine_cuLogsUnregisterCallback(void);
 extern void wine_cuLogsCurrent(void);
 extern void wine_cuLogsDumpToFile(void);
 extern void wine_cuLogsDumpToMemory(void);
+extern void wine_cuD3D11CtxCreate(void);
+extern void wine_cuD3D11CtxCreate_v2(void);
 
 const FunctionMapping mappings[] =
 {
@@ -1293,6 +1295,8 @@ const FunctionMapping mappings[] =
     {"cuLogsCurrent", 12090, 0, wine_cuLogsCurrent},
     {"cuLogsDumpToFile", 12090, 0, wine_cuLogsDumpToFile},
     {"cuLogsDumpToMemory", 12090, 0, wine_cuLogsDumpToMemory},
+    {"cuD3D11CtxCreate", 3000, 0, wine_cuD3D11CtxCreate},
+    {"cuD3D11CtxCreate", 3020, 0, wine_cuD3D11CtxCreate_v2},
 };
 
 const size_t mappings_count = sizeof(mappings) / sizeof(mappings[0]);

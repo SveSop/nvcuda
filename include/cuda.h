@@ -180,6 +180,22 @@ typedef enum CUexternalSemaphoreHandleType_enum
     CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_TIMELINE_SEMAPHORE_WIN32 = 10
 } CUexternalSemaphoreHandleType;
 
+typedef enum CUctx_flags_enum
+{
+    CU_CTX_SCHED_AUTO          = 0x00,
+    CU_CTX_SCHED_SPIN          = 0x01,
+    CU_CTX_SCHED_YIELD         = 0x02,
+    CU_CTX_SCHED_BLOCKING_SYNC = 0x04,
+    CU_CTX_BLOCKING_SYNC       = 0x04,
+    CU_CTX_SCHED_MASK          = 0x07,
+    CU_CTX_MAP_HOST            = 0x08,
+    CU_CTX_LMEM_RESIZE_TO_MAX  = 0x10,
+    CU_CTX_COREDUMP_ENABLE     = 0x20,
+    CU_CTX_USER_COREDUMP_ENABLE= 0x40,
+    CU_CTX_SYNC_MEMOPS         = 0x80,
+    CU_CTX_FLAGS_MASK          = 0xFF
+} CUctx_flags;
+
 typedef struct CUipcEventHandle_st
 {
     char reserved[CU_IPC_HANDLE_SIZE];

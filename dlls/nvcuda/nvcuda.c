@@ -5860,12 +5860,33 @@ CUresult WINAPI wine_cuD3D11CtxCreate(CUcontext* pCtx, CUdevice* pCudaDevice, un
 {
     FIXME("(%p, %p, %u, %p) - semi-stub\n", pCtx, pCudaDevice, Flags, pD3DDevice);
     /* Create a cuda context on the device - This will NOT actually be registered to the D3D11 device. */
-    CUresult ret = pcuCtxCreate(pCtx, Flags, *pCudaDevice);
+    CUresult ret;
+
+    ret = pcuDeviceGet(pCudaDevice, 0);
     if (ret)
     {
-        ERR("Failed to create cuda context!\n");
-        return CUDA_ERROR_NOT_SUPPORTED;
+        ERR("Failed to get CUDA device, error: %d\n", ret);
+        return ret;
     }
+    ret = pcuCtxCreate(pCtx, Flags, *pCudaDevice);
+    if (ret) ERR("Failed to create cuda context, error: %d\n", ret);
+    return ret;
+}
+
+CUresult WINAPI wine_cuD3D11CtxCreate_v2(CUcontext* pCtx, CUdevice* pCudaDevice, unsigned int Flags, ID3D11Device* pD3DDevice)
+{
+    FIXME("(%p, %p, %u, %p) - semi-stub\n", pCtx, pCudaDevice, Flags, pD3DDevice);
+    /* Create a cuda context on the device - This will NOT actually be registered to the D3D11 device. */
+    CUresult ret;
+
+    ret = pcuDeviceGet(pCudaDevice, 0);
+    if (ret)
+    {
+        ERR("Failed to get CUDA device, error: %d\n", ret);
+        return ret;
+    }
+    ret = pcuCtxCreate_v2(pCtx, Flags, *pCudaDevice);
+    if (ret) ERR("Failed to create cuda context, error: %d\n", ret);
     return ret;
 }
 
