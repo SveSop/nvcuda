@@ -5895,11 +5895,10 @@ static void get_addr(const char* symbol, int driverVersion, size_t flags, void**
 
 BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
 {
-    TRACE("(%p, %u, %p)\n", instance, reason, reserved);
-
     switch (reason)
     {
         case DLL_PROCESS_ATTACH:
+            TRACE("Process attached: (%p)\n", instance);
             if (!load_functions()) return FALSE;
             break;
         case DLL_PROCESS_DETACH:
