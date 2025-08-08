@@ -5817,7 +5817,7 @@ CUresult WINAPI wine_cuLogsDumpToMemory(CUlogIterator* iterator, char* buffer, s
     return pcuLogsDumpToMemory(iterator, buffer, size, flags);
 }
 
-CUresult WINAPI wine_cuGreenCtxGetId(CUgreenCtx greenCtx, unsigned long long *greenCtxId)
+CUresult WINAPI wine_cuGreenCtxGetId(CUgreenCtx greenCtx, unsigned long long* greenCtxId)
 {
     TRACE("(%p,%llu)\n", greenCtx, *greenCtxId);
     CHECK_FUNCPTR(cuGreenCtxGetId);

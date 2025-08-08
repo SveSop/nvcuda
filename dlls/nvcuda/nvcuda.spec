@@ -740,3 +740,21 @@
 @ stdcall cuLogsCurrent(ptr long) wine_cuLogsCurrent
 @ stdcall cuLogsDumpToFile(ptr ptr long) wine_cuLogsDumpToFile
 @ stdcall cuLogsDumpToMemory(ptr ptr ptr long) wine_cuLogsDumpToMemory
+@ stdcall cuGreenCtxGetId(ptr ptr) wine_cuGreenCtxGetId
+@ stdcall cuDeviceGetHostAtomicCapabilities(ptr ptr long long) wine_cuDeviceGetHostAtomicCapabilities
+@ stdcall cuCtxGetDevice_v2(ptr ptr) wine_cuCtxGetDevice_v2
+@ stdcall cuCtxSynchronize_v2(ptr) wine_cuCtxSynchronize_v2
+@ stdcall cuMemcpyBatchAsync_v2(ptr ptr ptr long ptr ptr long ptr) wine_cuMemcpyBatchAsync_v2
+@ stdcall cuMemcpyBatchAsync_v2_ptsz(ptr ptr ptr long ptr ptr long ptr) wine_cuMemcpyBatchAsync_v2_ptsz
+@ stdcall cuMemcpy3DBatchAsync_v2(long ptr long ptr) wine_cuMemcpy3DBatchAsync_v2
+@ stdcall cuMemcpy3DBatchAsync_v2_ptsz(long ptr long ptr) wine_cuMemcpy3DBatchAsync_v2_ptsz
+@ stdcall cuMemGetDefaultMemPool(ptr ptr ptr) wine_cuMemGetDefaultMemPool
+@ stdcall cuMemGetMemPool(ptr ptr ptr) wine_cuMemGetMemPool
+@ stdcall cuMemSetMemPool(ptr ptr ptr) wine_cuMemSetMemPool
+@ stdcall cuMemPrefetchBatchAsync(ptr ptr long ptr ptr long long ptr) wine_cuMemPrefetchBatchAsync
+@ stdcall cuMemPrefetchBatchAsync_ptsz(ptr ptr long ptr ptr long long ptr) wine_cuMemPrefetchBatchAsync_ptsz
+@ stdcall cuMemDiscardBatchAsync(ptr ptr long long ptr) wine_cuMemDiscardBatchAsync
+@ stdcall cuMemDiscardBatchAsync_ptsz(ptr ptr long long ptr) wine_cuMemDiscardBatchAsync_ptsz
+@ stdcall cuMemDiscardAndPrefetchBatchAsync(ptr ptr long ptr ptr long long ptr) wine_cuMemDiscardAndPrefetchBatchAsync
+@ stdcall cuMemDiscardAndPrefetchBatchAsync_ptsz(ptr ptr long ptr ptr long long ptr) wine_cuMemDiscardAndPrefetchBatchAsync_ptsz
+@ stdcall cuDeviceGetP2PAtomicCapabilities(ptr ptr long long long) wine_cuDeviceGetP2PAtomicCapabilities

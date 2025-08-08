@@ -55,6 +55,7 @@ extern void wine_cuCtxGetFlags(void);
 extern void wine_cuCtxSetCurrent(void);
 extern void wine_cuCtxGetCurrent(void);
 extern void wine_cuCtxDetach(void);
+extern void wine_cuCtxAttach(void);
 extern void wine_cuCtxGetApiVersion(void);
 extern void wine_cuCtxGetDevice(void);
 extern void wine_cuCtxGetDevice_v2(void);
@@ -672,16 +673,24 @@ extern void wine_cuMemDiscardBatchAsync_ptsz(void);
 extern void wine_cuMemDiscardAndPrefetchBatchAsync(void);
 extern void wine_cuMemDiscardAndPrefetchBatchAsync_ptsz(void);
 extern void wine_cuDeviceGetP2PAtomicCapabilities(void);
+extern void wine_cuDeviceComputeCapability(void);
+extern void wine_cuFuncSetBlockShape(void);
+extern void wine_cuFuncSetSharedSize(void);
+extern void wine_cuParamSetSize(void);
+extern void wine_cuLaunchGridAsync(void);
+extern void wine_cuModuleLoadDataEx(void);
 
 const FunctionMapping mappings[] =
 {
     {"cuGetProcAddress", 11030, 0, wine_cuGetProcAddress},
     {"cuGetProcAddress", 12000, 0, wine_cuGetProcAddress_v2},
+    {"cuGetProcAddress", 13000, 0, wine_cuGetProcAddress_v2},
     {"cuInit", 2000, 0, wine_cuInit},
     {"cuDeviceGet", 2000, 0, wine_cuDeviceGet},
     {"cuDeviceGet", 12020, 0, wine_cuDeviceGet},
     {"cuDeviceGet", 12030, 0, wine_cuDeviceGet},
     {"cuDeviceGet", 12080, 0, wine_cuDeviceGet},
+    {"cuDeviceGet", 13000, 0, wine_cuDeviceGet},
     {"cuDeviceGetCount", 2000, 0, wine_cuDeviceGetCount},
     {"cuDeviceGetName", 2000, 0, wine_cuDeviceGetName},
     {"cuDeviceGetName", 12020, 0, wine_cuDeviceGetName},
@@ -705,6 +714,7 @@ const FunctionMapping mappings[] =
     {"cuDevicePrimaryCtxRetain", 7000, 0, wine_cuDevicePrimaryCtxRetain},
     {"cuDevicePrimaryCtxRelease", 7000, 0, wine_cuDevicePrimaryCtxRelease},
     {"cuDevicePrimaryCtxRelease", 11000, 0, wine_cuDevicePrimaryCtxRelease_v2},
+    {"cuDevicePrimaryCtxSetFlags", 7000, 0, wine_cuDevicePrimaryCtxSetFlags},
     {"cuDevicePrimaryCtxSetFlags", 11000, 0, wine_cuDevicePrimaryCtxSetFlags_v2},
     {"cuDevicePrimaryCtxGetState", 7000, 0, wine_cuDevicePrimaryCtxGetState},
     {"cuDevicePrimaryCtxReset", 7000, 0, wine_cuDevicePrimaryCtxReset},
@@ -717,6 +727,7 @@ const FunctionMapping mappings[] =
     {"cuCtxSetCurrent", 4000, 0, wine_cuCtxSetCurrent},
     {"cuCtxGetCurrent", 4000, 0, wine_cuCtxGetCurrent},
     {"cuCtxDetach", 2000, 0, wine_cuCtxDetach},
+    {"cuCtxAttach", 2000, 0, wine_cuCtxAttach},
     {"cuCtxGetApiVersion", 3020, 0, wine_cuCtxGetApiVersion},
     {"cuCtxGetDevice", 2000, 0, wine_cuCtxGetDevice},
     {"cuCtxGetDevice", 13000, 0, wine_cuCtxGetDevice_v2},
@@ -821,6 +832,7 @@ const FunctionMapping mappings[] =
     {"cuMemcpyDtoHAsync", 2000, 0, wine_cuMemcpyDtoHAsync},
     {"cuMemcpyDtoHAsync", 3020, 0, wine_cuMemcpyDtoHAsync_v2},
     {"cuMemcpyDtoHAsync", 7000, 2, wine_cuMemcpyDtoHAsync_v2_ptsz},
+    {"cuMemcpyDtoD", 2000, 0, wine_cuMemcpyDtoD},
     {"cuMemcpyDtoD", 3000, 0, wine_cuMemcpyDtoD},
     {"cuMemcpyDtoD", 3020, 0, wine_cuMemcpyDtoD_v2},
     {"cuMemcpyDtoD", 7000, 2, wine_cuMemcpyDtoD_v2_ptds},
@@ -1034,6 +1046,7 @@ const FunctionMapping mappings[] =
     {"cuD3D9GetDevice", 2000, 0, wine_cuD3D9GetDevice},
     {"cuGraphicsD3D9RegisterResource", 3000, 0, wine_cuGraphicsD3D9RegisterResource},
     {"cuGetExportTable", 3000, 0, wine_cuGetExportTable},
+    {"cuGetExportTable", 13000, 0, wine_cuGetExportTable},
     {"cuOccupancyMaxActiveBlocksPerMultiprocessor", 6050, 0, wine_cuOccupancyMaxActiveBlocksPerMultiprocessor},
     {"cuOccupancyMaxActiveBlocksPerMultiprocessorWithFlags", 7000, 0, wine_cuOccupancyMaxActiveBlocksPerMultiprocessorWithFlags},
     {"cuOccupancyAvailableDynamicSMemPerBlock", 10020, 0, wine_cuOccupancyAvailableDynamicSMemPerBlock},
@@ -1333,6 +1346,12 @@ const FunctionMapping mappings[] =
     {"cuMemDiscardAndPrefetchBatchAsync", 13000, 0, wine_cuMemDiscardAndPrefetchBatchAsync},
     {"cuMemDiscardAndPrefetchBatchAsync", 13000, 2, wine_cuMemDiscardAndPrefetchBatchAsync_ptsz},
     {"cuDeviceGetP2PAtomicCapabilities", 13000, 0, wine_cuDeviceGetP2PAtomicCapabilities},
+    {"cuDeviceComputeCapability", 2000, 0, wine_cuDeviceComputeCapability},
+    {"cuFuncSetBlockShape", 2000, 0, wine_cuFuncSetBlockShape},
+    {"cuFuncSetSharedSize", 2000, 0, wine_cuFuncSetSharedSize},
+    {"cuParamSetSize", 2000, 0, wine_cuParamSetSize},
+    {"cuLaunchGridAsync", 2000, 0, wine_cuLaunchGridAsync},
+    {"cuModuleLoadDataEx", 2010, 0, wine_cuModuleLoadDataEx},
 };
 
 const size_t mappings_count = sizeof(mappings) / sizeof(mappings[0]);
