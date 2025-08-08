@@ -205,6 +205,7 @@ struct Relay1_table
     void* (WINAPI *func8)(void *param0, void *param1);
     void* (WINAPI *func9)(void *param0, void *param1);
     void* (WINAPI *func10)(void *param0, void *param1);
+    void* (WINAPI *func11)(void *param0, void *param1);
 };
 static const struct
 {
@@ -220,6 +221,7 @@ static const struct
     void* (*func8)(void *param0, void *param1);
     void* (*func9)(void *param0, void *param1);
     void* (*func10)(void *param0, void *param1);
+    void* (*func11)(void *param0, void *param1);
 } *Relay1_orig = NULL;
 
 /*
@@ -611,6 +613,8 @@ struct Relay9_table
     void* (WINAPI *func93)(void *param0, void *param1);
     void* (WINAPI *func94)(void *param0, void *param1);
     void* (WINAPI *func95)(void *param0, void *param1);
+    void* (WINAPI *func96)(void *param0, void *param1);
+    void* (WINAPI *func97)(void *param0, void *param1);
 };
 static const struct
 {
@@ -711,6 +715,8 @@ static const struct
     void* (*func93)(void *param0, void *param1);
     void* (*func94)(void *param0, void *param1);
     void* (*func95)(void *param0, void *param1);
+    void* (*func96)(void *param0, void *param1);
+    void* (*func97)(void *param0, void *param1);
 } *Relay9_orig = NULL;
 
 /*
@@ -723,6 +729,16 @@ struct Relay10_table
     void* (WINAPI *func1)(void *param0, void *param1);
     void* (WINAPI *func2)(void);
     void* (WINAPI *func3)(void *param0);
+    void* (WINAPI *func4)(void *param0, void *param1);
+    void* (WINAPI *func5)(void *param0, void *param1);
+    void* (WINAPI *func6)(void *param0, void *param1);
+    void* (WINAPI *func7)(void *param0, void *param1);
+    void* (WINAPI *func8)(void *param0, void *param1);
+    void* (WINAPI *func9)(void *param0, void *param1);
+    void* (WINAPI *func10)(void *param0, void *param1);
+    void* (WINAPI *func11)(void *param0, void *param1);
+    void* (WINAPI *func12)(void *param0, void *param1);
+    void* (WINAPI *func13)(void *param0, void *param1);
 };
 static const struct
 {
@@ -731,6 +747,16 @@ static const struct
     void* (*func1)(void *param0, void *param1);
     void* (*func2)(void);
     void* (*func3)(void *param0);
+    void* (*func4)(void *param0, void *param1);
+    void* (*func5)(void *param0, void *param1);
+    void* (*func6)(void *param0, void *param1);
+    void* (*func7)(void *param0, void *param1);
+    void* (*func8)(void *param0, void *param1);
+    void* (*func9)(void *param0, void *param1);
+    void* (*func10)(void *param0, void *param1);
+    void* (*func11)(void *param0, void *param1);
+    void* (*func12)(void *param0, void *param1);
+    void* (*func13)(void *param0, void *param1);
 } *Relay10_orig = NULL;
 
 /*
@@ -875,6 +901,12 @@ static void* WINAPI Relay1_func10(void *param0, void *param1)
     return Relay1_orig->func10(param0, param1);
 }
 
+static void* WINAPI Relay1_func11(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay1_orig->func11(param0, param1);
+}
+
 static struct Relay1_table Relay1_Impl =
 {
     sizeof(struct Relay1_table),
@@ -889,6 +921,7 @@ static struct Relay1_table Relay1_Impl =
     Relay1_func8,
     Relay1_func9,
     Relay1_func10,
+    Relay1_func11,
 };
 
 static void* WINAPI Relay2_func0(void *param0, void *param1)
@@ -2379,6 +2412,18 @@ static void* WINAPI Relay9_func95(void *param0, void *param1)
     return Relay9_orig->func95(param0, param1);
 }
 
+static void* WINAPI Relay9_func96(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay9_orig->func96(param0, param1);
+}
+
+static void* WINAPI Relay9_func97(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay9_orig->func97(param0, param1);
+}
+
 static struct Relay9_table Relay9_Impl =
 {
     sizeof(struct Relay9_table),
@@ -2478,6 +2523,8 @@ static struct Relay9_table Relay9_Impl =
     Relay9_func93,
     Relay9_func94,
     Relay9_func95,
+    Relay9_func96,
+    Relay9_func97,
 };
 
 static void* WINAPI Relay10_func0(void *param0)
@@ -2504,6 +2551,66 @@ static void* WINAPI Relay10_func3(void *param0)
     return Relay10_orig->func3(param0);
 }
 
+static void* WINAPI Relay10_func4(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay10_orig->func4(param0, param1);
+}
+
+static void* WINAPI Relay10_func5(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay10_orig->func5(param0, param1);
+}
+
+static void* WINAPI Relay10_func6(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay10_orig->func6(param0, param1);
+}
+
+static void* WINAPI Relay10_func7(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay10_orig->func7(param0, param1);
+}
+
+static void* WINAPI Relay10_func8(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay10_orig->func8(param0, param1);
+}
+
+static void* WINAPI Relay10_func9(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay10_orig->func9(param0, param1);
+}
+
+static void* WINAPI Relay10_func10(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay10_orig->func10(param0, param1);
+}
+
+static void* WINAPI Relay10_func11(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay10_orig->func11(param0, param1);
+}
+
+static void* WINAPI Relay10_func12(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay10_orig->func12(param0, param1);
+}
+
+static void* WINAPI Relay10_func13(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay10_orig->func13(param0, param1);
+}
+
 static struct Relay10_table Relay10_Impl =
 {
     sizeof(struct Relay10_table),
@@ -2511,6 +2618,16 @@ static struct Relay10_table Relay10_Impl =
     Relay10_func1,
     Relay10_func2,
     Relay10_func3,
+    Relay10_func4,
+    Relay10_func5,
+    Relay10_func6,
+    Relay10_func7,
+    Relay10_func8,
+    Relay10_func9,
+    Relay10_func10,
+    Relay10_func11,
+    Relay10_func12,
+    Relay10_func13,
 };
 
 static void* WINAPI OpticalFlow_func0(void *param0)
