@@ -806,6 +806,26 @@ static CUresult (*pcuLogsUnregisterCallback)(CUlogsCallbackHandle callback);
 static CUresult (*pcuLogsCurrent)(CUlogIterator* iterator, unsigned int flags);
 static CUresult (*pcuLogsDumpToFile)(CUlogIterator* iterator, const char* pathToFile, unsigned int flags);
 static CUresult (*pcuLogsDumpToMemory)(CUlogIterator* iterator, char* buffer, size_t* size, unsigned int flags);
+static CUresult (*pcuGreenCtxGetId)(CUgreenCtx greenCtx, unsigned long long *greenCtxId);
+
+/* Cuda 13*/
+static CUresult (*pcuDeviceGetHostAtomicCapabilities)(unsigned int* capabilities, const CUatomicOperation* operations, unsigned int count, CUdevice dev);
+static CUresult (*pcuCtxGetDevice_v2)(CUdevice* device, CUcontext ctx);
+static CUresult (*pcuCtxSynchronize_v2)(CUcontext ctx);
+static CUresult (*pcuMemcpyBatchAsync_v2)(CUdeviceptr_v2* dsts, CUdeviceptr_v2* srcs, size_t* sizes, size_t count, CUmemcpyAttributes_v1* attrs, size_t* attrIdxs, size_t numAttrs, CUstream hStream);
+static CUresult (*pcuMemcpyBatchAsync_v2_ptsz)(CUdeviceptr_v2* dsts, CUdeviceptr_v2* srcs, size_t* sizes, size_t count, CUmemcpyAttributes_v1* attrs, size_t* attrIdxs, size_t numAttrs, CUstream hStream);
+static CUresult (*pcuMemcpy3DBatchAsync_v2)(size_t numParams, CUDA_MEMCPY3D_BATCH_OP_v1* opList, unsigned long long flags, CUstream hStream);
+static CUresult (*pcuMemcpy3DBatchAsync_v2_ptsz)(size_t numParams, CUDA_MEMCPY3D_BATCH_OP_v1* opList, unsigned long long flags, CUstream hStream);
+static CUresult (*pcuMemGetDefaultMemPool)(CUmemoryPool* pool_out, CUmemLocation* location, CUmemAllocationType type);
+static CUresult (*pcuMemGetMemPool)(CUmemoryPool* pool_out, CUmemLocation* location, CUmemAllocationType type);
+static CUresult (*pcuMemSetMemPool)(CUmemLocation* location, CUmemAllocationType type, CUmemoryPool pool);
+static CUresult (*pcuMemPrefetchBatchAsync)(CUdeviceptr_v2* dptrs, size_t* sizes, size_t count, CUmemLocation_v1* prefetchLocs, size_t* prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, CUstream hStream);
+static CUresult (*pcuMemPrefetchBatchAsync_ptsz)(CUdeviceptr_v2* dptrs, size_t* sizes, size_t count, CUmemLocation_v1* prefetchLocs, size_t* prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, CUstream hStream);
+static CUresult (*pcuMemDiscardBatchAsync)(CUdeviceptr_v2* dptrs, size_t* sizes, size_t count, unsigned long long flags, CUstream hStream);
+static CUresult (*pcuMemDiscardBatchAsync_ptsz)(CUdeviceptr_v2* dptrs, size_t* sizes, size_t count, unsigned long long flags, CUstream hStream);
+static CUresult (*pcuMemDiscardAndPrefetchBatchAsync)(CUdeviceptr_v2* dptrs, size_t* sizes, size_t count, CUmemLocation_v1* prefetchLocs, size_t* prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, CUstream hStream);
+static CUresult (*pcuMemDiscardAndPrefetchBatchAsync_ptsz)(CUdeviceptr_v2* dptrs, size_t* sizes, size_t count, CUmemLocation_v1* prefetchLocs, size_t* prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, CUstream hStream);
+static CUresult (*pcuDeviceGetP2PAtomicCapabilities)(unsigned int* capabilities, const CUatomicOperation* operations, unsigned int count, CUdevice srcDevice, CUdevice dstDevice);
 
 static void *cuda_handle = NULL;
 
@@ -1463,6 +1483,26 @@ static BOOL load_functions(void)
     TRY_LOAD_FUNCPTR(cuLogsCurrent);
     TRY_LOAD_FUNCPTR(cuLogsDumpToFile);
     TRY_LOAD_FUNCPTR(cuLogsDumpToMemory);
+    TRY_LOAD_FUNCPTR(cuGreenCtxGetId);
+
+    /* Cuda 13*/
+    TRY_LOAD_FUNCPTR(cuDeviceGetHostAtomicCapabilities);
+    TRY_LOAD_FUNCPTR(cuCtxGetDevice_v2);
+    TRY_LOAD_FUNCPTR(cuCtxSynchronize_v2);
+    TRY_LOAD_FUNCPTR(cuMemcpyBatchAsync_v2);
+    TRY_LOAD_FUNCPTR(cuMemcpyBatchAsync_v2_ptsz);
+    TRY_LOAD_FUNCPTR(cuMemcpy3DBatchAsync_v2);
+    TRY_LOAD_FUNCPTR(cuMemcpy3DBatchAsync_v2_ptsz);
+    TRY_LOAD_FUNCPTR(cuMemGetDefaultMemPool);
+    TRY_LOAD_FUNCPTR(cuMemGetMemPool);
+    TRY_LOAD_FUNCPTR(cuMemSetMemPool);
+    TRY_LOAD_FUNCPTR(cuMemPrefetchBatchAsync);
+    TRY_LOAD_FUNCPTR(cuMemPrefetchBatchAsync_ptsz);
+    TRY_LOAD_FUNCPTR(cuMemDiscardBatchAsync);
+    TRY_LOAD_FUNCPTR(cuMemDiscardBatchAsync_ptsz);
+    TRY_LOAD_FUNCPTR(cuMemDiscardAndPrefetchBatchAsync);
+    TRY_LOAD_FUNCPTR(cuMemDiscardAndPrefetchBatchAsync_ptsz);
+    TRY_LOAD_FUNCPTR(cuDeviceGetP2PAtomicCapabilities);
 
     #undef LOAD_FUNCPTR
     #undef TRY_LOAD_FUNCPTR
@@ -5775,6 +5815,134 @@ CUresult WINAPI wine_cuLogsDumpToMemory(CUlogIterator* iterator, char* buffer, s
     TRACE("(%p, %p, %p, %u)\n", iterator, buffer, size, flags);
     CHECK_FUNCPTR(cuLogsDumpToMemory);
     return pcuLogsDumpToMemory(iterator, buffer, size, flags);
+}
+
+CUresult WINAPI wine_cuGreenCtxGetId(CUgreenCtx greenCtx, unsigned long long *greenCtxId)
+{
+    TRACE("(%p,%llu)\n", greenCtx, *greenCtxId);
+    CHECK_FUNCPTR(cuGreenCtxGetId);
+    return pcuGreenCtxGetId(greenCtx, greenCtxId);
+}
+
+/* Cuda 13 */
+
+CUresult WINAPI wine_cuDeviceGetHostAtomicCapabilities(unsigned int* capabilities, const CUatomicOperation* operations, unsigned int count, CUdevice dev)
+{
+    TRACE("(%u, %p, %u, %d)\n", *capabilities, operations, count, dev);
+    CHECK_FUNCPTR(cuDeviceGetHostAtomicCapabilities);
+    return pcuDeviceGetHostAtomicCapabilities(capabilities, operations, count, dev);
+}
+
+CUresult WINAPI wine_cuCtxGetDevice_v2(CUdevice* device, CUcontext ctx)
+{
+    TRACE("(%p, %p)\n", device, ctx);
+    CHECK_FUNCPTR(cuCtxGetDevice_v2);
+    return pcuCtxGetDevice_v2(device, ctx);
+}
+
+CUresult WINAPI wine_cuCtxSynchronize_v2(CUcontext ctx)
+{
+    TRACE("(%p)\n", ctx);
+    CHECK_FUNCPTR(cuCtxSynchronize_v2);
+    return pcuCtxSynchronize_v2(ctx);
+}
+
+CUresult WINAPI wine_cuMemcpyBatchAsync_v2(CUdeviceptr_v2* dsts, CUdeviceptr_v2* srcs, size_t* sizes, size_t count, CUmemcpyAttributes_v1* attrs, size_t* attrIdxs, size_t numAttrs, CUstream hStream)
+{
+    TRACE("(%p, %p, %p, %zu, %p, %p, %zu, %p)\n", dsts, srcs, sizes, count, attrs, attrIdxs, numAttrs, hStream);
+    CHECK_FUNCPTR(cuMemcpyBatchAsync_v2);
+    return pcuMemcpyBatchAsync_v2(dsts, srcs, sizes, count, attrs, attrIdxs, numAttrs, hStream);
+}
+
+CUresult WINAPI wine_cuMemcpyBatchAsync_v2_ptsz(CUdeviceptr_v2* dsts, CUdeviceptr_v2* srcs, size_t* sizes, size_t count, CUmemcpyAttributes_v1* attrs, size_t* attrIdxs, size_t numAttrs, CUstream hStream)
+{
+    TRACE("(%p, %p, %p, %zu, %p, %p, %zu, %p)\n", dsts, srcs, sizes, count, attrs, attrIdxs, numAttrs, hStream);
+    CHECK_FUNCPTR(cuMemcpyBatchAsync_v2_ptsz);
+    return pcuMemcpyBatchAsync_v2_ptsz(dsts, srcs, sizes, count, attrs, attrIdxs, numAttrs, hStream);
+}
+
+CUresult WINAPI wine_cuMemcpy3DBatchAsync_v2(size_t numParams, CUDA_MEMCPY3D_BATCH_OP_v1* opList, unsigned long long flags, CUstream hStream)
+{
+    TRACE("(%zu, %p, %llu, %p)\n", numParams, opList, flags, hStream);
+    CHECK_FUNCPTR(cuMemcpy3DBatchAsync_v2);
+    return pcuMemcpy3DBatchAsync_v2(numParams, opList, flags, hStream);
+}
+
+CUresult WINAPI wine_cuMemcpy3DBatchAsync_v2_ptsz(size_t numParams, CUDA_MEMCPY3D_BATCH_OP_v1* opList, unsigned long long flags, CUstream hStream)
+{
+    TRACE("(%zu, %p, %llu, %p)\n", numParams, opList, flags, hStream);
+    CHECK_FUNCPTR(cuMemcpy3DBatchAsync_v2_ptsz);
+    return pcuMemcpy3DBatchAsync_v2_ptsz(numParams, opList, flags, hStream);
+}
+
+CUresult WINAPI wine_cuMemGetDefaultMemPool(CUmemoryPool* pool_out, CUmemLocation* location, CUmemAllocationType type)
+{
+    TRACE("(%p, %p, %p)\n", pool_out, location, type);
+    CHECK_FUNCPTR(cuMemGetDefaultMemPool);
+    return pcuMemGetDefaultMemPool(pool_out, location, type);
+}
+
+CUresult WINAPI wine_cuMemGetMemPool(CUmemoryPool* pool_out, CUmemLocation* location, CUmemAllocationType type)
+{
+    TRACE("(%p, %p, %p)\n", pool_out, location, type);
+    CHECK_FUNCPTR(cuMemGetMemPool);
+    return pcuMemGetMemPool(pool_out, location, type);
+}
+
+CUresult WINAPI wine_cuMemSetMemPool(CUmemLocation* location, CUmemAllocationType type, CUmemoryPool pool)
+{
+    TRACE("(%p, %p, %p)\n", location, type, pool);
+    CHECK_FUNCPTR(cuMemSetMemPool);
+    return pcuMemSetMemPool(location, type, pool);
+}
+
+CUresult WINAPI wine_cuMemPrefetchBatchAsync(CUdeviceptr_v2* dptrs, size_t* sizes, size_t count, CUmemLocation_v1* prefetchLocs, size_t* prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, CUstream hStream)
+{
+    TRACE("(%p, %p, %zu, %p, %p, %zu, %llu, %p)\n", dptrs, sizes, count, prefetchLocs, prefetchLocIdxs, numPrefetchLocs, flags, hStream);
+    CHECK_FUNCPTR(cuMemPrefetchBatchAsync);
+    return pcuMemPrefetchBatchAsync(dptrs, sizes, count, prefetchLocs, prefetchLocIdxs, numPrefetchLocs, flags, hStream);
+}
+
+CUresult WINAPI wine_cuMemPrefetchBatchAsync_ptsz(CUdeviceptr_v2* dptrs, size_t* sizes, size_t count, CUmemLocation_v1* prefetchLocs, size_t* prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, CUstream hStream)
+{
+    TRACE("(%p, %p, %zu, %p, %p, %zu, %llu, %p)\n", dptrs, sizes, count, prefetchLocs, prefetchLocIdxs, numPrefetchLocs, flags, hStream);
+    CHECK_FUNCPTR(cuMemPrefetchBatchAsync_ptsz);
+    return pcuMemPrefetchBatchAsync_ptsz(dptrs, sizes, count, prefetchLocs, prefetchLocIdxs, numPrefetchLocs, flags, hStream);
+}
+
+CUresult WINAPI wine_cuMemDiscardBatchAsync(CUdeviceptr_v2* dptrs, size_t* sizes, size_t count, unsigned long long flags, CUstream hStream)
+{
+    TRACE("(%p, %p, %zu, %llu, %p)\n", dptrs, sizes, count, flags, hStream);
+    CHECK_FUNCPTR(cuMemDiscardBatchAsync);
+    return pcuMemDiscardBatchAsync(dptrs, sizes, count, flags, hStream);
+}
+
+CUresult WINAPI wine_cuMemDiscardBatchAsync_ptsz(CUdeviceptr_v2* dptrs, size_t* sizes, size_t count, unsigned long long flags, CUstream hStream)
+{
+    TRACE("(%p, %p, %zu, %llu, %p)\n", dptrs, sizes, count, flags, hStream);
+    CHECK_FUNCPTR(cuMemDiscardBatchAsync_ptsz);
+    return pcuMemDiscardBatchAsync_ptsz(dptrs, sizes, count, flags, hStream);
+}
+
+CUresult WINAPI wine_cuMemDiscardAndPrefetchBatchAsync(CUdeviceptr_v2* dptrs, size_t* sizes, size_t count, CUmemLocation_v1* prefetchLocs, size_t* prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, CUstream hStream)
+{
+    TRACE("(%p, %p, %zu, %p, %p, %zu, %llu, %p)\n", dptrs, sizes, count, prefetchLocs, prefetchLocIdxs, numPrefetchLocs, flags, hStream);
+    CHECK_FUNCPTR(cuMemDiscardAndPrefetchBatchAsync);
+    return pcuMemDiscardAndPrefetchBatchAsync(dptrs, sizes, count, prefetchLocs, prefetchLocIdxs, numPrefetchLocs, flags, hStream);
+}
+
+CUresult WINAPI wine_cuMemDiscardAndPrefetchBatchAsync_ptsz(CUdeviceptr_v2* dptrs, size_t* sizes, size_t count, CUmemLocation_v1* prefetchLocs, size_t* prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, CUstream hStream)
+{
+    TRACE("(%p, %p, %zu, %p, %p, %zu, %llu, %p)\n", dptrs, sizes, count, prefetchLocs, prefetchLocIdxs, numPrefetchLocs, flags, hStream);
+    CHECK_FUNCPTR(cuMemDiscardAndPrefetchBatchAsync_ptsz);
+    return pcuMemDiscardAndPrefetchBatchAsync_ptsz(dptrs, sizes, count, prefetchLocs, prefetchLocIdxs, numPrefetchLocs, flags, hStream);
+}
+
+CUresult WINAPI wine_cuDeviceGetP2PAtomicCapabilities(unsigned int* capabilities, const CUatomicOperation* operations, unsigned int count, CUdevice srcDevice, CUdevice dstDevice)
+{
+    TRACE("(%u, %p, %u, %d, %d)\n", *capabilities, operations, count, srcDevice, dstDevice);
+    CHECK_FUNCPTR(cuDeviceGetP2PAtomicCapabilities);
+    return pcuDeviceGetP2PAtomicCapabilities(capabilities, operations, count, srcDevice, dstDevice);
 }
 
 #undef CHECK_FUNCPTR

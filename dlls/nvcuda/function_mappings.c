@@ -57,6 +57,7 @@ extern void wine_cuCtxGetCurrent(void);
 extern void wine_cuCtxDetach(void);
 extern void wine_cuCtxGetApiVersion(void);
 extern void wine_cuCtxGetDevice(void);
+extern void wine_cuCtxGetDevice_v2(void);
 extern void wine_cuCtxGetLimit(void);
 extern void wine_cuCtxSetLimit(void);
 extern void wine_cuCtxGetCacheConfig(void);
@@ -65,6 +66,7 @@ extern void wine_cuCtxGetSharedMemConfig(void);
 extern void wine_cuCtxSetSharedMemConfig(void);
 extern void wine_cuCtxGetStreamPriorityRange(void);
 extern void wine_cuCtxSynchronize(void);
+extern void wine_cuCtxSynchronize_v2(void);
 extern void wine_cuCtxResetPersistingL2Cache(void);
 extern void wine_cuCtxPopCurrent(void);
 extern void wine_cuCtxPopCurrent_v2(void);
@@ -635,8 +637,12 @@ extern void wine_cuMemBatchDecompressAsync(void);
 extern void wine_cuMemBatchDecompressAsync_ptsz(void);
 extern void wine_cuMemcpyBatchAsync(void);
 extern void wine_cuMemcpyBatchAsync_ptsz(void);
+extern void wine_cuMemcpyBatchAsync_v2(void);
+extern void wine_cuMemcpyBatchAsync_v2_ptsz(void);
 extern void wine_cuMemcpy3DBatchAsync(void);
 extern void wine_cuMemcpy3DBatchAsync_ptsz(void);
+extern void wine_cuMemcpy3DBatchAsync_v2(void);
+extern void wine_cuMemcpy3DBatchAsync_v2_ptsz(void);
 extern void wine_cuStreamGetDevice(void);
 extern void wine_cuStreamGetDevice_ptsz(void);
 extern void wine_cuEventElapsedTime_v2(void);
@@ -654,6 +660,18 @@ extern void wine_cuLogsDumpToFile(void);
 extern void wine_cuLogsDumpToMemory(void);
 extern void wine_cuD3D11CtxCreate(void);
 extern void wine_cuD3D11CtxCreate_v2(void);
+extern void wine_cuGreenCtxGetId(void);
+extern void wine_cuDeviceGetHostAtomicCapabilities(void);
+extern void wine_cuMemGetDefaultMemPool(void);
+extern void wine_cuMemGetMemPool(void);
+extern void wine_cuMemSetMemPool(void);
+extern void wine_cuMemPrefetchBatchAsync(void);
+extern void wine_cuMemPrefetchBatchAsync_ptsz(void);
+extern void wine_cuMemDiscardBatchAsync(void);
+extern void wine_cuMemDiscardBatchAsync_ptsz(void);
+extern void wine_cuMemDiscardAndPrefetchBatchAsync(void);
+extern void wine_cuMemDiscardAndPrefetchBatchAsync_ptsz(void);
+extern void wine_cuDeviceGetP2PAtomicCapabilities(void);
 
 const FunctionMapping mappings[] =
 {
@@ -701,6 +719,7 @@ const FunctionMapping mappings[] =
     {"cuCtxDetach", 2000, 0, wine_cuCtxDetach},
     {"cuCtxGetApiVersion", 3020, 0, wine_cuCtxGetApiVersion},
     {"cuCtxGetDevice", 2000, 0, wine_cuCtxGetDevice},
+    {"cuCtxGetDevice", 13000, 0, wine_cuCtxGetDevice_v2},
     {"cuCtxGetLimit", 3010, 0, wine_cuCtxGetLimit},
     {"cuCtxSetLimit", 3010, 0, wine_cuCtxSetLimit},
     {"cuCtxGetCacheConfig", 3020, 0, wine_cuCtxGetCacheConfig},
@@ -709,6 +728,7 @@ const FunctionMapping mappings[] =
     {"cuCtxGetStreamPriorityRange", 5050, 0, wine_cuCtxGetStreamPriorityRange},
     {"cuCtxSetSharedMemConfig", 4020, 0, wine_cuCtxSetSharedMemConfig},
     {"cuCtxSynchronize", 2000, 0, wine_cuCtxSynchronize},
+    {"cuCtxSynchronize", 13000, 0, wine_cuCtxSynchronize_v2},
     {"cuCtxResetPersistingL2Cache", 11000, 0, wine_cuCtxResetPersistingL2Cache},
     {"cuCtxPopCurrent", 2000, 0, wine_cuCtxPopCurrent},
     {"cuCtxPopCurrent", 4000, 0, wine_cuCtxPopCurrent_v2},
@@ -1279,8 +1299,12 @@ const FunctionMapping mappings[] =
     {"cuMemBatchDecompressAsync", 12060, 2, wine_cuMemBatchDecompressAsync_ptsz},
     {"cuMemcpyBatchAsync", 12080, 0, wine_cuMemcpyBatchAsync},
     {"cuMemcpyBatchAsync", 12080, 2, wine_cuMemcpyBatchAsync_ptsz},
+    {"cuMemcpyBatchAsync", 13000, 0, wine_cuMemcpyBatchAsync_v2},
+    {"cuMemcpyBatchAsync", 13000, 2, wine_cuMemcpyBatchAsync_v2_ptsz},
     {"cuMemcpy3DBatchAsync", 12080, 0, wine_cuMemcpy3DBatchAsync},
     {"cuMemcpy3DBatchAsync", 12080, 2, wine_cuMemcpy3DBatchAsync_ptsz},
+    {"cuMemcpy3DBatchAsync", 13000, 0, wine_cuMemcpy3DBatchAsync_v2},
+    {"cuMemcpy3DBatchAsync", 13000, 2, wine_cuMemcpy3DBatchAsync_v2_ptsz},
     {"cuStreamGetDevice", 12080, 0, wine_cuStreamGetDevice},
     {"cuStreamGetDevice", 12080, 2, wine_cuStreamGetDevice_ptsz},
     {"cuTensorMapEncodeIm2colWide", 12080, 0, wine_cuTensorMapEncodeIm2colWide},
@@ -1297,6 +1321,18 @@ const FunctionMapping mappings[] =
     {"cuLogsDumpToMemory", 12090, 0, wine_cuLogsDumpToMemory},
     {"cuD3D11CtxCreate", 3000, 0, wine_cuD3D11CtxCreate},
     {"cuD3D11CtxCreate", 3020, 0, wine_cuD3D11CtxCreate_v2},
+    {"cuGreenCtxGetId", 12090, 0, wine_cuGreenCtxGetId},
+    {"cuDeviceGetHostAtomicCapabilities", 13000, 0, wine_cuDeviceGetHostAtomicCapabilities},
+    {"cuMemGetDefaultMemPool", 13000, 0, wine_cuMemGetDefaultMemPool},
+    {"cuMemGetMemPool", 13000, 0, wine_cuMemGetMemPool},
+    {"cuMemSetMemPool", 13000, 0, wine_cuMemSetMemPool},
+    {"cuMemPrefetchBatchAsync", 13000, 0, wine_cuMemPrefetchBatchAsync},
+    {"cuMemPrefetchBatchAsync", 13000, 2, wine_cuMemPrefetchBatchAsync_ptsz},
+    {"cuMemDiscardBatchAsync", 13000, 0, wine_cuMemDiscardBatchAsync},
+    {"cuMemDiscardBatchAsync", 13000, 2, wine_cuMemDiscardBatchAsync_ptsz},
+    {"cuMemDiscardAndPrefetchBatchAsync", 13000, 0, wine_cuMemDiscardAndPrefetchBatchAsync},
+    {"cuMemDiscardAndPrefetchBatchAsync", 13000, 2, wine_cuMemDiscardAndPrefetchBatchAsync_ptsz},
+    {"cuDeviceGetP2PAtomicCapabilities", 13000, 0, wine_cuDeviceGetP2PAtomicCapabilities},
 };
 
 const size_t mappings_count = sizeof(mappings) / sizeof(mappings[0]);

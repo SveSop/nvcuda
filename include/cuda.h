@@ -140,8 +140,8 @@ typedef void (CUDA_CB *CUhostFn)(void *userData);
 typedef void *CUlaunchConfig;
 typedef void *CUkernel;
 typedef void *CUgreenCtx;
-typedef void *CUmemcpyAttributes;
-typedef void *CUDA_MEMCPY3D_BATCH_OP;
+typedef void *CUmemcpyAttributes_v1;
+typedef void *CUDA_MEMCPY3D_BATCH_OP_v1;
 typedef void *CUtensorMap;
 typedef void *CUmemDecompressParams;
 typedef void *CUcheckpointLockArgs;
@@ -150,9 +150,14 @@ typedef void *CUcheckpointRestoreArgs;
 typedef void *CUcheckpointUnlockArgs;
 typedef void *CUlogsCallback;
 typedef void *CUlogsCallbackHandle;
+typedef void *CUmemLocation_v1;
+typedef void *CUmemAllocationType;
 
 typedef unsigned long long CUsurfObject;
 typedef unsigned long long CUtexObject;
+typedef CUmemcpyAttributes_v1 CUmemcpyAttributes;
+typedef CUDA_MEMCPY3D_BATCH_OP_v1 CUDA_MEMCPY3D_BATCH_OP;
+typedef CUmemLocation_v1 CUmemLocation;
 
 typedef enum CUexternalMemoryHandleType_enum
 {
@@ -195,6 +200,24 @@ typedef enum CUctx_flags_enum
     CU_CTX_SYNC_MEMOPS         = 0x80,
     CU_CTX_FLAGS_MASK          = 0xFF
 } CUctx_flags;
+
+typedef enum CUatomicOperation_enum
+{
+    CU_ATOMIC_OPERATION_INTEGER_ADD         = 0,
+    CU_ATOMIC_OPERATION_INTEGER_MIN         = 1,
+    CU_ATOMIC_OPERATION_INTEGER_MAX         = 2,
+    CU_ATOMIC_OPERATION_INTEGER_INCREMENT   = 3,
+    CU_ATOMIC_OPERATION_INTEGER_DECREMENT   = 4,
+    CU_ATOMIC_OPERATION_AND                 = 5,
+    CU_ATOMIC_OPERATION_OR                  = 6,
+    CU_ATOMIC_OPERATION_XOR                 = 7,
+    CU_ATOMIC_OPERATION_EXCHANGE            = 8,
+    CU_ATOMIC_OPERATION_CAS                 = 9,
+    CU_ATOMIC_OPERATION_FLOAT_ADD           = 10,
+    CU_ATOMIC_OPERATION_FLOAT_MIN           = 11,
+    CU_ATOMIC_OPERATION_FLOAT_MAX           = 12,
+    CU_ATOMIC_OPERATION_MAX
+} CUatomicOperation;
 
 typedef struct CUipcEventHandle_st
 {
