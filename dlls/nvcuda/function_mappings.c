@@ -679,6 +679,10 @@ extern void wine_cuFuncSetSharedSize(void);
 extern void wine_cuParamSetSize(void);
 extern void wine_cuLaunchGridAsync(void);
 extern void wine_cuModuleLoadDataEx(void);
+extern void wine_cuCoredumpGetAttribute(void);
+extern void wine_cuCoredumpGetAttributeGlobal(void);
+extern void wine_cuCoredumpSetAttribute(void);
+extern void wine_cuCoredumpSetAttributeGlobal(void);
 
 const FunctionMapping mappings[] =
 {
@@ -1352,6 +1356,10 @@ const FunctionMapping mappings[] =
     {"cuParamSetSize", 2000, 0, wine_cuParamSetSize},
     {"cuLaunchGridAsync", 2000, 0, wine_cuLaunchGridAsync},
     {"cuModuleLoadDataEx", 2010, 0, wine_cuModuleLoadDataEx},
+    {"cuCoredumpGetAttribute", 12010, 0, wine_cuCoredumpGetAttribute},
+    {"cuCoredumpGetAttributeGlobal", 12010, 0, wine_cuCoredumpGetAttributeGlobal},
+    {"cuCoredumpSetAttribute", 12010, 0, wine_cuCoredumpSetAttribute},
+    {"cuCoredumpSetAttributeGlobal", 12010, 0, wine_cuCoredumpSetAttributeGlobal},
 };
 
 const size_t mappings_count = sizeof(mappings) / sizeof(mappings[0]);

@@ -807,6 +807,10 @@ static CUresult (*pcuLogsCurrent)(CUlogIterator* iterator, unsigned int flags);
 static CUresult (*pcuLogsDumpToFile)(CUlogIterator* iterator, const char* pathToFile, unsigned int flags);
 static CUresult (*pcuLogsDumpToMemory)(CUlogIterator* iterator, char* buffer, size_t* size, unsigned int flags);
 static CUresult (*pcuGreenCtxGetId)(CUgreenCtx greenCtx, unsigned long long *greenCtxId);
+static CUresult (*pcuCoredumpGetAttribute)(void* get, void* value, size_t* size);
+static CUresult (*pcuCoredumpGetAttributeGlobal)(void* get, void* value, size_t* size);
+static CUresult (*pcuCoredumpSetAttribute)(void* set, void* value, size_t* size);
+static CUresult (*pcuCoredumpSetAttributeGlobal)(void* set, void* value, size_t* size);
 
 /* Cuda 13*/
 static CUresult (*pcuDeviceGetHostAtomicCapabilities)(unsigned int* capabilities, const CUatomicOperation* operations, unsigned int count, CUdevice dev);
@@ -1484,6 +1488,10 @@ static BOOL load_functions(void)
     TRY_LOAD_FUNCPTR(cuLogsDumpToFile);
     TRY_LOAD_FUNCPTR(cuLogsDumpToMemory);
     TRY_LOAD_FUNCPTR(cuGreenCtxGetId);
+    TRY_LOAD_FUNCPTR(cuCoredumpGetAttribute);
+    TRY_LOAD_FUNCPTR(cuCoredumpGetAttributeGlobal);
+    TRY_LOAD_FUNCPTR(cuCoredumpSetAttribute);
+    TRY_LOAD_FUNCPTR(cuCoredumpSetAttributeGlobal);
 
     /* Cuda 13*/
     TRY_LOAD_FUNCPTR(cuDeviceGetHostAtomicCapabilities);
@@ -5824,7 +5832,37 @@ CUresult WINAPI wine_cuGreenCtxGetId(CUgreenCtx greenCtx, unsigned long long* gr
     return pcuGreenCtxGetId(greenCtx, greenCtxId);
 }
 
-/* Cuda 13 */
+CUresult WINAPI wine_cuCoredumpGetAttribute(void* get, void* value, size_t* size)
+{
+    TRACE("(%p, %p, %p)\n", get, value, size);
+    CHECK_FUNCPTR(cuCoredumpGetAttribute);
+    return pcuCoredumpGetAttribute(get, value, size);
+}
+
+CUresult WINAPI wine_cuCoredumpGetAttributeGlobal(void* get, void* value, size_t* size)
+{
+    TRACE("(%p, %p, %p)\n", get, value, size);
+    CHECK_FUNCPTR(cuCoredumpGetAttributeGlobal);
+    return pcuCoredumpGetAttributeGlobal(get, value, size);
+}
+
+CUresult WINAPI wine_cuCoredumpSetAttribute(void* set, void* value, size_t* size)
+{
+    TRACE("(%p, %p, %p)\n", set, value, size);
+    CHECK_FUNCPTR(cuCoredumpSetAttribute);
+    return pcuCoredumpSetAttribute(set, value, size);
+}
+
+CUresult WINAPI wine_cuCoredumpSetAttributeGlobal(void* set, void* value, size_t* size)
+{
+    TRACE("(%p, %p, %p)\n", set, value, size);
+    CHECK_FUNCPTR(cuCoredumpSetAttributeGlobal);
+    return pcuCoredumpSetAttributeGlobal(set, value, size);
+}
+
+/*
+ * Additions in CUDA 13
+ */
 
 CUresult WINAPI wine_cuDeviceGetHostAtomicCapabilities(unsigned int* capabilities, const CUatomicOperation* operations, unsigned int count, CUdevice dev)
 {

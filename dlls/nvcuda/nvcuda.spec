@@ -407,7 +407,7 @@
 @ stdcall cuStreamDestroy(ptr) wine_cuStreamDestroy
 @ stdcall cuStreamDestroy_v2(ptr) wine_cuStreamDestroy_v2
 @ stdcall cuStreamEndCapture(ptr ptr) wine_cuStreamEndCapture
-@ stub cuStreamEndCapture_ptsz
+@ stdcall cuStreamEndCapture_ptsz(ptr ptr) wine_cuStreamEndCapture_ptsz
 @ stdcall cuStreamGetCaptureInfo(ptr ptr ptr) wine_cuStreamGetCaptureInfo
 @ stdcall cuStreamGetCaptureInfo_ptsz(ptr ptr ptr) wine_cuStreamGetCaptureInfo_ptsz
 @ stdcall cuStreamGetCaptureInfo_v2(ptr ptr ptr ptr ptr ptr) wine_cuStreamGetCaptureInfo_v2
@@ -655,10 +655,10 @@
 @ stdcall cuGraphInstantiateWithParams(ptr ptr ptr) wine_cuGraphInstantiateWithParams
 @ stdcall cuGraphInstantiateWithParams_ptsz(ptr ptr ptr) wine_cuGraphInstantiateWithParams_ptsz
 @ stdcall cuCtxSetFlags(long) wine_cuCtxSetFlags
-@ stub cuCoredumpGetAttribute
-@ stub cuCoredumpGetAttributeGlobal
-@ stub cuCoredumpSetAttribute
-@ stub cuCoredumpSetAttributeGlobal
+@ stdcall cuCoredumpGetAttribute(ptr ptr ptr) wine_cuCoredumpGetAttribute
+@ stdcall cuCoredumpGetAttributeGlobal(ptr ptr ptr) wine_cuCoredumpGetAttributeGlobal
+@ stdcall cuCoredumpSetAttribute(ptr ptr ptr) wine_cuCoredumpSetAttribute
+@ stdcall cuCoredumpSetAttributeGlobal(ptr ptr ptr) wine_cuCoredumpSetAttributeGlobal
 @ stub cuEGLApiInit
 @ stdcall cuGraphAddKernelNode_v2(ptr ptr ptr long ptr) wine_cuGraphAddKernelNode_v2
 @ stdcall cuGraphAddNode(ptr ptr ptr long ptr) wine_cuGraphAddNode
