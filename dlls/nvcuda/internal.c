@@ -843,14 +843,14 @@ static const struct
 struct Relay13_table
 {
     int size;
-    void* (WINAPI* func0)(void *param0, void *param1, void *param2);
-    void* (WINAPI* func1)(void *param0, void *param1);
+    CUresult (WINAPI* func0)(LPCSTR dllName, void* param1, HMODULE* phModule);
+    CUresult (WINAPI* func1)(HMODULE hModule);
 };
 static const struct
 {
     int size;
-    void* (*func0)(void *param0, void *param1, void *param2);
-    void* (*func1)(void *param0, void *param1);
+    CUresult (*func0)(LPCSTR dllName, void* param1, HMODULE* phModule);
+    CUresult (*func1)(HMODULE hModule);
 } *Relay13_orig = NULL;
 
 static void* WINAPI Relay1_func0(void *param0, void *param1)
@@ -2840,16 +2840,65 @@ static struct Relay12_table Relay12_Impl =
     Relay12_func1,
 };
 
-static void* WINAPI Relay13_func0(void *param0, void *param1, void *param2)
+/*  nvcudart_hybrid64.dll
+    This particular DLL is not part of the SDK but is part of the windows driver.
+    That means for certain SDK 13 apps/samples, you will need to download the windows 11
+    driver and extract this DLL and copy it into (WINEPREFIX) c:\windows\system32 folder.
+    I will not provide the DLL on this repository as this is part of the windows WHQL driver. */
+
+static void* (WINAPI* pcudaGetProcAddress)(void* param0);
+HMODULE cudart_hybrid_handle = NULL;
+
+static BOOL load_nvcudart_hybrid(void)
 {
-    TRACE("(%p, %p, %p)\n", param0, param1, param2);
-    return Relay13_orig->func0(param0, param1, param2);    
+    cudart_hybrid_handle = LoadLibraryExW(L"nvcudart_hybrid64.dll", NULL, LOAD_LIBRARY_SEARCH_SYSTEM32);
+    if (cudart_hybrid_handle)
+    {
+        TRACE("Successfully loaded nvcudart_hybrid64.dll\n");
+    }
+    else
+    {
+        DWORD error = GetLastError();
+        TRACE("LoadLibraryExW failed with error code: %u while loading nvcudart_hybrid64.dll\n", error);
+        TRACE("This most likely means that you have not manually copied the nvcudart_hybrid64.dll library\n");
+        TRACE("extracted from the windows driver into your (WINEPREFIX) - c:\\windows\\system32 folder!\n");
+        return FALSE;
+    }
+
+    pcudaGetProcAddress = (void* (WINAPI *)(void*))GetProcAddress(cudart_hybrid_handle, "__cudaGetProcAddress");
+    if (!pcudaGetProcAddress)
+    {
+        TRACE("Failed to obtain __cudaGetProcAddress function pointer from nvcudart_hybrid64.dll\n");
+        return FALSE;
+    }
+
+    return TRUE;
 }
 
-static void* WINAPI Relay13_func1(void *param0, void *param1)
+static CUresult WINAPI Relay13_func0(LPCSTR dllName, void* param1, HMODULE* phModule)
 {
-    TRACE("(%p, %p)\n", param0, param1);
-    return Relay13_orig->func1(param0, param1);
+    // We need to manually load nvcudart_hybrid64.dll and set the appropriate pointers by using the above function.
+    TRACE("Dll: %s, (%p, %p)\n", dllName, param1, phModule);
+    
+    if (!load_nvcudart_hybrid())
+        return CUDA_ERROR_INVALID_HANDLE;
+
+    *((void**)param1) = (void*)pcudaGetProcAddress;
+    *phModule = cudart_hybrid_handle;
+
+    TRACE("Returning module handle: (%p)\n", *phModule);
+    return CUDA_SUCCESS;
+}
+
+static CUresult WINAPI Relay13_func1(HMODULE hModule)
+{
+    // Since we loaded nvcudart_hybrid64.dll manually, we free it manually i suppose...
+    TRACE("(%p)\n", hModule);
+
+    if (!hModule) return CUDA_ERROR_INVALID_HANDLE;
+    FreeLibrary(hModule);
+
+    return CUDA_SUCCESS;
 }
 
 static struct Relay13_table Relay13_Impl =
