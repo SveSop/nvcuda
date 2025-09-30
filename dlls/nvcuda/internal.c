@@ -791,6 +791,9 @@ struct OpticalFlow_table
     void* (WINAPI* func21)(void *param0, void *param1);
     void* (WINAPI* func22)(void *param0, void *param1);
     void* (WINAPI* func23)(void *param0, void *param1);
+    void* (WINAPI* func24)(void *param0, void *param1);
+    void* (WINAPI* func25)(void *param0, void *param1);
+    void* (WINAPI* func26)(void *param0, void *param1);
 };
 static const struct
 {
@@ -819,6 +822,9 @@ static const struct
     void* (*func21)(void *param0, void *param1);
     void* (*func22)(void *param0, void *param1);
     void* (*func23)(void *param0, void *param1);
+    void* (*func24)(void *param0, void *param1);
+    void* (*func25)(void *param0, void *param1);
+    void* (*func26)(void *param0, void *param1);
 } *OpticalFlow_orig = NULL;
 
 /*
@@ -2792,6 +2798,24 @@ static void* WINAPI OpticalFlow_func23(void *param0, void *param1)
     return OpticalFlow_orig->func23(param0, param1);
 }
 
+static void* WINAPI OpticalFlow_func24(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return OpticalFlow_orig->func24(param0, param1);
+}
+
+static void* WINAPI OpticalFlow_func25(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return OpticalFlow_orig->func25(param0, param1);
+}
+
+static void* WINAPI OpticalFlow_func26(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return OpticalFlow_orig->func26(param0, param1);
+}
+
 static struct OpticalFlow_table OpticalFlow_Impl =
 {
     sizeof(struct OpticalFlow_table),
@@ -2819,6 +2843,9 @@ static struct OpticalFlow_table OpticalFlow_Impl =
     OpticalFlow_func21,
     OpticalFlow_func22,
     OpticalFlow_func23,
+    OpticalFlow_func24,
+    OpticalFlow_func25,
+    OpticalFlow_func26,
 };
 
 static void* WINAPI Relay12_func0(void *param0, void *param1)

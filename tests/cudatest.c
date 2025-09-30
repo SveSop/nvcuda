@@ -7,12 +7,16 @@ typedef CUresult (*pcuInit)(unsigned int flags);
 typedef CUresult (*pcuDeviceGet)(CUdevice *device, int ordinal);
 typedef CUresult (*pcuDeviceGetName)(char *name, int len, CUdevice dev);
 typedef CUresult (*pcuDeviceComputeCapability)(int *major, int *minor, CUdevice dev);
+typedef CUresult (*pcuDeviceGetUuid)(CUuuid *uuid, CUdevice dev);
+typedef CUresult (*pcuDeviceGetLuid)(char *luid, unsigned int *deviceNodeMask, CUdevice dev);
 typedef CUresult (*pcuGetExportTable)(const void** table, const CUuuid *id);
 
 pcuInit cuInit;
 pcuDeviceGet cuDeviceGet;
 pcuDeviceGetName cuDeviceGetName;
 pcuDeviceComputeCapability cuDeviceComputeCapability;
+pcuDeviceGetUuid cuDeviceGetUuid;
+pcuDeviceGetLuid cuDeviceGetLuid;
 pcuGetExportTable cuGetExportTable;
 
 static const struct
@@ -58,11 +62,28 @@ static const CUuuid UUID_OpticalFlow                = {{0x9A, 0xF0, 0x70, 0x7B, 
 static const CUuuid UUID_Relay12                    = {{0xF8, 0xCF, 0xF9, 0x51, 0x21, 0x46, 0x8B, 0x4E,
                                                         0xB9, 0xE2, 0xFB, 0x46, 0x9E, 0x7C, 0x0D, 0xD9}};
                                                     // {f8cff951-2146-8b4e-b9e2-fb469e7c0dd9}
+static const CUuuid UUID_Relay13                    = {{0xDD, 0x9E, 0x98, 0xA4, 0xF4, 0x10, 0x48, 0x44,
+                                                        0x99, 0xB0, 0xE2, 0xAE, 0xB7, 0xB4, 0x32, 0xB5}};
+
+static char* cuda_print_uuid(const CUuuid *id, char *buffer, int size)
+{
+    snprintf(buffer, size, "{%02x%02x%02x%02x-%02x%02x-%02x%02x-"\
+                           "%02x%02x-%02x%02x%02x%02x%02x%02x}",
+        id->bytes[0] & 0xFF, id->bytes[1] & 0xFF, id->bytes[2] & 0xFF, id->bytes[3] & 0xFF,
+        id->bytes[4] & 0xFF, id->bytes[5] & 0xFF, id->bytes[6] & 0xFF, id->bytes[7] & 0xFF,
+        id->bytes[8] & 0xFF, id->bytes[9] & 0xFF, id->bytes[10] & 0xFF, id->bytes[11] & 0xFF,
+        id->bytes[12] & 0xFF, id->bytes[13] & 0xFF, id->bytes[14] & 0xFF, id->bytes[15] & 0xFF);
+    return buffer;
+}
 
 int main() {
     CUresult ret;
     CUdevice dev;
+    CUuuid uuid;
+    unsigned int deviceNodeMask;
+    char luid[64];
     char name[100];
+    char buffer[128];
     int major = 0;
     int minor = 0;
 
@@ -79,6 +100,8 @@ int main() {
     LOAD_FUNCPTR(cuDeviceGet);
     LOAD_FUNCPTR(cuDeviceGetName);
     LOAD_FUNCPTR(cuDeviceComputeCapability);
+    LOAD_FUNCPTR(cuDeviceGetUuid);
+    LOAD_FUNCPTR(cuDeviceGetLuid);
     LOAD_FUNCPTR(cuGetExportTable);
 
     #undef LOAD_FUNCPTR
@@ -98,6 +121,16 @@ int main() {
     (ret = cuDeviceComputeCapability(&major, &minor, dev)) == CUDA_SUCCESS
     ? printf("SM version: %d.%d\n==============================\n", major, minor)
     : (printf("cuDeviceComputeCapability returned error: %d\n", ret), exit(1));
+
+    (ret = cuDeviceGetUuid(&uuid, dev)) == CUDA_SUCCESS
+    ? printf("Device %d UUID: %s\n", dev, cuda_print_uuid(&uuid, buffer, sizeof(buffer)))
+    : (printf("cuDeviceGetLuid returned error: %d\n", ret), exit(1));
+
+    (ret = cuDeviceGetLuid(luid, &deviceNodeMask, dev)) == CUDA_SUCCESS
+    ? printf("Device %d LUID: %02x%02x%02x%02x-%02x%02x%02x%02x\n", dev,
+                (unsigned char)luid[0], (unsigned char)luid[1], (unsigned char)luid[2], (unsigned char)luid[3],
+                (unsigned char)luid[4], (unsigned char)luid[5], (unsigned char)luid[6], (unsigned char)luid[7])
+    : (printf("cuDeviceGetLuid returned error: %d\n", ret), exit(1));
 
     (ret = cuGetExportTable((const void **)&addrTable, &UUID_Relay1)) != CUDA_SUCCESS || !addrTable
     ? printf("Failed to retrieve UUID_Relay1: %d\n", ret)
@@ -157,6 +190,11 @@ int main() {
     (ret = cuGetExportTable((const void **)&addrTable, &UUID_Relay12)) != CUDA_SUCCESS || !addrTable
     ? printf("Failed to retrieve UUID_Relay12: %d\n", ret)
     : printf("UUID_Relay12 size: %d\n", addrTable->size);
+    addrTable = NULL;
+
+    (ret = cuGetExportTable((const void **)&addrTable, &UUID_Relay13)) != CUDA_SUCCESS || !addrTable
+    ? printf("Failed to retrieve UUID_Relay13: %d\n", ret)
+    : printf("UUID_Relay13 size: %d\n", addrTable->size);
     addrTable = NULL;
 
     return 0;
