@@ -3792,23 +3792,43 @@ CUresult WINAPI wine_cuDeviceGetUuid(CUuuid *uuid, CUdevice dev)
 
 CUresult WINAPI wine_cuDeviceGetLuid(char *luid, unsigned int *deviceNodeMask, CUdevice dev)
 {
+    // In case we need to fake LUID creation possibly for emulated hardware situations
+    CUresult ret;
+    CUuuid uuid;
+    const char *env = getenv("CUDA_FAKE_LUID");
+    if (env && *env == '1')
+    {
+        uint64_t hash = 0;
+        for (int k = 0; k < sizeof(uuid.bytes); k++)
+            hash = (hash << 5) - hash + uuid.bytes[k];
+        memcpy(luid, &hash, sizeof(LUID));
+
+        *deviceNodeMask = 1;
+        TRACE("LUID override! Returning fake LUID for device %d\n", dev);
+
+        return CUDA_SUCCESS;
+    }
     char buffer[1024];
     KEY_VALUE_PARTIAL_INFORMATION *value = (void *)buffer;
     KEY_BASIC_INFORMATION *key = (void *)buffer;
     HKEY pci, outerdev, innerdev, prop;
     DWORD size, i = 0;
-    CUresult ret;
-    CUuuid uuid;
 
     TRACE("(%p, %p, %d)\n", luid, deviceNodeMask, dev);
 
     if ((ret = pcuDeviceGetUuid(&uuid, dev)) != CUDA_SUCCESS)
+    {
+        ERR("Error: %d when retrieving UUID for device %d\n", ret, dev);
         return ret;
+    }
 
     ret = CUDA_ERROR_UNKNOWN;
 
     if (!(pci = reg_open_ascii_key(NULL, "\\Registry\\Machine\\System\\CurrentControlSet\\Enum\\PCI")))
+    {
+        ERR("Error opening registry key for PCI device enumerator\n");
         return ret;
+    }
 
     while (!NtEnumerateKey(pci, i++, KeyBasicInformation, key, sizeof(buffer), &size))
     {
@@ -3854,6 +3874,9 @@ CUresult WINAPI wine_cuDeviceGetLuid(char *luid, unsigned int *deviceNodeMask, C
     }
 
     NtClose(pci);
+
+    if (ret != CUDA_SUCCESS)
+        ERR("Failed to retrieve LUID for device %d\n", dev);
 
     return ret;
 }
