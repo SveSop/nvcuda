@@ -30,3 +30,12 @@ Run this using wine: `wine ./cudatest.exe` and it will perform some minor
 function tests to verify that your adapter is working with cuda.  
 
 Building this test executable requires the build system have mingw-w64 installed.  
+
+## Env variables
+In certain cases where there is virtual or emulated hardware, nvcuda is not able to  
+obtain the proper PCI ID of the adapter through wine and the call to cuDeviceGetLuid  
+will fail. This can be overriden by using this env variable:  
+`CUDA_FAKE_LUID=1`  
+This will generate a LUID for the cuda adapter and return CUDA_SUCCESS from the call.  
+PS. This should ONLY be used in those cases where this call fails due to types of  
+virtual/emulated hardware as this can potentially cause other issues if enabled.  
