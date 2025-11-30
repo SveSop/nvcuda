@@ -700,6 +700,7 @@ const FunctionMapping mappings[] =
     {"cuDeviceGetName", 12020, 0, wine_cuDeviceGetName},
     {"cuDeviceGetName", 12030, 0, wine_cuDeviceGetName},
     {"cuDeviceGetName", 12080, 0, wine_cuDeviceGetName},
+    {"cuDeviceGetName", 13000, 0, wine_cuDeviceGetName},
     {"cuDeviceTotalMem", 2000, 0, wine_cuDeviceTotalMem},
     {"cuDeviceTotalMem", 3020, 0, wine_cuDeviceTotalMem_v2},
     {"cuDeviceGetAttribute", 2000, 0, wine_cuDeviceGetAttribute},
