@@ -152,6 +152,7 @@ typedef void *CUlogsCallback;
 typedef void *CUlogsCallbackHandle;
 typedef void *CUmemLocation_v1;
 typedef void *CUmemAllocationType;
+typedef void *CUdevResource;
 
 typedef unsigned long long CUsurfObject;
 typedef unsigned long long CUtexObject;
@@ -218,6 +219,13 @@ typedef enum CUatomicOperation_enum
     CU_ATOMIC_OPERATION_FLOAT_MAX           = 12,
     CU_ATOMIC_OPERATION_MAX
 } CUatomicOperation;
+
+typedef enum {
+    CU_DEV_RESOURCE_TYPE_INVALID = 0,
+    CU_DEV_RESOURCE_TYPE_SM = 1,
+    CU_DEV_RESOURCE_TYPE_WORKQUEUE_CONFIG = 1000,
+    CU_DEV_RESOURCE_TYPE_WORKQUEUE = 10000,
+} CUdevResourceType;
 
 typedef struct CUipcEventHandle_st
 {
@@ -332,5 +340,13 @@ typedef struct CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_st
     unsigned int reserved[16];
 } CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_v1;
 typedef CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_v1 CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC;
+
+typedef struct CU_DEV_SM_RESOURCE_GROUP_PARAMS_st {
+    unsigned int smCount;
+    unsigned int coscheduledSmCount;
+    unsigned int preferredCoscheduledSmCount;
+    unsigned int flags;
+    unsigned int reserved[12];
+} CU_DEV_SM_RESOURCE_GROUP_PARAMS;
 
 #endif /* __WINE_CUDA_H */

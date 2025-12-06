@@ -675,7 +675,9 @@
 @ stdcall cuMemPrefetchAsync_v2_ptsz(double long ptr long ptr) wine_cuMemPrefetchAsync_v2_ptsz
 @ stdcall cuMulticastAddDevice(double long) wine_cuMulticastAddDevice
 @ stdcall cuMulticastBindAddr(double long double long double) wine_cuMulticastBindAddr
+@ stdcall cuMulticastBindAddr_v2(double long double long double long) wine_cuMulticastBindAddr_v2
 @ stdcall cuMulticastBindMem(double long double long long double) wine_cuMulticastBindMem
+@ stdcall cuMulticastBindMem_v2(double long double long long double long) wine_cuMulticastBindMem_v2
 @ stdcall cuMulticastCreate(ptr ptr) wine_cuMulticastCreate
 @ stdcall cuMulticastGetGranularity(ptr ptr ptr) wine_cuMulticastGetGranularity
 @ stdcall cuMulticastUnbind(double long long long) wine_cuMulticastUnbind
@@ -758,3 +760,12 @@
 @ stdcall cuMemDiscardAndPrefetchBatchAsync(ptr ptr long ptr ptr long long ptr) wine_cuMemDiscardAndPrefetchBatchAsync
 @ stdcall cuMemDiscardAndPrefetchBatchAsync_ptsz(ptr ptr long ptr ptr long long ptr) wine_cuMemDiscardAndPrefetchBatchAsync_ptsz
 @ stdcall cuDeviceGetP2PAtomicCapabilities(ptr ptr long long long) wine_cuDeviceGetP2PAtomicCapabilities
+@ stdcall cuGraphNodeGetContainingGraph(ptr ptr) wine_cuGraphNodeGetContainingGraph
+@ stdcall cuGraphNodeGetLocalId(ptr ptr) wine_cuGraphNodeGetLocalId
+@ stdcall cuGraphNodeGetToolsId(ptr ptr) wine_cuGraphNodeGetToolsId
+@ stdcall cuGraphGetId(ptr ptr) wine_cuGraphGetId
+@ stdcall cuGraphExecGetId(ptr ptr) wine_cuGraphExecGetId
+@ stdcall cuStreamGetDevResource(ptr ptr long) wine_cuStreamGetDevResource
+@ stdcall cuStreamGetDevResource_ptsz(ptr ptr long) wine_cuStreamGetDevResource_ptsz
+@ stdcall cuDevSmResourceSplit(ptr long ptr ptr long ptr) wine_cuDevSmResourceSplit
+@ stdcall cuDriverGetGpuCodeIsaVersion(ptr ptr) wine_cuDriverGetGpuCodeIsaVersion

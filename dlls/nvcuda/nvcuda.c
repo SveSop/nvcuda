@@ -830,6 +830,19 @@ static CUresult (*pcuMemDiscardBatchAsync_ptsz)(CUdeviceptr_v2* dptrs, size_t* s
 static CUresult (*pcuMemDiscardAndPrefetchBatchAsync)(CUdeviceptr_v2* dptrs, size_t* sizes, size_t count, CUmemLocation_v1* prefetchLocs, size_t* prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, CUstream hStream);
 static CUresult (*pcuMemDiscardAndPrefetchBatchAsync_ptsz)(CUdeviceptr_v2* dptrs, size_t* sizes, size_t count, CUmemLocation_v1* prefetchLocs, size_t* prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, CUstream hStream);
 static CUresult (*pcuDeviceGetP2PAtomicCapabilities)(unsigned int* capabilities, const CUatomicOperation* operations, unsigned int count, CUdevice srcDevice, CUdevice dstDevice);
+static CUresult (*pcuMulticastBindMem_v2)(CUmemGenericAllocationHandle mcHandle, CUdevice dev, size_t mcOffset, CUmemGenericAllocationHandle memHandle, size_t memOffset, size_t size, unsigned long long flags);
+static CUresult (*pcuMulticastBindAddr_v2)(CUmemGenericAllocationHandle mcHandle, CUdevice dev, size_t mcOffset, CUdeviceptr memptr, size_t size, unsigned long long flags);
+static CUresult (*pcuGraphNodeGetContainingGraph)(CUgraphNode hNode, CUgraph* phGraph);
+static CUresult (*pcuGraphNodeGetLocalId)(CUgraphNode hNode, unsigned int* nodeId);
+static CUresult (*pcuGraphNodeGetToolsId)(CUgraphNode hNode, unsigned long long* nodeId);
+static CUresult (*pcuGraphGetId)(CUgraph hGraph, unsigned int* graphId);
+static CUresult (*pcuGraphExecGetId)(CUgraphExec hGraphExec, unsigned int* graphId);
+static CUresult (*pcuStreamGetDevResource)(CUstream hStream, CUdevResource* result, CUdevResourceType type);
+static CUresult (*pcuStreamGetDevResource_ptsz)(CUstream hStream, CUdevResource* result, CUdevResourceType type);
+static CUresult (*pcuDevSmResourceSplit)(CUdevResource* result, unsigned int nbGroups, const CUdevResource* input, CUdevResource* remainder, unsigned int flags, CU_DEV_SM_RESOURCE_GROUP_PARAMS* groupParams);
+
+// Unknown so far - Possibly some python usage?
+static CUresult (*pcuDriverGetGpuCodeIsaVersion)(void* param0, void* param1);
 
 static void *cuda_handle = NULL;
 
@@ -1511,6 +1524,17 @@ static BOOL load_functions(void)
     TRY_LOAD_FUNCPTR(cuMemDiscardAndPrefetchBatchAsync);
     TRY_LOAD_FUNCPTR(cuMemDiscardAndPrefetchBatchAsync_ptsz);
     TRY_LOAD_FUNCPTR(cuDeviceGetP2PAtomicCapabilities);
+    TRY_LOAD_FUNCPTR(cuDevSmResourceSplit);
+    TRY_LOAD_FUNCPTR(cuGraphExecGetId);
+    TRY_LOAD_FUNCPTR(cuGraphGetId);
+    TRY_LOAD_FUNCPTR(cuGraphNodeGetContainingGraph);
+    TRY_LOAD_FUNCPTR(cuGraphNodeGetLocalId);
+    TRY_LOAD_FUNCPTR(cuGraphNodeGetToolsId);
+    TRY_LOAD_FUNCPTR(cuMulticastBindAddr_v2);
+    TRY_LOAD_FUNCPTR(cuMulticastBindMem_v2);
+    TRY_LOAD_FUNCPTR(cuStreamGetDevResource);
+    TRY_LOAD_FUNCPTR(cuStreamGetDevResource_ptsz);
+    TRY_LOAD_FUNCPTR(cuDriverGetGpuCodeIsaVersion);
 
     #undef LOAD_FUNCPTR
     #undef TRY_LOAD_FUNCPTR
@@ -6004,6 +6028,84 @@ CUresult WINAPI wine_cuDeviceGetP2PAtomicCapabilities(unsigned int* capabilities
     TRACE("(%u, %p, %u, %d, %d)\n", *capabilities, operations, count, srcDevice, dstDevice);
     CHECK_FUNCPTR(cuDeviceGetP2PAtomicCapabilities);
     return pcuDeviceGetP2PAtomicCapabilities(capabilities, operations, count, srcDevice, dstDevice);
+}
+
+CUresult WINAPI wine_cuMulticastBindMem_v2(CUmemGenericAllocationHandle mcHandle, CUdevice dev, size_t mcOffset, CUmemGenericAllocationHandle memHandle, size_t memOffset, size_t size, unsigned long long flags)
+{
+    TRACE("(%llu, %d, %zu, %llu, %zu, %zu, %llu)\n", mcHandle, dev, mcOffset, memHandle, memOffset, size, flags);
+    CHECK_FUNCPTR(cuMulticastBindMem_v2);
+    return pcuMulticastBindMem_v2(mcHandle, dev, mcOffset, memHandle, memOffset, size, flags);
+}
+
+CUresult WINAPI wine_cuMulticastBindAddr_v2(CUmemGenericAllocationHandle mcHandle, CUdevice dev, size_t mcOffset, CUdeviceptr memptr, size_t size, unsigned long long flags)
+{
+    TRACE("(%llu, %d, %zu, " DEV_PTR ", %zu, %llu)\n", mcHandle, dev, mcOffset, memptr, size, flags);
+    CHECK_FUNCPTR(cuMulticastBindAddr_v2);
+    return pcuMulticastBindAddr_v2(mcHandle, dev, mcOffset, memptr, size, flags);
+}
+
+CUresult WINAPI wine_cuGraphNodeGetContainingGraph(CUgraphNode hNode, CUgraph* phGraph)
+{
+    TRACE("(%p, %p)\n", hNode, phGraph);
+    CHECK_FUNCPTR(cuGraphNodeGetContainingGraph);
+    return pcuGraphNodeGetContainingGraph(hNode, phGraph);
+}
+
+CUresult WINAPI wine_cuGraphNodeGetLocalId(CUgraphNode hNode, unsigned int* nodeId)
+{
+    TRACE("(%p, %p)\n", hNode, nodeId);
+    CHECK_FUNCPTR(cuGraphNodeGetLocalId);
+    return pcuGraphNodeGetLocalId(hNode, nodeId);
+}
+
+CUresult WINAPI wine_cuGraphNodeGetToolsId(CUgraphNode hNode, unsigned long long* nodeId)
+{
+    TRACE("(%p, %p)\n", hNode, nodeId);
+    CHECK_FUNCPTR(cuGraphNodeGetToolsId);
+    return pcuGraphNodeGetToolsId(hNode, nodeId);
+}
+
+CUresult WINAPI wine_cuGraphGetId(CUgraph hGraph, unsigned int* graphId)
+{
+    TRACE("(%p, %p)\n", hGraph, graphId);
+    CHECK_FUNCPTR(cuGraphGetId);
+    return pcuGraphGetId(hGraph, graphId);
+}
+
+CUresult WINAPI wine_cuGraphExecGetId(CUgraphExec hGraphExec, unsigned int* graphId)
+{
+    TRACE("(%p, %p)\n", hGraphExec, graphId);
+    CHECK_FUNCPTR(cuGraphExecGetId);
+    return pcuGraphExecGetId(hGraphExec, graphId);
+}
+
+CUresult WINAPI wine_cuStreamGetDevResource(CUstream hStream, CUdevResource* result, CUdevResourceType type)
+{
+    TRACE("(%p , %p, %d)\n", hStream, result, type);
+    CHECK_FUNCPTR(cuStreamGetDevResource);
+    return pcuStreamGetDevResource(hStream, result, type);
+}
+
+CUresult WINAPI wine_cuStreamGetDevResource_ptsz(CUstream hStream, CUdevResource* result, CUdevResourceType type)
+{
+    TRACE("(%p , %p, %d)\n", hStream, result, type);
+    CHECK_FUNCPTR(cuStreamGetDevResource_ptsz);
+    return pcuStreamGetDevResource_ptsz(hStream, result, type);
+}
+
+CUresult WINAPI wine_cuDevSmResourceSplit(CUdevResource* result, unsigned int nbGroups, const CUdevResource* input, CUdevResource* remainder, unsigned int flags, CU_DEV_SM_RESOURCE_GROUP_PARAMS* groupParams)
+{
+    TRACE("(%p, %u, %p, %p, %u, %p)\n", result, nbGroups, input, remainder, flags, groupParams);
+    CHECK_FUNCPTR(cuDevSmResourceSplit);
+    return pcuDevSmResourceSplit(result, nbGroups, input, remainder, flags, groupParams);
+}
+
+// Unknown so far - Possibly some Pyhthon thing...?
+CUresult WINAPI wine_cuDriverGetGpuCodeIsaVersion(void* param0, void* param1)
+{
+    TRACE("cuDriverGetGpuCodeIsaVersion: (UNKNOWN - FIXME!)\n");
+    CHECK_FUNCPTR(cuDriverGetGpuCodeIsaVersion);
+    return CUDA_ERROR_UNKNOWN;
 }
 
 #undef CHECK_FUNCPTR

@@ -629,7 +629,9 @@ extern void wine_cuModuleEnumerateFunctions(void);
 extern void wine_cuModuleGetFunctionCount(void);
 extern void wine_cuMulticastAddDevice(void);
 extern void wine_cuMulticastBindAddr(void);
+extern void wine_cuMulticastBindAddr_v2(void);
 extern void wine_cuMulticastBindMem(void);
+extern void wine_cuMulticastBindMem_v2(void);
 extern void wine_cuMulticastCreate(void);
 extern void wine_cuMulticastGetGranularity(void);
 extern void wine_cuMulticastUnbind(void);
@@ -683,6 +685,14 @@ extern void wine_cuCoredumpGetAttribute(void);
 extern void wine_cuCoredumpGetAttributeGlobal(void);
 extern void wine_cuCoredumpSetAttribute(void);
 extern void wine_cuCoredumpSetAttributeGlobal(void);
+extern void wine_cuGraphNodeGetContainingGraph(void);
+extern void wine_cuGraphNodeGetLocalId(void);
+extern void wine_cuGraphNodeGetToolsId(void);
+extern void wine_cuGraphGetId(void);
+extern void wine_cuGraphExecGetId(void);
+extern void wine_cuStreamGetDevResource(void);
+extern void wine_cuStreamGetDevResource_ptsz(void);
+extern void wine_cuDevSmResourceSplit(void);
 
 const FunctionMapping mappings[] =
 {
@@ -1308,7 +1318,9 @@ const FunctionMapping mappings[] =
     {"cuModuleGetFunctionCount", 12040, 0, wine_cuModuleGetFunctionCount},
     {"cuMulticastAddDevice", 12010, 0, wine_cuMulticastAddDevice},
     {"cuMulticastBindAddr", 12010, 0, wine_cuMulticastBindAddr},
+    {"cuMulticastBindAddr", 13010, 0, wine_cuMulticastBindAddr_v2},
     {"cuMulticastBindMem", 12010, 0, wine_cuMulticastBindMem},
+    {"cuMulticastBindMem", 13010, 0, wine_cuMulticastBindMem_v2},
     {"cuMulticastCreate", 12010, 0, wine_cuMulticastCreate},
     {"cuMulticastGetGranularity", 12010, 0, wine_cuMulticastGetGranularity},
     {"cuMulticastUnbind", 12010, 0, wine_cuMulticastUnbind},
@@ -1361,6 +1373,14 @@ const FunctionMapping mappings[] =
     {"cuCoredumpGetAttributeGlobal", 12010, 0, wine_cuCoredumpGetAttributeGlobal},
     {"cuCoredumpSetAttribute", 12010, 0, wine_cuCoredumpSetAttribute},
     {"cuCoredumpSetAttributeGlobal", 12010, 0, wine_cuCoredumpSetAttributeGlobal},
+    {"cuGraphNodeGetContainingGraph", 13010, 0, wine_cuGraphNodeGetContainingGraph},
+    {"cuGraphNodeGetLocalId", 13010, 0, wine_cuGraphNodeGetLocalId},
+    {"cuGraphNodeGetToolsId", 13010, 0, wine_cuGraphNodeGetToolsId},
+    {"cuGraphGetId", 13010, 0, wine_cuGraphGetId},
+    {"cuGraphExecGetId", 13010, 0, wine_cuGraphExecGetId},
+    {"cuStreamGetDevResource", 13010, 0, wine_cuStreamGetDevResource},
+    {"cuStreamGetDevResource", 13010, 2, wine_cuStreamGetDevResource_ptsz},
+    {"cuDevSmResourceSplit", 13010, 0, wine_cuDevSmResourceSplit},
 };
 
 const size_t mappings_count = sizeof(mappings) / sizeof(mappings[0]);
