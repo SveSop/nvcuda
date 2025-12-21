@@ -56,6 +56,9 @@ static const CUuuid UUID_Relay9                     = {{0x6E, 0x16, 0x3F, 0xBE, 
 static const CUuuid UUID_Relay10                    = {{0x26, 0x3E, 0x88, 0x60, 0x7C, 0xD2, 0x61, 0x43,
                                                         0x92, 0xF6, 0xBB, 0xD5, 0x00, 0x6D, 0xFA, 0x7E}};
                                                     // {263e8860-7cd2-6143-92f6-bbd5006dfa7e}
+static const CUuuid UUID_Relay11                    = {{0xB1, 0x05, 0x41, 0xE1, 0xF7, 0xC7, 0xC7, 0x4A,
+                                                        0x9F, 0x64, 0xF2, 0x23, 0xBE, 0x99, 0xF1, 0xE2}};
+                                                    // {b10541e1-f7c7-c74a-9f64-f223be99f1e2}
 static const CUuuid UUID_OpticalFlow                = {{0x9A, 0xF0, 0x70, 0x7B, 0x8E, 0x2D, 0xD8, 0x4C,
                                                         0x8E, 0x4E, 0xB9, 0x94, 0xC8, 0x2D, 0xDC, 0x35}};
                                                     // {9af0707b-8e2d-d84c-8e4e-b994c82ddc35}
@@ -64,6 +67,7 @@ static const CUuuid UUID_Relay12                    = {{0xF8, 0xCF, 0xF9, 0x51, 
                                                     // {f8cff951-2146-8b4e-b9e2-fb469e7c0dd9}
 static const CUuuid UUID_Relay13                    = {{0xDD, 0x9E, 0x98, 0xA4, 0xF4, 0x10, 0x48, 0x44,
                                                         0x99, 0xB0, 0xE2, 0xAE, 0xB7, 0xB4, 0x32, 0xB5}};
+                                                    // {dd9e98a4-f410-4844-99b0-e2aeb7b432b5}
 
 static char* cuda_print_uuid(const CUuuid *id, char *buffer, int size)
 {
@@ -180,6 +184,11 @@ int main() {
     (ret = cuGetExportTable((const void **)&addrTable, &UUID_Relay10)) != CUDA_SUCCESS || !addrTable
     ? printf("Failed to retrieve UUID_Relay10: %d\n", ret)
     : printf("UUID_Relay10 size: %d\n", addrTable->size);
+    addrTable = NULL;
+
+    (ret = cuGetExportTable((const void**)&addrTable, &UUID_Relay11)) != CUDA_SUCCESS || !addrTable
+        ? printf("Failed to retrieve UUID_Relay11: %d\n", ret)
+        : printf("UUID_Relay11 size: %d\n", addrTable->size);
     addrTable = NULL;
 
     (ret = cuGetExportTable((const void **)&addrTable, &UUID_OpticalFlow)) != CUDA_SUCCESS || !addrTable
