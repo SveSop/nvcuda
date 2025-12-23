@@ -90,7 +90,7 @@ struct __wine_debug_channel
 #define __WINE_DBG_LOG(...) \
    wine_dbg_log( __dbcl, __dbch, __func__, __VA_ARGS__); } } while(0)
 
-#if defined(__MINGW32__) || (!defined(__WINE_USE_MSVCRT) && (defined(__GNUC__) || defined(__clang__)))
+#if (defined(__GNUC__) || defined(__clang__)) && (defined(__MINGW32__) || defined (_MSC_VER) || !defined(__WINE_USE_MSVCRT))
 #define __WINE_PRINTF_ATTR(fmt,args) __attribute__((format (printf,fmt,args)))
 #else
 #define __WINE_PRINTF_ATTR(fmt,args)
@@ -123,7 +123,7 @@ extern DECLSPEC_EXPORT int __cdecl __wine_dbg_header( enum __wine_debug_class cl
    quotes.  The string will be valid for some time, but not indefinitely
    as strings are re-used.  */
 
-#if (defined(__x86_64__) || (defined(__aarch64__) && __has_attribute(ms_abi))) && defined(__GNUC__) && defined(__WINE_USE_MSVCRT)
+#if defined(__x86_64__) && defined(__GNUC__) && defined(__WINE_USE_MSVCRT)
 # define __wine_dbg_cdecl __cdecl
 #else
 # define __wine_dbg_cdecl
@@ -135,6 +135,7 @@ static inline const char * __wine_dbg_cdecl wine_dbg_vsprintf( const char *forma
     char buffer[200];
 
     vsnprintf( buffer, sizeof(buffer), format, args );
+    buffer[sizeof(buffer) - 1] = 0;
     return __wine_dbg_strdup( buffer );
 }
 
@@ -156,6 +157,7 @@ static inline int __wine_dbg_cdecl wine_dbg_vprintf( const char *format, va_list
     char buffer[1024];
 
     vsnprintf( buffer, sizeof(buffer), format, args );
+    buffer[sizeof(buffer) - 1] = 0;
     return __wine_dbg_output( buffer );
 }
 
