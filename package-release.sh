@@ -14,8 +14,17 @@ NVCUDA_SRC_DIR=$(dirname "$(readlink -f "$0")")
 NVCUDA_BUILD_DIR=$(realpath "$2")"/nvcuda-$VERSION"
 ENABLE_TESTS=false
 
-if [ "$3" == "--enable-tests" ]; then
-  ENABLE_TESTS=true
+if [ $# -eq 3 ]; then
+  case "$3" in
+    --enable-tests)
+      ENABLE_TESTS=true
+      ;;
+    *)
+      echo "Error: unknown option '$3'"
+      echo "Usage: $0 releasename destdir [--enable-tests]"
+      exit 1
+      ;;
+  esac
 fi
 
 if [ -e "$NVCUDA_BUILD_DIR" ]; then
@@ -25,32 +34,23 @@ fi
 
 # build nvcuda
 
-function build_arch {
-  export WINEARCH="win$1"
+cd "$NVCUDA_SRC_DIR"
 
-  cd "$NVCUDA_SRC_DIR"
+meson setup                                            \
+      --cross-file "$NVCUDA_SRC_DIR/build-wine64.txt"  \
+      --buildtype release                              \
+      --prefix "$NVCUDA_BUILD_DIR"                     \
+      --libdir x64                                     \
+      --strip                                          \
+      "$NVCUDA_BUILD_DIR/build.64"
 
-  meson setup                                            \
-        --cross-file "$NVCUDA_SRC_DIR/build-wine$1.txt"  \
-        --buildtype release                              \
-        --prefix "$NVCUDA_BUILD_DIR"                     \
-        --libdir x$1                                     \
-	--strip                                          \
-        "$NVCUDA_BUILD_DIR/build.$1"
+cd "$NVCUDA_BUILD_DIR/build.64"
+ninja install
 
-  cd "$NVCUDA_BUILD_DIR/build.$1"
-  ninja install
-
-  rm -R "$NVCUDA_BUILD_DIR/build.$1"
-}
-
-build_arch 64
-build_arch 32
+rm -R "$NVCUDA_BUILD_DIR/build.64"
 
 # Optional cudatest.exe build
 if $ENABLE_TESTS; then
-
-  export WINEARCH="win64"
 
   cd "$NVCUDA_SRC_DIR"
   meson setup                                              \
