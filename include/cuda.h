@@ -24,25 +24,7 @@
 typedef uint32_t cuuint32_t;
 typedef uint64_t cuuint64_t;
 
-#if defined(__i386)
-typedef struct
-{
-    uint64_t low;
-    uint64_t high;
-} __uint128_t;
-
-typedef struct
-{
-    int64_t low;
-    int64_t high;
-} __int128_t;
-#endif
-
-#ifdef _WIN32
-#define CUDA_CB __stdcall
-#else
 #define CUDA_CB
-#endif
 
 #define CUDA_SUCCESS                 0
 #define CUDA_ERROR_INVALID_VALUE     1
@@ -59,13 +41,6 @@ typedef struct
 #define CU_DEVICE_ATTRIBUTE_PCI_DEVICE_ID  34
 #define CU_DEVICE_ATTRIBUTE_PCI_DOMAIN_ID  50
 
-#if defined(__x86_64) || defined(AMD64) || defined(_M_AMD64) || defined(__aarch64__)
-typedef unsigned long long CUdeviceptr_v2;
-#else
-typedef unsigned int CUdeviceptr_v2;
-#endif
-typedef CUdeviceptr_v2 CUdeviceptr;
-
 typedef enum CUdriverProcAddressQueryResult_enum
 {
     CU_GET_PROC_ADDRESS_SUCCESS                = 0,
@@ -77,6 +52,8 @@ typedef struct CUextSemaphore_st *CUexternalSemaphore;
 typedef unsigned long long CUmemGenericAllocationHandle_v1;
 typedef CUmemGenericAllocationHandle_v1 CUmemGenericAllocationHandle;
 typedef unsigned int CUdeviceptr_v1;
+typedef unsigned long long CUdeviceptr_v2;
+typedef CUdeviceptr_v2 CUdeviceptr;
 typedef int CUGLDeviceList;
 typedef int CUaddress_mode;
 typedef int CUarray_format;
