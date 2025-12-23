@@ -3231,7 +3231,7 @@ static struct Relay12_table Relay12_Impl =
     I will not provide the DLL on this repository as this is part of the windows WHQL driver. */
 
 static void* (WINAPI* pcudaGetProcAddress)(void* param0);
-HMODULE cudart_hybrid_handle = NULL;
+static HMODULE cudart_hybrid_handle = NULL;
 
 static BOOL load_nvcudart_hybrid(void)
 {
