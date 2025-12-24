@@ -2,8 +2,9 @@
 Version: v0.2  
 
 Standalone version of nvcuda based from Wine-Staging  
-This builds ONLY the 64bit version of nvcuda. For previous  
+This builds ONLY the 64bit version of nvcuda. For 32bit version  
 version see:  
+[https://github.com/SveSop/nvcuda/tree/32bit_only](https://github.com/SveSop/nvcuda/tree/32bit_only)  
 
 The master branch is meant for keeping up-to-date with  
 current driver implementation of nvcuda, but are a work in  
