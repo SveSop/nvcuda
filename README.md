@@ -16,6 +16,19 @@ available for this relay.
 Required driver is 525 series or newer.  
 The recommended driver is always most recent. (570+).  
 
+## Usage
+You can install 32bit nvcuda.dll into your WINEPREFIX like this:  
+`WINEPREFIX=/home/myname/my-prefix ./setup_nvcuda.sh install`
+
+You can install 32bit nvcuda.dll into PROTON like this:  
+`PROTON_LIBS='/home/myname/.steam/steam/steamapps/common/Proton - Experimental'`
+
+OBS! You must have 32bit NVIDIA driver libs installed, and some games  
+requires custom installation of PhysX.  
+
+## Compatibility
+50xx series cards does NOT have 32bit cuda support.  
+
 ## Build requirements:  
 - [WINE] (version >= 10.0) [https://www.winehq.org/](https://www.winehq.org/)  
 - [Meson] [http://mesonbuild.com/](http://mesonbuild.com/)  

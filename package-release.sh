@@ -11,7 +11,7 @@ fi
 
 VERSION="$1"
 NVCUDA_SRC_DIR=$(dirname "$(readlink -f "$0")")
-NVCUDA_BUILD_DIR=$(realpath "$2")"/nvcuda-$VERSION"
+NVCUDA_BUILD_DIR=$(realpath "$2")"/nvcuda32-$VERSION"
 
 if [ -e "$NVCUDA_BUILD_DIR" ]; then
   echo "Build directory $NVCUDA_BUILD_DIR already exists"
@@ -34,6 +34,12 @@ cd "$NVCUDA_BUILD_DIR/build.32"
 ninja install
 
 rm -R "$NVCUDA_BUILD_DIR/build.32"
+
+# Copy installscripts and README
+cp $NVCUDA_SRC_DIR/*.sh "$NVCUDA_BUILD_DIR/"
+rm $NVCUDA_BUILD_DIR/package-release.sh
+chmod +x $NVCUDA_BUILD_DIR/*.sh
+cp "$NVCUDA_SRC_DIR/README.md" "$NVCUDA_BUILD_DIR/README.md"
 
 # cleanup
 cd $NVCUDA_BUILD_DIR
