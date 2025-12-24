@@ -1,5 +1,5 @@
 # nvcuda
-Version: v0.2  
+Version: v0.3  
 
 Standalone version of nvcuda based from Wine-Staging  
 
