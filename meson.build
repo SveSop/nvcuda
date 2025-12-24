@@ -11,10 +11,4 @@ winebuild = find_program('winebuild', required: false)
 winegcc   = find_program('winegcc', required: false)
 wrc       = find_program('wrc', required: false)
 
-target_arch = target_machine.cpu_family() == 'x86_64' ? '-m64' : '-m32'
-
-if not is_mingw
-  subdir('dlls')
-else
-  subdir('tests')
-endif
+subdir('dlls')
