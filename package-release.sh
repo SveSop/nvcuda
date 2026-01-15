@@ -40,7 +40,7 @@ meson setup                                            \
       --cross-file "$NVCUDA_SRC_DIR/build-wine64.txt"  \
       --buildtype release                              \
       --prefix "$NVCUDA_BUILD_DIR"                     \
-      --libdir x64                                     \
+      --libdir lib                                     \
       --strip                                          \
       "$NVCUDA_BUILD_DIR/build.64"
 
@@ -70,5 +70,4 @@ fi
 # cleanup
 cd $NVCUDA_BUILD_DIR
 find . -name \*.a -type f -delete
-find . -name '*.dll.so' -type f -exec sh -c 'mv "$1" "${1%.so}"' _ {} \;
 echo "Done building!"
