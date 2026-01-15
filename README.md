@@ -24,7 +24,7 @@ The recommended driver is always most recent. (570+).
 Build by running the included script:  
 `./package-release.sh packagename destdir`  
 
-## Optional test executable
+## Optional build variables
 If you put `--enable-tests` after the buildscript like this:  
 `./package-release.sh packagename destdir --enable-tests`  
 An executable will be placed in `destdir/bin` named `cudatest.exe`  
@@ -33,6 +33,20 @@ Run this using wine: `wine ./cudatest.exe` and it will perform some minor
 function tests to verify that your adapter is working with cuda.  
 
 Building this test executable requires the build system have mingw-w64 installed.  
+
+If you put `--fakedll` after the buildscript like this:  
+`./package-release.sh packagename destdir --fakedll`  
+The library will be built as a winelib dll.so and a fakedll .dll placed in the  
+output folder in typical wine folderstructure eg.  
+`nvcuda-packagename/lib/wine/x86_64-windows` and `nvcuda-packagename/lib/wine/x86_64-unix`  
+These can preferrably be used with the wine env variable `WINEDLLPATH` like this:  
+`export WINEDLLPATH=nvcuda-packagename/lib/wine`  
+
+This should make `wineboot -u` copy the fakedll to your WINEPREFIX automatically if you  
+use wine > 10.0. Be aware that you must use this ENV variable whenever you use that  
+WINEPREFIX for CUDA.  
+The files can also be copied directly into the wine binary folders in the same folderstructure,  
+and it should work the same way.  
 
 ## Env variables
 In certain cases where there is virtual or emulated hardware, nvcuda is not able to  
