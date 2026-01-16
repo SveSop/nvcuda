@@ -2,12 +2,15 @@ name: Artifacts (Package)
 
 on:
   push:
+    branches: [ master ]
     tags: [ v* ]
+  pull_request:
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
   build-artifacts:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Checkout code
@@ -15,6 +18,13 @@ jobs:
       with:
         submodules: recursive
         fetch-depth: 0
+
+    - name: Prepare environment (none-tag)
+      if: github.ref_type != 'tag'
+      run: |
+        export VERSION="${GITHUB_REF##*/}-${GITHUB_SHA::7}"
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+        echo "ARTIFACT=build/nvcuda-${VERSION}" >> $GITHUB_ENV
 
     - name: Prepare environment (tag)
       if: github.ref_type == 'tag'
@@ -26,15 +36,28 @@ jobs:
     - name: Setup problem matcher
       uses: Joshua-Ashton/gcc-problem-matcher@v3
 
-    - name: Build
-      uses: Joshua-Ashton/arch-mingw-github-action@9cdb815264bce7a6346927521b176f578982679d
+    - name: Build (default)
+      uses: SveSop/ubuntu-mingw-github-action@v2
       with:
         command: |
           ./package-release.sh "${{ env.VERSION }}" build
 
-    - name: Upload artifact
+    - name: Build (fakedll)
+      uses: SveSop/ubuntu-mingw-github-action@v2
+      with:
+        command: |
+          ./package-release.sh "${{ env.VERSION }}-fakedll" build --fakedll
+
+    - name: Upload artifacts (default)
       uses: actions/upload-artifact@v4
       with:
         name: nvcuda-${{ env.VERSION }}
         path: ${{ env.ARTIFACT }}
+        if-no-files-found: error
+
+    - name: Upload artifacts (fakedll)
+      uses: actions/upload-artifact@v4
+      with:
+        name: nvcuda-${{ env.VERSION }}-fakedll
+        path: ${{ env.ARTIFACT }}-fakedll
         if-no-files-found: error
