@@ -11,7 +11,6 @@
 @ stdcall cuCtxCreate(ptr long long) wine_cuCtxCreate
 @ stdcall cuCtxCreate_v2(ptr long long) wine_cuCtxCreate_v2
 @ stdcall cuCtxCreate_v3(ptr ptr long long long) wine_cuCtxCreate_v3
-@ stdcall cuCtxCreate_v4(ptr ptr long long) wine_cuCtxCreate_v4
 @ stdcall cuCtxDestroy(ptr) wine_cuCtxDestroy
 @ stdcall cuCtxDestroy_v2(ptr) wine_cuCtxDestroy_v2
 @ stdcall cuCtxDetach(ptr) wine_cuCtxDetach
@@ -238,8 +237,6 @@
 @ stdcall cuMemAllocPitch(ptr ptr long long long) wine_cuMemAllocPitch
 @ stdcall cuMemAllocPitch_v2(ptr ptr long long long) wine_cuMemAllocPitch_v2
 @ stdcall cuMemAlloc_v2(ptr long) wine_cuMemAlloc_v2
-@ stdcall cuMemBatchDecompressAsync(ptr long long ptr ptr) wine_cuMemBatchDecompressAsync
-@ stdcall cuMemBatchDecompressAsync_ptsz(ptr long long ptr ptr) wine_cuMemBatchDecompressAsync_ptsz
 @ stdcall cuMemFree(long) wine_cuMemFree
 @ stdcall cuMemGetAllocationGranularity(ptr ptr long) wine_cuMemGetAllocationGranularity
 @ stdcall cuMemFreeAsync(double ptr) wine_cuMemFreeAsync
@@ -414,8 +411,6 @@
 @ stdcall cuStreamGetCaptureInfo_v2_ptsz(ptr ptr ptr ptr ptr ptr) wine_cuStreamGetCaptureInfo_v2_ptsz
 @ stdcall cuStreamGetCtx(ptr ptr) wine_cuStreamGetCtx
 @ stdcall cuStreamGetCtx_ptsz(ptr ptr) wine_cuStreamGetCtx_ptsz
-@ stdcall cuStreamGetCtx_v2(ptr ptr ptr) wine_cuStreamGetCtx_v2
-@ stdcall cuStreamGetCtx_v2_ptsz(ptr ptr ptr) wine_cuStreamGetCtx_v2_ptsz
 @ stdcall cuStreamGetFlags(ptr ptr) wine_cuStreamGetFlags
 @ stdcall cuStreamGetFlags_ptsz(ptr ptr) wine_cuStreamGetFlags_ptsz
 @ stdcall cuStreamGetPriority(ptr ptr) wine_cuStreamGetPriority
@@ -632,112 +627,8 @@
 @ stdcall cuStreamWriteValue32_v2_ptsz(ptr double long long) wine_cuStreamWriteValue32_v2_ptsz
 @ stdcall cuStreamWriteValue64_v2(ptr double int64 long) wine_cuStreamWriteValue64_v2
 @ stdcall cuStreamWaitValue32_v2_ptsz(ptr double long long) wine_cuStreamWaitValue32_v2_ptsz
-@ stdcall cuCtxGetId(ptr ptr) wine_cuCtxGetId
-@ stdcall cuStreamGetId(ptr ptr) wine_cuStreamGetId
-@ stdcall cuStreamGetId_ptsz(ptr ptr) wine_cuStreamGetId_ptsz
 @ stub cuGraphAddKernelnNode
-@ stdcall cuGraphExecGetFlags(ptr ptr) wine_cuGraphExecGetFlags
-@ stdcall cuTensorMapEncodeTiled(ptr ptr long ptr ptr ptr ptr ptr ptr ptr ptr ptr) wine_cuTensorMapEncodeTiled
-@ stdcall cuTensorMapEncodeIm2col(ptr ptr long ptr ptr ptr ptr ptr long long ptr ptr ptr ptr ptr) wine_cuTensorMapEncodeIm2col
-@ stdcall cuTensorMapReplaceAddress(ptr ptr) wine_cuTensorMapReplaceAddress
-@ stdcall cuLibraryLoadData(ptr ptr ptr ptr long ptr ptr long) wine_cuLibraryLoadData
-@ stdcall cuLibraryLoadFromFile(ptr ptr ptr ptr long ptr ptr long) wine_cuLibraryLoadFromFile
-@ stdcall cuLibraryUnload(ptr) wine_cuLibraryUnload
-@ stdcall cuLibraryGetKernel(ptr ptr str) wine_cuLibraryGetKernel
-@ stdcall cuLibraryGetModule(ptr ptr) wine_cuLibraryGetModule
-@ stdcall cuKernelGetFunction(ptr ptr) wine_cuKernelGetFunction
-@ stdcall cuLibraryGetGlobal(ptr ptr ptr str) wine_cuLibraryGetGlobal
-@ stdcall cuLibraryGetManaged(ptr ptr ptr str) wine_cuLibraryGetManaged
-@ stdcall cuKernelGetAttribute(ptr long ptr long) wine_cuKernelGetAttribute
-@ stdcall cuKernelSetAttribute(long long ptr long) wine_cuKernelSetAttribute
-@ stdcall cuKernelSetCacheConfig(ptr ptr long) wine_cuKernelSetCacheConfig
-@ stdcall cuLibraryGetUnifiedFunction(ptr ptr str) wine_cuLibraryGetUnifiedFunction
-@ stdcall cuGraphInstantiateWithParams(ptr ptr ptr) wine_cuGraphInstantiateWithParams
-@ stdcall cuGraphInstantiateWithParams_ptsz(ptr ptr ptr) wine_cuGraphInstantiateWithParams_ptsz
-@ stdcall cuCtxSetFlags(long) wine_cuCtxSetFlags
-@ stdcall cuCoredumpGetAttribute(ptr ptr ptr) wine_cuCoredumpGetAttribute
-@ stdcall cuCoredumpGetAttributeGlobal(ptr ptr ptr) wine_cuCoredumpGetAttributeGlobal
-@ stdcall cuCoredumpSetAttribute(ptr ptr ptr) wine_cuCoredumpSetAttribute
-@ stdcall cuCoredumpSetAttributeGlobal(ptr ptr ptr) wine_cuCoredumpSetAttributeGlobal
 @ stub cuEGLApiInit
-@ stdcall cuGraphAddKernelNode_v2(ptr ptr ptr long ptr) wine_cuGraphAddKernelNode_v2
-@ stdcall cuGraphAddNode(ptr ptr ptr long ptr) wine_cuGraphAddNode
-@ stdcall cuGraphExecKernelNodeSetParams_v2(ptr ptr ptr) wine_cuGraphExecKernelNodeSetParams_v2
-@ stdcall cuGraphExecNodeSetParams(ptr ptr ptr) wine_cuGraphExecNodeSetParams
-@ stdcall cuGraphExecUpdate_v2(ptr ptr ptr) wine_cuGraphExecUpdate_v2
-@ stdcall cuGraphKernelNodeGetParams_v2(ptr ptr) wine_cuGraphKernelNodeGetParams_v2
-@ stdcall cuGraphKernelNodeSetParams_v2(ptr ptr) wine_cuGraphKernelNodeSetParams_v2
-@ stdcall cuGraphNodeSetParams(ptr ptr) wine_cuGraphNodeSetParams
-@ stdcall cuMemAdvise_v2(double long ptr ptr) wine_cuMemAdvise_v2
 @ stub cuMemGetAttribute
 @ stub cuMemGetAttribute_v2
-@ stdcall cuMemPrefetchAsync_v2(double long ptr long ptr) wine_cuMemPrefetchAsync_v2
-@ stdcall cuMemPrefetchAsync_v2_ptsz(double long ptr long ptr) wine_cuMemPrefetchAsync_v2_ptsz
-@ stdcall cuMulticastAddDevice(double long) wine_cuMulticastAddDevice
-@ stdcall cuMulticastBindAddr(double long double long double) wine_cuMulticastBindAddr
-@ stdcall cuMulticastBindMem(double long double long long double) wine_cuMulticastBindMem
-@ stdcall cuMulticastCreate(ptr ptr) wine_cuMulticastCreate
-@ stdcall cuMulticastGetGranularity(ptr ptr ptr) wine_cuMulticastGetGranularity
-@ stdcall cuMulticastUnbind(double long long long) wine_cuMulticastUnbind
 @ stdcall cuGetProcAddress(ptr ptr long int64) wine_cuGetProcAddress
-@ stdcall cuGetProcAddress_v2(ptr ptr long int64 ptr) wine_cuGetProcAddress_v2
-@ stdcall cuKernelGetName(ptr ptr) wine_cuKernelGetName
-@ stdcall cuFuncGetName(ptr ptr) wine_cuFuncGetName
-@ stdcall cuGraphGetEdges_v2(ptr ptr ptr ptr ptr) wine_cuGraphGetEdges_v2
-@ stdcall cuGraphNodeGetDependencies_v2(ptr ptr ptr ptr) wine_cuGraphNodeGetDependencies_v2
-@ stdcall cuGraphNodeGetDependentNodes_v2(ptr ptr ptr ptr) wine_cuGraphNodeGetDependentNodes_v2
-@ stdcall cuGraphAddDependencies_v2(ptr ptr ptr ptr long) wine_cuGraphAddDependencies_v2
-@ stdcall cuGraphRemoveDependencies_v2(ptr ptr ptr ptr long) wine_cuGraphRemoveDependencies_v2
-@ stdcall cuStreamBeginCaptureToGraph(ptr ptr ptr ptr long long) wine_cuStreamBeginCaptureToGraph
-@ stdcall cuStreamBeginCaptureToGraph_ptsz(ptr ptr ptr ptr long long) wine_cuStreamBeginCaptureToGraph_ptsz
-@ stdcall cuStreamGetCaptureInfo_v3(ptr ptr ptr ptr ptr ptr ptr) wine_cuStreamGetCaptureInfo_v3
-@ stdcall cuStreamGetCaptureInfo_v3_ptsz(ptr ptr ptr ptr ptr ptr ptr) wine_cuStreamGetCaptureInfo_v3_ptsz
-@ stdcall cuStreamUpdateCaptureDependencies_v2(ptr ptr ptr long long) wine_cuStreamUpdateCaptureDependencies_v2
-@ stdcall cuStreamUpdateCaptureDependencies_v2_ptsz(ptr ptr ptr long long) wine_cuStreamUpdateCaptureDependencies_v2_ptsz
-@ stdcall cuGraphAddNode_v2(ptr ptr ptr ptr long ptr) wine_cuGraphAddNode_v2
-@ stdcall cuGraphConditionalHandleCreate(ptr ptr ptr long long) wine_cuGraphConditionalHandleCreate
-@ stdcall cuFuncGetParamInfo(ptr long ptr ptr) wine_cuFuncGetParamInfo
-@ stdcall cuFuncIsLoaded(ptr ptr) wine_cuFuncIsLoaded
-@ stdcall cuFuncLoad(ptr) wine_cuFuncLoad
-@ stdcall cuModuleGetFunctionCount(ptr ptr) wine_cuModuleGetFunctionCount
-@ stdcall cuModuleEnumerateFunctions(ptr long ptr) wine_cuModuleEnumerateFunctions
-@ stdcall cuLibraryGetKernelCount(ptr ptr) wine_cuLibraryGetKernelCount
-@ stdcall cuLibraryEnumerateKernels(ptr long ptr) wine_cuLibraryEnumerateKernels
-@ stdcall cuKernelGetParamInfo(ptr long ptr ptr) wine_cuKernelGetParamInfo
-@ stdcall cuDeviceRegisterAsyncNotification(long ptr ptr ptr) wine_cuDeviceRegisterAsyncNotification
-@ stdcall cuDeviceUnregisterAsyncNotification(long ptr) wine_cuDeviceUnregisterAsyncNotification
-@ stdcall cuGreenCtxCreate(ptr ptr long long) wine_cuGreenCtxCreate
-@ stdcall cuGreenCtxDestroy(ptr) wine_cuGreenCtxDestroy
-@ stdcall cuDeviceGetDevResource(long ptr ptr) wine_cuDeviceGetDevResource
-@ stdcall cuCtxGetDevResource(ptr ptr ptr) wine_cuCtxGetDevResource
-@ stdcall cuGreenCtxGetDevResource(ptr ptr ptr) wine_cuGreenCtxGetDevResource
-@ stdcall cuGreenCtxRecordEvent(ptr ptr) wine_cuGreenCtxRecordEvent
-@ stdcall cuGreenCtxWaitEvent(ptr ptr) wine_cuGreenCtxWaitEvent
-@ stdcall cuDevResourceGenerateDesc(ptr ptr long) wine_cuDevResourceGenerateDesc
-@ stdcall cuDevSmResourceSplitByCount(ptr ptr ptr ptr long long) wine_cuDevSmResourceSplitByCount
-@ stdcall cuStreamGetGreenCtx(ptr ptr) wine_cuStreamGetGreenCtx
-@ stdcall cuCtxFromGreenCtx(ptr ptr) wine_cuCtxFromGreenCtx
-@ stdcall cuKernelGetLibrary(ptr ptr) wine_cuKernelGetLibrary
-@ stdcall cuCtxRecordEvent(ptr ptr) wine_cuCtxRecordEvent
-@ stdcall cuCtxWaitEvent(ptr ptr) wine_cuCtxWaitEvent
-@ stdcall cuGreenCtxStreamCreate(ptr ptr long long) wine_cuGreenCtxStreamCreate
-@ stdcall cuMemcpyBatchAsync(ptr ptr ptr long ptr ptr long ptr ptr) wine_cuMemcpyBatchAsync
-@ stdcall cuMemcpyBatchAsync_ptsz(ptr ptr ptr long ptr ptr long ptr ptr) wine_cuMemcpyBatchAsync_ptsz
-@ stdcall cuMemcpy3DBatchAsync(long ptr ptr double ptr) wine_cuMemcpy3DBatchAsync
-@ stdcall cuMemcpy3DBatchAsync_ptsz(long ptr ptr double ptr) wine_cuMemcpy3DBatchAsync_ptsz
-@ stdcall cuStreamGetDevice(ptr ptr) wine_cuStreamGetDevice
-@ stdcall cuStreamGetDevice_ptsz(ptr ptr) wine_cuStreamGetDevice_ptsz
-@ stdcall cuEventElapsedTime_v2(ptr ptr ptr) wine_cuEventElapsedTime_v2
-@ stdcall cuTensorMapEncodeIm2colWide(ptr long long ptr ptr ptr long long long long ptr long long long long long) wine_cuTensorMapEncodeIm2colWide
-@ stdcall cuCheckpointProcessGetRestoreThreadId(long ptr) wine_cuCheckpointProcessGetRestoreThreadId
-@ stdcall cuCheckpointProcessGetState(long ptr) wine_cuCheckpointProcessGetState
-@ stdcall cuCheckpointProcessLock(long ptr) wine_cuCheckpointProcessLock
-@ stdcall cuCheckpointProcessCheckpoint(long ptr) wine_cuCheckpointProcessCheckpoint
-@ stdcall cuCheckpointProcessRestore(long ptr) wine_cuCheckpointProcessRestore
-@ stdcall cuCheckpointProcessUnlock(long ptr) wine_cuCheckpointProcessUnlock
-@ stdcall cuLogsRegisterCallback(ptr ptr ptr) wine_cuLogsRegisterCallback
-@ stdcall cuLogsUnregisterCallback(ptr) wine_cuLogsUnregisterCallback
-@ stdcall cuLogsCurrent(ptr long) wine_cuLogsCurrent
-@ stdcall cuLogsDumpToFile(ptr ptr long) wine_cuLogsDumpToFile
-@ stdcall cuLogsDumpToMemory(ptr ptr ptr long) wine_cuLogsDumpToMemory
-@ stdcall cuGreenCtxGetId(ptr ptr) wine_cuGreenCtxGetId
