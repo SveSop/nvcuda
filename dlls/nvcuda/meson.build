@@ -1,8 +1,6 @@
 nvcuda_src = [
   'internal.c',
   'nvcuda.c',
-  'function_mappings.c',
-  'encryption.c',
 ]
 
 thread_dep = dependency('threads')
