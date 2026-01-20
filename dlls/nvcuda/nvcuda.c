@@ -70,6 +70,17 @@ struct stream_callback_entry
     } args;
 };
 
+static char* cuda_print_uuid(const CUuuid *id, char *buffer, int size)
+{
+    snprintf(buffer, size, "{%02x%02x%02x%02x-%02x%02x-%02x%02x-"\
+                            "%02x%02x-%02x%02x%02x%02x%02x%02x}",
+             id->bytes[0] & 0xFF, id->bytes[1] & 0xFF, id->bytes[2] & 0xFF, id->bytes[3] & 0xFF,
+             id->bytes[4] & 0xFF, id->bytes[5] & 0xFF, id->bytes[6] & 0xFF, id->bytes[7] & 0xFF,
+             id->bytes[8] & 0xFF, id->bytes[9] & 0xFF, id->bytes[10] & 0xFF, id->bytes[11] & 0xFF,
+             id->bytes[12] & 0xFF, id->bytes[13] & 0xFF, id->bytes[14] & 0xFF, id->bytes[15] & 0xFF);
+    return buffer;
+}
+
 /* CUDA Funcion declarations */
 static CUresult (*pcuArray3DCreate)(CUarray *pHandle, const CUDA_ARRAY3D_DESCRIPTOR *pAllocateArray);
 static CUresult (*pcuArray3DCreate_v2)(CUarray *pHandle, const CUDA_ARRAY3D_DESCRIPTOR *pAllocateArray);
@@ -437,6 +448,7 @@ static CUresult (*pcuStreamWaitValue32_ptsz)(CUstream stream, CUdeviceptr_v2 add
 static CUresult (*pcuStreamWriteValue32_ptsz)(CUstream stream, CUdeviceptr_v2 addr, cuuint32_t value, unsigned int flags);
 static CUresult (*pcuStreamWaitValue64_ptsz)(CUstream stream, CUdeviceptr_v2 addr, cuuint64_t value, unsigned int flags);
 static CUresult (*pcuStreamWriteValue64_ptsz)(CUstream stream, CUdeviceptr_v2 addr, cuuint64_t value, unsigned int flags);
+static CUresult (*pcuDeviceGetUuid)(CUuuid *uuid, CUdevice dev);
 
 static void *cuda_handle = NULL;
 
@@ -798,6 +810,7 @@ static BOOL load_functions(void)
     LOAD_FUNCPTR(cuStreamWriteValue32_ptsz);
     LOAD_FUNCPTR(cuStreamWaitValue64_ptsz);
     LOAD_FUNCPTR(cuStreamWriteValue64_ptsz);
+    LOAD_FUNCPTR(cuDeviceGetUuid);
 
     #undef LOAD_FUNCPTR
     #undef TRY_LOAD_FUNCPTR
@@ -3058,6 +3071,19 @@ CUresult WINAPI wine_cuStreamWriteValue64_ptsz(CUstream stream, CUdeviceptr_v2 a
 {
     TRACE("(%p, " DEV_PTR ", %lu, %u)\n", stream, addr, (SIZE_T)value, flags);
     return pcuStreamWriteValue64_ptsz(stream, addr, value, flags);
+}
+
+CUresult WINAPI wine_cuDeviceGetUuid(CUuuid *uuid, CUdevice dev)
+{
+    char buffer[128];
+
+    CUresult ret = pcuDeviceGetUuid(uuid, dev);
+    if(ret == CUDA_SUCCESS)
+    {
+        TRACE("(UUID: %s, Device: %d)\n", cuda_print_uuid(uuid, buffer, sizeof(buffer)), dev);
+        return ret;
+    }
+    else return CUDA_ERROR_INVALID_VALUE;
 }
 
 #define CHECK_FUNCPTR(f) \

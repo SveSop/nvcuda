@@ -1,11 +1,11 @@
 #!/bin/bash
 
-nvlibs_dir="$(dirname "$(readlink -fm "$0")")"
+nvcuda32_dir="$(dirname "$(readlink -fm "$0")")"
 lib='lib/wine'
 arch='i386'
 
-if [ ! -f "$nvlibs_dir/x32/nvcuda.dll" ]; then
-    echo "Files not found in $nvlibs_dir" >&2
+if [ ! -f "$nvcuda32_dir/x32/nvcuda.dll" ]; then
+    echo "Files not found in $nvcuda32_dir" >&2
     exit 1
 fi
 
@@ -22,7 +22,6 @@ if [ ! -f "$PROTON_LIBS/files/$lib/$arch-windows/dxgi.dll" ]; then
     exit 1
 fi
 
-# proton 10/Experimental support
-cp -f "$nvlibs_dir/x32/nvcuda.dll" "$PROTON_LIBS/files/$lib/$arch-windows/nvcuda.dll"
+cp -f "$nvcuda32_dir/x32/nvcuda.dll" "$PROTON_LIBS/files/$lib/$arch-windows/nvcuda.dll"
 
 echo -ne "All done - Files dropped in $PROTON_LIBS\n"

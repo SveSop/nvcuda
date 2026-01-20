@@ -395,6 +395,7 @@
 @ stdcall cuTexRefSetMipmapLevelClamp(ptr float float) wine_cuTexRefSetMipmapLevelClamp
 @ stdcall cuTexRefSetMipmappedArray(ptr ptr long) wine_cuTexRefSetMipmappedArray
 @ stdcall cuWGLGetDevice(ptr ptr) wine_cuWGLGetDevice
+@ stdcall cuDeviceGetUuid(ptr long) wine_cuDeviceGetUuid
 @ stub cuDeviceGetNvSciSyncAttributes
 @ stub cuEGLStreamConsumerAcquireFrame
 @ stub cuEGLStreamConsumerConnect
@@ -448,7 +449,6 @@
 @ stub cuDestroyExternalMemory
 @ stub cuDestroyExternalSemaphore
 @ stub cuDeviceGetLuid
-@ stub cuDeviceGetUuid
 @ stub cuExternalMemoryGetMappedBuffer
 @ stub cuExternalMemoryGetMappedMipmappedArray
 @ stub cuGraphAddChildGraphNode
