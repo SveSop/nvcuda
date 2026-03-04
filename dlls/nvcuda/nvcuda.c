@@ -3813,22 +3813,8 @@ CUresult WINAPI wine_cuDeviceGetUuid(CUuuid *uuid, CUdevice dev)
 
 CUresult WINAPI wine_cuDeviceGetLuid(char *luid, unsigned int *deviceNodeMask, CUdevice dev)
 {
-    // In case we need to fake LUID creation possibly for emulated hardware situations
     CUresult ret;
     CUuuid uuid;
-    const char *env = getenv("CUDA_FAKE_LUID");
-    if (env && *env == '1')
-    {
-        uint64_t hash = 0;
-        for (int k = 0; k < sizeof(uuid.bytes); k++)
-            hash = (hash << 5) - hash + uuid.bytes[k];
-        memcpy(luid, &hash, sizeof(LUID));
-
-        *deviceNodeMask = 1;
-        TRACE("LUID override! Returning fake LUID for device %d\n", dev);
-
-        return CUDA_SUCCESS;
-    }
     char buffer[1024];
     KEY_VALUE_PARTIAL_INFORMATION *value = (void *)buffer;
     KEY_BASIC_INFORMATION *key = (void *)buffer;
@@ -3841,6 +3827,21 @@ CUresult WINAPI wine_cuDeviceGetLuid(char *luid, unsigned int *deviceNodeMask, C
     {
         ERR("Error: %d when retrieving UUID for device %d\n", ret, dev);
         return ret;
+    }
+
+    // In case we need to fake LUID creation possibly for emulated hardware situations
+    const char *env = getenv("CUDA_FAKE_LUID");
+    if (env && *env == '1')
+    {
+        uint64_t hash = 0;
+        for (int k = 0; k < sizeof(uuid.bytes); k++)
+            hash = (hash << 5) - hash + uuid.bytes[k];
+        memcpy(luid, &hash, sizeof(LUID));
+
+        *deviceNodeMask = 1;
+        TRACE("LUID override! Returning fake LUID for device %d\n", dev);
+
+        return CUDA_SUCCESS;
     }
 
     ret = CUDA_ERROR_UNKNOWN;
