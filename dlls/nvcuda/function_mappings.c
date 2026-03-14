@@ -262,6 +262,8 @@ extern void wine_cuLaunchCooperativeKernel_ptsz(void);
 extern void wine_cuLaunchCooperativeKernelMultiDevice(void);
 extern void wine_cuLaunchHostFunc(void);
 extern void wine_cuLaunchHostFunc_ptsz(void);
+extern void wine_cuLaunchHostFunc_v2(void);
+extern void wine_cuLaunchHostFunc_v2_ptsz(void);
 extern void wine_cuLaunchKernelEx(void);
 extern void wine_cuLaunchKernelEx_ptsz(void);
 extern void wine_cuEventCreate(void);
@@ -693,6 +695,21 @@ extern void wine_cuGraphExecGetId(void);
 extern void wine_cuStreamGetDevResource(void);
 extern void wine_cuStreamGetDevResource_ptsz(void);
 extern void wine_cuDevSmResourceSplit(void);
+extern void wine_cuMemcpyWithAttributesAsync(void);
+extern void wine_cuMemcpyWithAttributesAsync_ptsz(void);
+extern void wine_cuMemcpy3DWithAttributesAsync(void);
+extern void wine_cuMemcpy3DWithAttributesAsync_ptsz(void);
+extern void wine_cuStreamEndCaptureToCig(void);
+extern void wine_cuStreamEndCaptureToCig_ptsz(void);
+extern void wine_cuStreamBeginCaptureToCig(void);
+extern void wine_cuStreamBeginCaptureToCig_ptsz(void);
+extern void wine_cuFuncGetParamCount(void);
+extern void wine_cuGraphNodeGetParams(void);
+extern void wine_cuKernelGetParamCount(void);
+extern void wine_cuCoredumpRegisterStartCallback(void);
+extern void wine_cuCoredumpRegisterCompleteCallback(void);
+extern void wine_cuCoredumpDeregisterStartCallback(void);
+extern void wine_cuCoredumpDeregisterCompleteCallback(void);
 
 const FunctionMapping mappings[] =
 {
@@ -950,6 +967,8 @@ const FunctionMapping mappings[] =
     {"cuLaunchCooperativeKernelMultiDevice", 9000, 0, wine_cuLaunchCooperativeKernelMultiDevice},
     {"cuLaunchHostFunc", 10000, 0, wine_cuLaunchHostFunc},
     {"cuLaunchHostFunc", 10000, 2, wine_cuLaunchHostFunc_ptsz},
+    {"cuLaunchHostFunc", 13010, 0, wine_cuLaunchHostFunc_v2},
+    {"cuLaunchHostFunc", 13010, 2, wine_cuLaunchHostFunc_v2_ptsz},
     {"cuLaunchKernelEx", 11060, 0, wine_cuLaunchKernelEx},
     {"cuLaunchKernelEx", 11060, 2, wine_cuLaunchKernelEx_ptsz},
     {"cuEventCreate", 2000, 0, wine_cuEventCreate},
@@ -1382,6 +1401,21 @@ const FunctionMapping mappings[] =
     {"cuStreamGetDevResource", 13010, 0, wine_cuStreamGetDevResource},
     {"cuStreamGetDevResource", 13010, 2, wine_cuStreamGetDevResource_ptsz},
     {"cuDevSmResourceSplit", 13010, 0, wine_cuDevSmResourceSplit},
+    {"cuMemcpyWithAttributesAsync", 13020, 0, wine_cuMemcpyWithAttributesAsync},
+    {"cuMemcpyWithAttributesAsync", 13020, 2, wine_cuMemcpyWithAttributesAsync_ptsz},
+    {"cuMemcpy3DWithAttributesAsync", 13020, 0, wine_cuMemcpy3DWithAttributesAsync},
+    {"cuMemcpy3DWithAttributesAsync", 13020, 2, wine_cuMemcpy3DWithAttributesAsync_ptsz},
+    {"cuStreamEndCaptureToCig", 13010, 0, wine_cuStreamEndCaptureToCig},
+    {"cuStreamEndCaptureToCig", 13010, 2, wine_cuStreamEndCaptureToCig_ptsz},
+    {"cuStreamBeginCaptureToCig", 13010, 0, wine_cuStreamBeginCaptureToCig},
+    {"cuStreamBeginCaptureToCig", 13010, 2, wine_cuStreamBeginCaptureToCig_ptsz},
+    {"cuFuncGetParamCount", 13020, 0, wine_cuFuncGetParamCount},
+    {"cuGraphNodeGetParams", 13020, 0, wine_cuGraphNodeGetParams},
+    {"cuKernelGetParamCount", 13020, 0, wine_cuKernelGetParamCount},
+    {"cuCoredumpRegisterStartCallback", 13020, 0, wine_cuCoredumpRegisterStartCallback},
+    {"cuCoredumpRegisterCompleteCallback", 13020, 0, wine_cuCoredumpRegisterCompleteCallback},
+    {"cuCoredumpDeregisterStartCallback", 13020, 0, wine_cuCoredumpDeregisterStartCallback},
+    {"cuCoredumpDeregisterCompleteCallback", 13020, 0, wine_cuCoredumpDeregisterCompleteCallback},
 };
 
 const size_t mappings_count = sizeof(mappings) / sizeof(mappings[0]);

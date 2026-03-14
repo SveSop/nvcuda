@@ -130,12 +130,15 @@ typedef void *CUlogsCallbackHandle;
 typedef void *CUmemLocation_v1;
 typedef void *CUmemAllocationType;
 typedef void *CUdevResource;
+typedef void* CUgraphNodeParams;
+typedef void (CUDA_CB* CUcoredumpStatusCallback)(void* userData, int pid, CUdevice dev);
 
 typedef unsigned long long CUsurfObject;
 typedef unsigned long long CUtexObject;
 typedef CUmemcpyAttributes_v1 CUmemcpyAttributes;
 typedef CUDA_MEMCPY3D_BATCH_OP_v1 CUDA_MEMCPY3D_BATCH_OP;
 typedef CUmemLocation_v1 CUmemLocation;
+typedef struct CUcoredumpCallbackEntry_st* CUcoredumpCallbackHandle;
 
 typedef enum CUexternalMemoryHandleType_enum
 {
@@ -203,6 +206,19 @@ typedef enum {
     CU_DEV_RESOURCE_TYPE_WORKQUEUE_CONFIG = 1000,
     CU_DEV_RESOURCE_TYPE_WORKQUEUE = 10000,
 } CUdevResourceType;
+
+typedef enum CUstreamCigDataType_enum {
+    STREAM_CIG_DATA_TYPE_D3D12_COMMAND_LIST = 0x1,
+} CUstreamCigDataType;
+
+typedef struct CUstreamCigParam_st {
+    CUstreamCigDataType streamSharedDataType;
+    void* streamSharedData;
+} CUstreamCigParam;
+
+typedef struct CUstreamCigCaptureParams_st {
+    CUstreamCigParam* streamCigParams;
+} CUstreamCigCaptureParams;
 
 typedef struct CUipcEventHandle_st
 {

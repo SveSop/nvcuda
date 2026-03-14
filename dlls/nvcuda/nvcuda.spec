@@ -769,3 +769,20 @@
 @ stdcall cuStreamGetDevResource_ptsz(ptr ptr long) wine_cuStreamGetDevResource_ptsz
 @ stdcall cuDevSmResourceSplit(ptr long ptr ptr long ptr) wine_cuDevSmResourceSplit
 @ stdcall cuDriverGetGpuCodeIsaVersion(ptr ptr) wine_cuDriverGetGpuCodeIsaVersion
+@ stdcall cuMemcpyWithAttributesAsync_ptsz(long long long ptr ptr) wine_cuMemcpyWithAttributesAsync_ptsz
+@ stdcall cuMemcpy3DWithAttributesAsync_ptsz(ptr long ptr) wine_cuMemcpy3DWithAttributesAsync_ptsz
+@ stdcall cuStreamBeginCaptureToCig(ptr ptr) wine_cuStreamBeginCaptureToCig
+@ stdcall cuStreamBeginCaptureToCig_ptsz(ptr ptr) wine_cuStreamBeginCaptureToCig_ptsz
+@ stdcall cuStreamEndCaptureToCig(ptr) wine_cuStreamEndCaptureToCig
+@ stdcall cuStreamEndCaptureToCig_ptsz(ptr) wine_cuStreamEndCaptureToCig_ptsz
+@ stdcall cuFuncGetParamCount(ptr ptr) wine_cuFuncGetParamCount
+@ stdcall cuGraphNodeGetParams(ptr ptr) wine_cuGraphNodeGetParams
+@ stdcall cuMemcpyWithAttributesAsync(long long long ptr ptr) wine_cuMemcpyWithAttributesAsync
+@ stdcall cuMemcpy3DWithAttributesAsync(ptr long ptr) wine_cuMemcpy3DWithAttributesAsync
+@ stdcall cuKernelGetParamCount(ptr ptr) wine_cuKernelGetParamCount
+@ stdcall cuCoredumpRegisterStartCallback(ptr ptr ptr) wine_cuCoredumpRegisterStartCallback
+@ stdcall cuCoredumpRegisterCompleteCallback(ptr ptr ptr) wine_cuCoredumpRegisterCompleteCallback
+@ stdcall cuCoredumpDeregisterStartCallback(ptr) wine_cuCoredumpDeregisterStartCallback
+@ stdcall cuCoredumpDeregisterCompleteCallback(ptr) wine_cuCoredumpDeregisterCompleteCallback
+@ stdcall cuLaunchHostFunc_v2(ptr ptr ptr long) wine_cuLaunchHostFunc_v2
+@ stdcall cuLaunchHostFunc_v2_ptsz(ptr ptr ptr long) wine_cuLaunchHostFunc_v2_ptsz

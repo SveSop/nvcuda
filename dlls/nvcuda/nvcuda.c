@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2014-2015 Michael Müller
  * Copyright (C) 2014-2015 Sebastian Lackner
- * Copyright (C) 2022-2025 Sveinar Søpler
+ * Copyright (C) 2022-2026 Sveinar Søpler
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -837,6 +837,23 @@ static CUresult (*pcuGraphExecGetId)(CUgraphExec hGraphExec, unsigned int* graph
 static CUresult (*pcuStreamGetDevResource)(CUstream hStream, CUdevResource* result, CUdevResourceType type);
 static CUresult (*pcuStreamGetDevResource_ptsz)(CUstream hStream, CUdevResource* result, CUdevResourceType type);
 static CUresult (*pcuDevSmResourceSplit)(CUdevResource* result, unsigned int nbGroups, const CUdevResource* input, CUdevResource* remainder, unsigned int flags, CU_DEV_SM_RESOURCE_GROUP_PARAMS* groupParams);
+static CUresult (*pcuMemcpyWithAttributesAsync_ptsz)(CUdeviceptr_v2 dst, CUdeviceptr_v2 src, size_t size, CUmemcpyAttributes_v1* attr, CUstream hStream);
+static CUresult (*pcuMemcpy3DWithAttributesAsync_ptsz)(CUDA_MEMCPY3D_BATCH_OP_v1* op, unsigned long long flags, CUstream hStream);
+static CUresult (*pcuStreamBeginCaptureToCig)(CUstream hStream, CUstreamCigCaptureParams* streamCigCaptureParams);
+static CUresult (*pcuStreamBeginCaptureToCig_ptsz)(CUstream hStream, CUstreamCigCaptureParams* streamCigCaptureParams);
+static CUresult (*pcuStreamEndCaptureToCig)(CUstream hStream);
+static CUresult (*pcuStreamEndCaptureToCig_ptsz)(CUstream hStream);
+static CUresult (*pcuFuncGetParamCount)(CUfunction func, size_t* paramCount);
+static CUresult (*pcuGraphNodeGetParams)(CUgraphNode hNode, CUgraphNodeParams* nodeParams);
+static CUresult (*pcuMemcpyWithAttributesAsync)(CUdeviceptr_v2 dst, CUdeviceptr_v2 src, size_t size, CUmemcpyAttributes_v1* attr, CUstream hStream);
+static CUresult (*pcuMemcpy3DWithAttributesAsync)(CUDA_MEMCPY3D_BATCH_OP_v1* op, unsigned long long flags, CUstream hStream);
+static CUresult (*pcuKernelGetParamCount)(CUkernel kernel, size_t* paramCount);
+static CUresult (*pcuCoredumpRegisterStartCallback)(CUcoredumpStatusCallback callback, void* userData, CUcoredumpCallbackHandle* callbackOut);
+static CUresult (*pcuCoredumpRegisterCompleteCallback)(CUcoredumpStatusCallback callback, void* userData, CUcoredumpCallbackHandle* callbackOut);
+static CUresult (*pcuCoredumpDeregisterStartCallback)(CUcoredumpCallbackHandle callback);
+static CUresult (*pcuCoredumpDeregisterCompleteCallback)(CUcoredumpCallbackHandle callback);
+static CUresult (*pcuLaunchHostFunc_v2)(CUstream hStream, CUhostFn fn, void* userData, unsigned int syncMode);
+static CUresult (*pcuLaunchHostFunc_v2_ptsz)(CUstream hStream, CUhostFn fn, void* userData, unsigned int syncMode);
 
 // Unknown so far - Possibly some python usage?
 static CUresult (*pcuDriverGetGpuCodeIsaVersion)(void* param0, void* param1);
@@ -1532,6 +1549,23 @@ static BOOL load_functions(void)
     TRY_LOAD_FUNCPTR(cuStreamGetDevResource);
     TRY_LOAD_FUNCPTR(cuStreamGetDevResource_ptsz);
     TRY_LOAD_FUNCPTR(cuDriverGetGpuCodeIsaVersion);
+    TRY_LOAD_FUNCPTR(cuMemcpyWithAttributesAsync);
+    TRY_LOAD_FUNCPTR(cuMemcpy3DWithAttributesAsync_ptsz);
+    TRY_LOAD_FUNCPTR(cuStreamBeginCaptureToCig);
+    TRY_LOAD_FUNCPTR(cuStreamBeginCaptureToCig_ptsz);
+    TRY_LOAD_FUNCPTR(cuStreamEndCaptureToCig);
+    TRY_LOAD_FUNCPTR(cuStreamEndCaptureToCig_ptsz);
+    TRY_LOAD_FUNCPTR(cuFuncGetParamCount);
+    TRY_LOAD_FUNCPTR(cuGraphNodeGetParams);
+    TRY_LOAD_FUNCPTR(cuMemcpyWithAttributesAsync);
+    TRY_LOAD_FUNCPTR(cuMemcpy3DWithAttributesAsync);
+    TRY_LOAD_FUNCPTR(cuKernelGetParamCount);
+    TRY_LOAD_FUNCPTR(cuCoredumpRegisterStartCallback);
+    TRY_LOAD_FUNCPTR(cuCoredumpRegisterCompleteCallback);
+    TRY_LOAD_FUNCPTR(cuCoredumpDeregisterStartCallback);
+    TRY_LOAD_FUNCPTR(cuCoredumpDeregisterCompleteCallback);
+    TRY_LOAD_FUNCPTR(cuLaunchHostFunc_v2);
+    TRY_LOAD_FUNCPTR(cuLaunchHostFunc_v2);
 
     #undef LOAD_FUNCPTR
     #undef TRY_LOAD_FUNCPTR
@@ -6095,6 +6129,125 @@ CUresult WINAPI wine_cuDevSmResourceSplit(CUdevResource* result, unsigned int nb
     TRACE("(%p, %u, %p, %p, %u, %p)\n", result, nbGroups, input, remainder, flags, groupParams);
     CHECK_FUNCPTR(cuDevSmResourceSplit);
     return pcuDevSmResourceSplit(result, nbGroups, input, remainder, flags, groupParams);
+}
+
+CUresult WINAPI wine_cuMemcpyWithAttributesAsync_ptsz(CUdeviceptr_v2 dst, CUdeviceptr_v2 src, size_t size, CUmemcpyAttributes_v1* attr, CUstream hStream)
+{
+    TRACE("(" DEV_PTR ", " DEV_PTR ", %zu, %p, %p)\n", dst, src, size, attr, hStream);
+    CHECK_FUNCPTR(cuMemcpyWithAttributesAsync_ptsz);
+    return pcuMemcpyWithAttributesAsync_ptsz(dst, src, size, attr, hStream);
+}
+
+CUresult WINAPI wine_cuMemcpy3DWithAttributesAsync_ptsz(CUDA_MEMCPY3D_BATCH_OP_v1* op, unsigned long long flags, CUstream hStream)
+{
+    TRACE("(%p, %llu, %p)\n", op, flags, hStream);
+    CHECK_FUNCPTR(cuMemcpy3DWithAttributesAsync_ptsz);
+    return pcuMemcpy3DWithAttributesAsync_ptsz(op, flags, hStream);
+}
+
+CUresult WINAPI wine_cuStreamBeginCaptureToCig(CUstream hStream, CUstreamCigCaptureParams* streamCigCaptureParams)
+{
+    TRACE("(%p, %p)\n", hStream, streamCigCaptureParams);
+    CHECK_FUNCPTR(cuStreamBeginCaptureToCig);
+    return pcuStreamBeginCaptureToCig(hStream, streamCigCaptureParams);
+}
+
+CUresult WINAPI wine_cuStreamBeginCaptureToCig_ptsz(CUstream hStream, CUstreamCigCaptureParams* streamCigCaptureParams)
+{
+    TRACE("(%p, %p)\n", hStream, streamCigCaptureParams);
+    CHECK_FUNCPTR(cuStreamBeginCaptureToCig_ptsz);
+    return pcuStreamBeginCaptureToCig_ptsz(hStream, streamCigCaptureParams);
+}
+
+CUresult WINAPI wine_cuStreamEndCaptureToCig(CUstream hStream)
+{
+    TRACE("(%p)\n", hStream);
+    CHECK_FUNCPTR(cuStreamEndCaptureToCig);
+    return pcuStreamEndCaptureToCig(hStream);
+}
+
+CUresult WINAPI wine_cuStreamEndCaptureToCig_ptsz(CUstream hStream)
+{
+    TRACE("(%p)\n", hStream);
+    CHECK_FUNCPTR(cuStreamEndCaptureToCig_ptsz);
+    return pcuStreamEndCaptureToCig_ptsz(hStream);
+}
+
+CUresult WINAPI wine_cuFuncGetParamCount(CUfunction func, size_t* paramCount)
+{
+    TRACE("(%p, %p)\n", func, paramCount);
+    CHECK_FUNCPTR(cuFuncGetParamCount);
+    return pcuFuncGetParamCount(func, paramCount);
+}
+
+CUresult WINAPI wine_cuGraphNodeGetParams(CUgraphNode hNode, CUgraphNodeParams* nodeParams)
+{
+    TRACE("(%p, %p)\n", hNode, nodeParams);
+    CHECK_FUNCPTR(cuGraphNodeGetParams);
+    return pcuGraphNodeGetParams(hNode, nodeParams);
+}
+
+CUresult WINAPI wine_cuMemcpyWithAttributesAsync(CUdeviceptr_v2 dst, CUdeviceptr_v2 src, size_t size, CUmemcpyAttributes_v1* attr, CUstream hStream)
+{
+    TRACE("(" DEV_PTR ", " DEV_PTR ", %zu, %p, %p)\n", dst, src, size, attr, hStream);
+    CHECK_FUNCPTR(cuMemcpyWithAttributesAsync);
+    return pcuMemcpyWithAttributesAsync(dst, src, size, attr, hStream);
+}
+
+CUresult WINAPI wine_cuMemcpy3DWithAttributesAsync(CUDA_MEMCPY3D_BATCH_OP_v1* op, unsigned long long flags, CUstream hStream)
+{
+    TRACE("(%p, %llu, %p)\n", op, flags, hStream);
+    CHECK_FUNCPTR(cuMemcpy3DWithAttributesAsync);
+    return pcuMemcpy3DWithAttributesAsync(op, flags, hStream);
+}
+
+CUresult WINAPI wine_cuKernelGetParamCount(CUkernel kernel, size_t* paramCount)
+{
+    TRACE("(%p, %p)\n", kernel, paramCount);
+    CHECK_FUNCPTR(cuKernelGetParamCount);
+    return pcuKernelGetParamCount(kernel, paramCount);
+}
+
+CUresult WINAPI wine_cuCoredumpRegisterStartCallback(CUcoredumpStatusCallback callback, void* userData, CUcoredumpCallbackHandle* callbackOut)
+{
+    TRACE("(%p, %p, %p)\n", callback, userData, callbackOut);
+    CHECK_FUNCPTR(cuCoredumpRegisterStartCallback);
+    return pcuCoredumpRegisterStartCallback(callback, userData, callbackOut);
+}
+
+CUresult WINAPI wine_cuCoredumpRegisterCompleteCallback(CUcoredumpStatusCallback callback, void* userData, CUcoredumpCallbackHandle* callbackOut)
+{
+    TRACE("(%p, %p, %p)\n", callback, userData, callbackOut);
+    CHECK_FUNCPTR(cuCoredumpRegisterCompleteCallback);
+    return pcuCoredumpRegisterCompleteCallback(callback, userData, callbackOut);
+}
+
+CUresult WINAPI wine_cuCoredumpDeregisterStartCallback(CUcoredumpCallbackHandle callback)
+{
+    TRACE("(%p)\n", callback);
+    CHECK_FUNCPTR(cuCoredumpDeregisterStartCallback);
+    return pcuCoredumpDeregisterStartCallback(callback);
+}
+
+CUresult WINAPI wine_cuCoredumpDeregisterCompleteCallback(CUcoredumpCallbackHandle callback)
+{
+    TRACE("(%p)\n", callback);
+    CHECK_FUNCPTR(cuCoredumpDeregisterCompleteCallback);
+    return pcuCoredumpDeregisterCompleteCallback(callback);
+}
+
+CUresult WINAPI wine_cuLaunchHostFunc_v2(CUstream hStream, CUhostFn fn, void* userData, unsigned int syncMode)
+{
+    TRACE("(%p, %p, %p, %u)\n", hStream, fn, userData, syncMode);
+    CHECK_FUNCPTR(cuLaunchHostFunc_v2);
+    return pcuLaunchHostFunc_v2(hStream, fn, userData, syncMode);
+}
+
+CUresult WINAPI wine_cuLaunchHostFunc_v2_ptsz(CUstream hStream, CUhostFn fn, void* userData, unsigned int syncMode)
+{
+    TRACE("(%p, %p, %p, %u)\n", hStream, fn, userData, syncMode);
+    CHECK_FUNCPTR(cuLaunchHostFunc_v2_ptsz);
+    return pcuLaunchHostFunc_v2_ptsz(hStream, fn, userData, syncMode);
 }
 
 // Unknown so far - Possibly some Pyhthon thing...?
