@@ -1,5 +1,5 @@
 # nvcuda
-Version: v0.4  
+Version: v0.5  
 
 Standalone version of nvcuda based from Wine-Staging  
 This builds ONLY the 64bit version of nvcuda. For 32bit version  
@@ -13,7 +13,7 @@ progress and not all functions are implemented.
 The DirectX implementation in the CUDA driver for linux is not  
 available for this relay.  
 Required driver is 525 series or newer.  
-The recommended driver is always most recent. (570+).  
+The recommended driver is always most recent. (580+).  
 
 ## Build requirements:  
 - [WINE] (version >= 10.0) [https://www.winehq.org/](https://www.winehq.org/)  
