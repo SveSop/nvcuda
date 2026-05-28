@@ -710,6 +710,26 @@ extern void wine_cuCoredumpRegisterStartCallback(void);
 extern void wine_cuCoredumpRegisterCompleteCallback(void);
 extern void wine_cuCoredumpDeregisterStartCallback(void);
 extern void wine_cuCoredumpDeregisterCompleteCallback(void);
+extern void wine_cuLogicalEndpointIdReserve(void);
+extern void wine_cuLogicalEndpointIdRelease(void);
+extern void wine_cuLogicalEndpointCreate(void);
+extern void wine_cuLogicalEndpointAddDevice(void);
+extern void wine_cuLogicalEndpointDestroy(void);
+extern void wine_cuLogicalEndpointBindAddr(void);
+extern void wine_cuLogicalEndpointBindMem(void);
+extern void wine_cuLogicalEndpointUnbind(void);
+extern void wine_cuLogicalEndpointExport(void);
+extern void wine_cuLogicalEndpointImport(void);
+extern void wine_cuLogicalEndpointGetLimits(void);
+extern void wine_cuLogicalEndpointQuery(void);
+extern void wine_cuStreamBeginRecaptureToGraph(void);
+extern void wine_cuStreamBeginRecaptureToGraph_ptsz(void);
+
+// Unknown calls - possibly TILE related ?
+extern void wine_cuDriverGetGpuCodeIsaVersion(void);
+extern void wine_cuSubgridCreate(void);
+extern void wine_cuSubgridWorkerGridCreate(void);
+extern void wine_cuSubgridWorksetCreate(void);
 
 const FunctionMapping mappings[] =
 {
@@ -1416,6 +1436,25 @@ const FunctionMapping mappings[] =
     {"cuCoredumpRegisterCompleteCallback", 13020, 0, wine_cuCoredumpRegisterCompleteCallback},
     {"cuCoredumpDeregisterStartCallback", 13020, 0, wine_cuCoredumpDeregisterStartCallback},
     {"cuCoredumpDeregisterCompleteCallback", 13020, 0, wine_cuCoredumpDeregisterCompleteCallback},
+    {"cuLogicalEndpointIdReserve", 13030, 0, wine_cuLogicalEndpointIdReserve},
+    {"cuLogicalEndpointIdRelease", 13030, 0, wine_cuLogicalEndpointIdRelease},
+    {"cuLogicalEndpointCreate", 13030, 0, wine_cuLogicalEndpointCreate},
+    {"cuLogicalEndpointAddDevice", 13030, 0, wine_cuLogicalEndpointAddDevice},
+    {"cuLogicalEndpointDestroy", 13030, 0, wine_cuLogicalEndpointDestroy},
+    {"cuLogicalEndpointBindAddr", 13030, 0, wine_cuLogicalEndpointBindAddr},
+    {"cuLogicalEndpointBindMem", 13030, 0, wine_cuLogicalEndpointBindMem},
+    {"cuLogicalEndpointUnbind", 13030, 0, wine_cuLogicalEndpointUnbind},
+    {"cuLogicalEndpointExport", 13030, 0, wine_cuLogicalEndpointExport},
+    {"cuLogicalEndpointImport", 13030, 0, wine_cuLogicalEndpointImport},
+    {"cuLogicalEndpointGetLimits", 13030, 0, wine_cuLogicalEndpointGetLimits},
+    {"cuLogicalEndpointQuery", 13030, 0, wine_cuLogicalEndpointQuery},
+    {"cuStreamBeginRecaptureToGraph", 13030, 0, wine_cuStreamBeginRecaptureToGraph},
+    {"cuStreamBeginRecaptureToGraph", 13030, 2, wine_cuStreamBeginRecaptureToGraph_ptsz},
+    // Unknown - possibly TILE related
+    {"cuDriverGetGpuCodeIsaVersion", 13010, 0, wine_cuDriverGetGpuCodeIsaVersion},
+    {"cuSubgridCreate", 13030, 0, wine_cuSubgridCreate},
+    {"cuSubgridWorkerGridCreate", 13030, 0, wine_cuSubgridWorkerGridCreate},
+    {"cuSubgridWorksetCreate", 13030, 0, wine_cuSubgridWorksetCreate},
 };
 
 const size_t mappings_count = sizeof(mappings) / sizeof(mappings[0]);

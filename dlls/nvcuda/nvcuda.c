@@ -854,9 +854,26 @@ static CUresult (*pcuCoredumpDeregisterStartCallback)(CUcoredumpCallbackHandle c
 static CUresult (*pcuCoredumpDeregisterCompleteCallback)(CUcoredumpCallbackHandle callback);
 static CUresult (*pcuLaunchHostFunc_v2)(CUstream hStream, CUhostFn fn, void* userData, unsigned int syncMode);
 static CUresult (*pcuLaunchHostFunc_v2_ptsz)(CUstream hStream, CUhostFn fn, void* userData, unsigned int syncMode);
+static CUresult (*pcuLogicalEndpointIdReserve)(CUlogicalEndpointId* leId, cuuint32_t count);
+static CUresult (*pcuLogicalEndpointIdRelease)(CUlogicalEndpointId leId, cuuint32_t count);
+static CUresult (*pcuLogicalEndpointCreate)(CUlogicalEndpointId leId, const CUlogicalEndpointProp* prop);
+static CUresult (*pcuLogicalEndpointAddDevice)(CUlogicalEndpointId leId, CUdevice dev);
+static CUresult (*pcuLogicalEndpointDestroy)(CUlogicalEndpointId leId);
+static CUresult (*pcuLogicalEndpointBindAddr)(CUlogicalEndpointId leId, CUdevice dev, cuuint64_t offset, void* ptr, cuuint64_t size, unsigned long long flags);
+static CUresult (*pcuLogicalEndpointBindMem)(CUlogicalEndpointId leId, CUdevice dev, cuuint64_t offset, CUmemGenericAllocationHandle memHandle, cuuint64_t memOffset, cuuint64_t size, unsigned long long flags);
+static CUresult (*pcuLogicalEndpointUnbind)(CUlogicalEndpointId leId, CUdevice dev, cuuint64_t offset, cuuint64_t size);
+static CUresult (*pcuLogicalEndpointExport)(void* handle, const CUlogicalEndpointId leId, CUlogicalEndpointIpcHandleType handleType);
+static CUresult (*pcuLogicalEndpointImport)(CUlogicalEndpointId leId, const void* handle, CUlogicalEndpointIpcHandleType handleType);
+static CUresult (*pcuLogicalEndpointGetLimits)(cuuint64_t* bindAlignment, cuuint64_t* maxSize, const CUlogicalEndpointProp* prop);
+static CUresult (*pcuLogicalEndpointQuery)(CUlogicalEndpointId leId, cuuint32_t count, int* queryStatus);
+static CUresult (*pcuStreamBeginRecaptureToGraph)(CUstream hStream, CUstreamCaptureMode mode, CUgraph hGraph, CUgraphRecaptureCallback callbackFunc, void* userData);
+static CUresult (*pcuStreamBeginRecaptureToGraph_ptsz)(CUstream hStream, CUstreamCaptureMode mode, CUgraph hGraph, CUgraphRecaptureCallback callbackFunc, void* userData);
 
-// Unknown so far - Possibly some python usage?
+// Unknown so far - Possibly TILE related - Not documented
 static CUresult (*pcuDriverGetGpuCodeIsaVersion)(void* param0, void* param1);
+static CUresult (*pcuSubgridCreate)(void* param0, void* param1);
+static CUresult (*pcuSubgridWorkerGridCreate)(void* param0, void* param1);
+static CUresult (*pcuSubgridWorksetCreate)(void* param0, void* param1);
 
 static void *cuda_handle = NULL;
 
@@ -1548,7 +1565,6 @@ static BOOL load_functions(void)
     TRY_LOAD_FUNCPTR(cuMulticastBindMem_v2);
     TRY_LOAD_FUNCPTR(cuStreamGetDevResource);
     TRY_LOAD_FUNCPTR(cuStreamGetDevResource_ptsz);
-    TRY_LOAD_FUNCPTR(cuDriverGetGpuCodeIsaVersion);
     TRY_LOAD_FUNCPTR(cuMemcpyWithAttributesAsync);
     TRY_LOAD_FUNCPTR(cuMemcpy3DWithAttributesAsync_ptsz);
     TRY_LOAD_FUNCPTR(cuStreamBeginCaptureToCig);
@@ -1566,6 +1582,26 @@ static BOOL load_functions(void)
     TRY_LOAD_FUNCPTR(cuCoredumpDeregisterCompleteCallback);
     TRY_LOAD_FUNCPTR(cuLaunchHostFunc_v2);
     TRY_LOAD_FUNCPTR(cuLaunchHostFunc_v2);
+    TRY_LOAD_FUNCPTR(cuLogicalEndpointIdReserve);
+    TRY_LOAD_FUNCPTR(cuLogicalEndpointIdRelease);
+    TRY_LOAD_FUNCPTR(cuLogicalEndpointCreate);
+    TRY_LOAD_FUNCPTR(cuLogicalEndpointAddDevice);
+    TRY_LOAD_FUNCPTR(cuLogicalEndpointDestroy);
+    TRY_LOAD_FUNCPTR(cuLogicalEndpointBindAddr);
+    TRY_LOAD_FUNCPTR(cuLogicalEndpointBindMem);
+    TRY_LOAD_FUNCPTR(cuLogicalEndpointUnbind);
+    TRY_LOAD_FUNCPTR(cuLogicalEndpointExport);
+    TRY_LOAD_FUNCPTR(cuLogicalEndpointImport);
+    TRY_LOAD_FUNCPTR(cuLogicalEndpointGetLimits);
+    TRY_LOAD_FUNCPTR(cuLogicalEndpointQuery);
+    TRY_LOAD_FUNCPTR(cuStreamBeginRecaptureToGraph);
+    TRY_LOAD_FUNCPTR(cuStreamBeginRecaptureToGraph_ptsz);
+
+    // Undocumented - TILE related?
+    TRY_LOAD_FUNCPTR(cuDriverGetGpuCodeIsaVersion);
+    TRY_LOAD_FUNCPTR(cuSubgridCreate);
+    TRY_LOAD_FUNCPTR(cuSubgridWorkerGridCreate);
+    TRY_LOAD_FUNCPTR(cuSubgridWorksetCreate);
 
     #undef LOAD_FUNCPTR
     #undef TRY_LOAD_FUNCPTR
@@ -6251,11 +6287,130 @@ CUresult WINAPI wine_cuLaunchHostFunc_v2_ptsz(CUstream hStream, CUhostFn fn, voi
     return pcuLaunchHostFunc_v2_ptsz(hStream, fn, userData, syncMode);
 }
 
-// Unknown so far - Possibly some Pyhthon thing...?
+CUresult WINAPI wine_cuLogicalEndpointIdReserve(CUlogicalEndpointId* leId, cuuint32_t count)
+{
+    TRACE("(%p, %u)\n", leId, count);
+    CHECK_FUNCPTR(cuLogicalEndpointIdReserve);
+    return pcuLogicalEndpointIdReserve(leId, count);
+}
+
+CUresult WINAPI wine_cuLogicalEndpointIdRelease(CUlogicalEndpointId leId, cuuint32_t count)
+{
+    TRACE("(%u, %u)\n", leId, count);
+    CHECK_FUNCPTR(cuLogicalEndpointIdRelease);
+    return pcuLogicalEndpointIdRelease(leId, count);
+}
+
+CUresult WINAPI wine_cuLogicalEndpointCreate(CUlogicalEndpointId leId, const CUlogicalEndpointProp* prop)
+{
+    TRACE("(%u, %p)\n", leId, prop);
+    CHECK_FUNCPTR(cuLogicalEndpointCreate);
+    return pcuLogicalEndpointCreate(leId, prop);
+}
+
+CUresult WINAPI wine_cuLogicalEndpointAddDevice(CUlogicalEndpointId leId, CUdevice dev)
+{
+    TRACE("(%u, %d)\n", leId, dev);
+    CHECK_FUNCPTR(cuLogicalEndpointAddDevice);
+    return pcuLogicalEndpointAddDevice(leId, dev);
+}
+
+CUresult WINAPI wine_cuLogicalEndpointDestroy(CUlogicalEndpointId leId)
+{
+    TRACE("(%u)\n", leId);
+    CHECK_FUNCPTR(cuLogicalEndpointDestroy);
+    return pcuLogicalEndpointDestroy(leId);
+}
+
+CUresult WINAPI wine_cuLogicalEndpointBindAddr(CUlogicalEndpointId leId, CUdevice dev, cuuint64_t offset, void* ptr, cuuint64_t size, unsigned long long flags)
+{
+    TRACE("(%u, %d, %" PRIu64 ", %p, %" PRIu64 ", %llu)\n", leId, dev, offset, ptr, size, flags);
+    CHECK_FUNCPTR(cuLogicalEndpointBindAddr);
+    return pcuLogicalEndpointBindAddr(leId, dev, offset, ptr, size, flags);
+}
+
+CUresult WINAPI wine_cuLogicalEndpointBindMem(CUlogicalEndpointId leId, CUdevice dev, cuuint64_t offset, CUmemGenericAllocationHandle memHandle, cuuint64_t memOffset, cuuint64_t size, unsigned long long flags)
+{
+    TRACE("(%u, %d, %" PRIu64 ", %lld, %" PRIu64 ", %" PRIu64 ", %llu)\n", leId, dev, offset, memHandle, memOffset, size, flags);
+    CHECK_FUNCPTR(cuLogicalEndpointBindMem);
+    return pcuLogicalEndpointBindMem(leId, dev, offset, memHandle, memOffset, size, flags);
+}
+
+CUresult WINAPI wine_cuLogicalEndpointUnbind(CUlogicalEndpointId leId, CUdevice dev, cuuint64_t offset, cuuint64_t size)
+{
+    TRACE("(%u, %d, %" PRIu64 ", %" PRIu64 ")\n", leId, dev, offset, size);
+    CHECK_FUNCPTR(cuLogicalEndpointUnbind);
+    return pcuLogicalEndpointUnbind(leId, dev, offset, size);
+}
+
+CUresult WINAPI wine_cuLogicalEndpointExport(void* handle, const CUlogicalEndpointId leId, CUlogicalEndpointIpcHandleType handleType)
+{
+    TRACE("(%p, %u, %d)\n", handle, leId, handleType);
+    CHECK_FUNCPTR(cuLogicalEndpointExport);
+    return pcuLogicalEndpointExport(handle, leId, handleType);
+}
+
+CUresult WINAPI wine_cuLogicalEndpointImport(CUlogicalEndpointId leId, const void* handle, CUlogicalEndpointIpcHandleType handleType)
+{
+    TRACE("(%u, %p, %d)\n", leId, handle, handleType);
+    CHECK_FUNCPTR(cuLogicalEndpointImport);
+    return pcuLogicalEndpointImport(leId, handle, handleType);
+}
+
+CUresult WINAPI wine_cuLogicalEndpointGetLimits(cuuint64_t* bindAlignment, cuuint64_t* maxSize, const CUlogicalEndpointProp* prop)
+{
+    TRACE("(%p, %p, %p)\n", bindAlignment, maxSize, prop);
+    CHECK_FUNCPTR(cuLogicalEndpointGetLimits);
+    return pcuLogicalEndpointGetLimits(bindAlignment, maxSize, prop);
+}
+
+CUresult WINAPI wine_cuLogicalEndpointQuery(CUlogicalEndpointId leId, cuuint32_t count, int* queryStatus)
+{
+    TRACE("(%u, %u, %p)\n", leId, count, queryStatus);
+    CHECK_FUNCPTR(cuLogicalEndpointQuery);
+    return pcuLogicalEndpointQuery(leId, count, queryStatus);
+}
+
+CUresult WINAPI wine_cuStreamBeginRecaptureToGraph(CUstream hStream, CUstreamCaptureMode mode, CUgraph hGraph, CUgraphRecaptureCallback callbackFunc, void* userData)
+{
+    TRACE("(%p, %u, %p, %p, %p)\n", hStream, mode, hGraph, callbackFunc, userData);
+    CHECK_FUNCPTR(cuStreamBeginRecaptureToGraph);
+    return pcuStreamBeginRecaptureToGraph(hStream, mode, hGraph, callbackFunc, userData);
+}
+
+CUresult WINAPI wine_cuStreamBeginRecaptureToGraph_ptsz(CUstream hStream, CUstreamCaptureMode mode, CUgraph hGraph, CUgraphRecaptureCallback callbackFunc, void* userData)
+{
+    TRACE("(%p, %u, %p, %p, %p)\n", hStream, mode, hGraph, callbackFunc, userData);
+    CHECK_FUNCPTR(cuStreamBeginRecaptureToGraph_ptsz);
+    return pcuStreamBeginRecaptureToGraph_ptsz(hStream, mode, hGraph, callbackFunc, userData);
+}
+
+// Unknown so far - Possibly TILE related...?
 CUresult WINAPI wine_cuDriverGetGpuCodeIsaVersion(void* param0, void* param1)
 {
-    TRACE("cuDriverGetGpuCodeIsaVersion: (UNKNOWN - FIXME!)\n");
+    FIXME("(%p, %p)\n", param0, param1);
     CHECK_FUNCPTR(cuDriverGetGpuCodeIsaVersion);
+    return CUDA_ERROR_UNKNOWN;
+}
+
+CUresult WINAPI wine_cuSubgridCreate(void* param0, void* param1)
+{
+    FIXME("(%p, %p)\n", param0, param1);
+    CHECK_FUNCPTR(cuSubgridCreate);
+    return CUDA_ERROR_UNKNOWN;
+}
+
+CUresult WINAPI wine_cuSubgridWorkerGridCreate(void* param0, void* param1)
+{
+    FIXME("(%p, %p)\n", param0, param1);
+    CHECK_FUNCPTR(cuSubgridWorkerGridCreate);
+    return CUDA_ERROR_UNKNOWN;
+}
+
+CUresult WINAPI wine_cuSubgridWorksetCreate(void* param0, void* param1)
+{
+    FIXME("(%p, %p)\n", param0, param1);
+    CHECK_FUNCPTR(cuSubgridWorksetCreate);
     return CUDA_ERROR_UNKNOWN;
 }
 

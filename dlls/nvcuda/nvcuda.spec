@@ -786,3 +786,20 @@
 @ stdcall cuCoredumpDeregisterCompleteCallback(ptr) wine_cuCoredumpDeregisterCompleteCallback
 @ stdcall cuLaunchHostFunc_v2(ptr ptr ptr long) wine_cuLaunchHostFunc_v2
 @ stdcall cuLaunchHostFunc_v2_ptsz(ptr ptr ptr long) wine_cuLaunchHostFunc_v2_ptsz
+@ stdcall cuLogicalEndpointIdReserve(ptr long) wine_cuLogicalEndpointIdReserve
+@ stdcall cuLogicalEndpointIdRelease(long long) wine_cuLogicalEndpointIdRelease
+@ stdcall cuLogicalEndpointCreate(long ptr) wine_cuLogicalEndpointCreate
+@ stdcall cuLogicalEndpointAddDevice(long long) wine_cuLogicalEndpointAddDevice
+@ stdcall cuLogicalEndpointDestroy(long) wine_cuLogicalEndpointDestroy
+@ stdcall cuLogicalEndpointBindAddr(long long int64 ptr int64 double) wine_cuLogicalEndpointBindAddr
+@ stdcall cuLogicalEndpointBindMem(long long int64 ptr int64 int64 double) wine_cuLogicalEndpointBindMem
+@ stdcall cuLogicalEndpointUnbind(long long int64 int64) wine_cuLogicalEndpointUnbind
+@ stdcall cuLogicalEndpointExport(ptr long long) wine_cuLogicalEndpointExport
+@ stdcall cuLogicalEndpointImport(long ptr long) wine_cuLogicalEndpointImport
+@ stdcall cuLogicalEndpointGetLimits(ptr ptr ptr) wine_cuLogicalEndpointGetLimits
+@ stdcall cuLogicalEndpointQuery(long long ptr) wine_cuLogicalEndpointQuery
+@ stdcall cuStreamBeginRecaptureToGraph(ptr long ptr ptr ptr) wine_cuStreamBeginRecaptureToGraph
+@ stdcall cuStreamBeginRecaptureToGraph_ptsz(ptr long ptr ptr ptr) wine_cuStreamBeginRecaptureToGraph_ptsz
+@ stdcall cuSubgridCreate(ptr ptr) wine_cuSubgridCreate
+@ stdcall cuSubgridWorkerGridCreate(ptr ptr) wine_cuSubgridWorkerGridCreate
+@ stdcall cuSubgridWorksetCreate(ptr ptr) wine_cuSubgridWorksetCreate

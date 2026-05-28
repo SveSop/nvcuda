@@ -87,6 +87,7 @@ typedef int CUtensorMapL2promotion;
 typedef int CUtensorMapFloatOOBfill;
 typedef int CUprocessState;
 typedef unsigned int CUlogIterator;
+typedef cuuint32_t CUlogicalEndpointId;
 
 typedef void *CUDA_ARRAY_DESCRIPTOR;
 typedef void *CUDA_MEMCPY3D_PEER;
@@ -131,6 +132,7 @@ typedef void *CUmemLocation_v1;
 typedef void *CUmemAllocationType;
 typedef void *CUdevResource;
 typedef void* CUgraphNodeParams;
+typedef void* CUlogicalEndpointProp;
 typedef void (CUDA_CB* CUcoredumpStatusCallback)(void* userData, int pid, CUdevice dev);
 
 typedef unsigned long long CUsurfObject;
@@ -206,6 +208,19 @@ typedef enum {
     CU_DEV_RESOURCE_TYPE_WORKQUEUE_CONFIG = 1000,
     CU_DEV_RESOURCE_TYPE_WORKQUEUE = 10000,
 } CUdevResourceType;
+
+typedef enum CUlogicalEndpointIpcHandleType_enum {
+    CU_LOGICAL_ENDPOINT_IPC_HANDLE_TYPE_NONE,
+    CU_LOGICAL_ENDPOINT_IPC_HANDLE_TYPE_FABRIC
+} CUlogicalEndpointIpcHandleType;
+
+typedef enum CUgraphRecaptureStatus_enum {
+    CU_GRAPH_RECAPTURE_ELIGIBLE_FOR_UPDATE = 0,
+    CU_GRAPH_RECAPTURE_INELIGIBLE_FOR_UPDATE = 1,
+    CU_GRAPH_RECAPTURE_ERROR = 2,
+} CUgraphRecaptureStatus;
+
+typedef CUresult(CUDA_CB* CUgraphRecaptureCallback)(void* data, CUgraphNode node, const CUgraphNodeParams* originalParams, const CUgraphNodeParams* recaptureParams, CUgraphRecaptureStatus status);
 
 typedef enum CUstreamCigDataType_enum {
     STREAM_CIG_DATA_TYPE_D3D12_COMMAND_LIST = 0x1,
