@@ -66,7 +66,7 @@ static RTL_CRITICAL_SECTION tls_callback_section = { &critsect_debug, -1, 0, 0, 
 
 void cuda_process_tls_callbacks(DWORD reason)
 {
-    // Check if the list is empty before entering the critical section
+    /* Check if the list is empty before entering the critical section */
     if (list_empty(&tls_callbacks))
         return;
     
@@ -1271,8 +1271,8 @@ static struct Encryption_table Encryption_Impl;
 static CUresult WINAPI Encryption_encrypt0(unsigned int cudaVersion, time_t timestamp, __uint128_t *res)
 {
     TRACE("%u, (%ld, %p)\n", cudaVersion, timestamp, res);
-    // After CUDA SDK 11.6 some checks is done by the CudaRuntimeLibrary (CudaRT)
-    // This fails, so implementing encryption function from ZLUDA for this
+    /* After CUDA SDK 11.6 some checks is done by the CudaRuntimeLibrary (CudaRT)
+     * This fails, so implementing encryption function from ZLUDA for this */
 
     int version;
     if (wine_cuDriverGetVersion(&version)) return CUDA_ERROR_UNKNOWN;
@@ -3287,11 +3287,13 @@ static struct Relay12_table Relay12_Impl =
     Relay12_func1,
 };
 
-/*  nvcudart_hybrid64.dll
-    This particular DLL is not part of the SDK but is part of the windows driver.
-    That means for certain SDK 13 apps/samples, you will need to download the windows 11
-    driver and extract this DLL and copy it into (WINEPREFIX) c:\windows\system32 folder.
-    I will not provide the DLL on this repository as this is part of the windows WHQL driver. */
+/* nvcudart_hybrid64.dll
+ * This particular DLL is not part of the SDK but is part of the windows driver.
+ * That means for certain SDK 13 apps/samples, you will need to download the windows 11
+ * driver and extract this DLL and copy it into (WINEPREFIX) c:\windows\system32 folder.
+ * I will not provide the DLL on this repository as this is part of the windows WHQL driver,
+ * and tied to the drivers supported CUDA version.
+ */
 
 static void* (WINAPI* pcudaGetProcAddress)(void* param0);
 static HMODULE cudart_hybrid_handle = NULL;
@@ -3322,15 +3324,33 @@ static BOOL load_nvcudart_hybrid(void)
     return TRUE;
 }
 
+/* Snooping function for nvcudart_hybrid64 */
+static void* WINAPI nvcudart_hybrid64(void* param0)
+{
+    const CUDA_GET_PROC_ADDRESS_PARAMS* funcData = (const CUDA_GET_PROC_ADDRESS_PARAMS*)param0;
+
+    void* ret = pcudaGetProcAddress(param0);
+    if (funcData)
+    {
+        /* ID and Function here is unknown, but the RuntimeVersion seems to follow the compiled binary SDK version and cudart64_xx.dll version
+         * possibly overriding the linked cudart64_xx.dll to that of the drivers supported version - lowest version taking presedence.
+         */
+        TRACE("(__cudaGetProcAddress): ID: %u, Function: %3u, RuntimeVersion: %u - ProcAddress: (%p)\n", funcData->id, funcData->function, funcData->cudaVer,  ret);
+    }
+    return ret;
+}
+
 static CUresult WINAPI Relay13_func0(LPCSTR dllName, void* param1, HMODULE* phModule)
 {
-    // We need to manually load nvcudart_hybrid64.dll and set the appropriate pointers by using the above function.
+    /* We need to manually load nvcudart_hybrid64.dll and set the appropriate pointers by using the above function. */
     TRACE("Dll: %s, (%p, %p)\n", dllName, param1, phModule);
     
     if (!load_nvcudart_hybrid())
         return CUDA_ERROR_INVALID_HANDLE;
 
-    *((void**)param1) = (void*)pcudaGetProcAddress;
+    /* Divert funcpointer to log some info from the nvcudart_hybrid64.dll library */
+    *((void**)param1) = (void*)&nvcudart_hybrid64;
+
     *phModule = cudart_hybrid_handle;
 
     TRACE("Returning module handle: (%p)\n", *phModule);
@@ -3339,7 +3359,7 @@ static CUresult WINAPI Relay13_func0(LPCSTR dllName, void* param1, HMODULE* phMo
 
 static CUresult WINAPI Relay13_func1(HMODULE hModule)
 {
-    // Since we loaded nvcudart_hybrid64.dll manually, we free it manually i suppose...
+    /* Since we loaded nvcudart_hybrid64.dll manually, we free it manually i suppose... */
     TRACE("(%p)\n", hModule);
 
     if (!hModule) return CUDA_ERROR_INVALID_HANDLE;

@@ -357,4 +357,13 @@ typedef struct CU_DEV_SM_RESOURCE_GROUP_PARAMS_st {
     unsigned int reserved[12];
 } CU_DEV_SM_RESOURCE_GROUP_PARAMS;
 
+typedef struct CUDA_GET_PROC_ADDRESS_PARAMS_st
+{
+    cuuint32_t id;         // offset 0x00
+    cuuint32_t reserved0;  // offset 0x04
+    cuuint32_t function;   // offset 0x08
+    cuuint32_t reserved1;  // offset 0x0C
+    cuuint32_t cudaVer;    // offset 0x10
+} CUDA_GET_PROC_ADDRESS_PARAMS;
+
 #endif /* __WINE_CUDA_H */
