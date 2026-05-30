@@ -570,6 +570,7 @@ static CUresult (*pcuMemAddressReserve)(CUdeviceptr_v2 *ptr, size_t size, size_t
 static CUresult (*pcuMemExportToShareableHandle)(void* shareableHandle, void* handle, void* handleType, unsigned long long flags);
 static CUresult (*pcuMemGetAllocationPropertiesFromHandle)(void* prop, CUmemGenericAllocationHandle_v1 handle);
 static CUresult (*pcuMemImportFromShareableHandle)(void* handle, void* osHandle, void* shHandleType);
+static CUresult (*pcuDeviceGetNvSciSyncAttributes)(void *nvSciSyncAttrList, CUdevice_v1 dev, int flags);
 
 /* Cuda 11 */
 static CUresult (*pcuMemAllocAsync)(CUdeviceptr_v2 *dptr, size_t bytesize, CUstream hStream);
@@ -4476,6 +4477,12 @@ CUresult WINAPI wine_cuMemImportFromShareableHandle(void* handle, void* osHandle
 {
     TRACE("(%p, %p, %p)\n", handle, osHandle, shHandleType);
     return pcuMemImportFromShareableHandle(handle, osHandle, shHandleType);
+}
+
+CUresult WINAPI wine_cuDeviceGetNvSciSyncAttributes(void *nvSciSyncAttrList, CUdevice_v1 dev, int flags)
+{
+    TRACE("(%p, %d, %d)\n", nvSciSyncAttrList, dev, flags);
+    return pcuDeviceGetNvSciSyncAttributes(nvSciSyncAttrList, dev, flags);
 }
 
 /*

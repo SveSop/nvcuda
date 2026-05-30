@@ -569,7 +569,7 @@
 @ stdcall cuUserObjectCreate(ptr ptr ptr long long) wine_cuUserObjectCreate
 @ stdcall cuUserObjectRelease(ptr long) wine_cuUserObjectRelease
 @ stdcall cuUserObjectRetain(ptr long) wine_cuUserObjectRetain
-@ stub cuDeviceGetNvSciSyncAttributes
+@ stdcall cuDeviceGetNvSciSyncAttributes(ptr long long) wine_cuDeviceGetNvSciSyncAttributes
 @ stub cuEGLStreamConsumerAcquireFrame
 @ stub cuEGLStreamConsumerConnect
 @ stub cuEGLStreamConsumerConnectWithFlags

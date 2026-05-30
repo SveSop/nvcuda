@@ -724,6 +724,7 @@ extern void wine_cuLogicalEndpointGetLimits(void);
 extern void wine_cuLogicalEndpointQuery(void);
 extern void wine_cuStreamBeginRecaptureToGraph(void);
 extern void wine_cuStreamBeginRecaptureToGraph_ptsz(void);
+extern void wine_cuDeviceGetNvSciSyncAttributes(void);
 
 // Unknown calls - possibly TILE related ?
 extern void wine_cuDriverGetGpuCodeIsaVersion(void);
@@ -1450,8 +1451,9 @@ const FunctionMapping mappings[] =
     {"cuLogicalEndpointQuery", 13030, 0, wine_cuLogicalEndpointQuery},
     {"cuStreamBeginRecaptureToGraph", 13030, 0, wine_cuStreamBeginRecaptureToGraph},
     {"cuStreamBeginRecaptureToGraph", 13030, 2, wine_cuStreamBeginRecaptureToGraph_ptsz},
+    {"cuDeviceGetNvSciSyncAttributes", 10020, 0, wine_cuDeviceGetNvSciSyncAttributes},
     // Unknown - possibly TILE related
-    {"cuDriverGetGpuCodeIsaVersion", 13010, 0, wine_cuDriverGetGpuCodeIsaVersion},
+    {"cuDriverGetGpuCodeIsaVersion", 13000, 0, wine_cuDriverGetGpuCodeIsaVersion},
     {"cuSubgridCreate", 13030, 0, wine_cuSubgridCreate},
     {"cuSubgridWorkerGridCreate", 13030, 0, wine_cuSubgridWorkerGridCreate},
     {"cuSubgridWorksetCreate", 13030, 0, wine_cuSubgridWorksetCreate},
