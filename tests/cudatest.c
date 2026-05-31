@@ -68,6 +68,9 @@ static const CUuuid UUID_Relay12                    = {{0xF8, 0xCF, 0xF9, 0x51, 
 static const CUuuid UUID_Relay13                    = {{0xDD, 0x9E, 0x98, 0xA4, 0xF4, 0x10, 0x48, 0x44,
                                                         0x99, 0xB0, 0xE2, 0xAE, 0xB7, 0xB4, 0x32, 0xB5}};
                                                     // {dd9e98a4-f410-4844-99b0-e2aeb7b432b5}
+static const CUuuid UUID_Relay14                    = {{0xDA, 0x91, 0x51, 0xD3, 0x3A, 0xE6, 0xCC, 0x41,
+                                                        0xA5, 0xC0, 0x4F, 0x26, 0xD5, 0x33, 0xE3, 0x28}};
+                                                    // {da9151d3-3ae6-cc41-a5c0-4f26d533e328}
 
 static char* cuda_print_uuid(const CUuuid *id, char *buffer, int size)
 {
@@ -204,6 +207,11 @@ int main() {
     (ret = cuGetExportTable((const void **)&addrTable, &UUID_Relay13)) != CUDA_SUCCESS || !addrTable
     ? printf("Failed to retrieve UUID_Relay13: %d\n", ret)
     : printf("UUID_Relay13 size: %d\n", addrTable->size);
+    addrTable = NULL;
+
+    (ret = cuGetExportTable((const void **)&addrTable, &UUID_Relay14)) != CUDA_SUCCESS || !addrTable
+    ? printf("Failed to retrieve UUID_Relay14: %d\n", ret)
+    : printf("UUID_Relay14 size: %d\n", addrTable->size);
     addrTable = NULL;
 
     return 0;
