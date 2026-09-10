@@ -428,6 +428,9 @@ struct Relay8_table
     void* (WINAPI *func92)(void *param0, void *param1);
     void* (WINAPI *func93)(void *param0, void *param1);
     void* (WINAPI *func94)(void *param0, void *param1);
+    void* (WINAPI *func95)(void *param0, void *param1);
+    void* (WINAPI *func96)(void *param0, void *param1);
+    void* (WINAPI *func97)(void *param0, void *param1);
 };
 static const struct
 {
@@ -527,6 +530,9 @@ static const struct
     void* (*func92)(void *param0, void *param1);
     void* (*func93)(void *param0, void *param1);
     void* (*func94)(void *param0, void *param1);
+    void* (*func95)(void *param0, void *param1);
+    void* (*func96)(void *param0, void *param1);
+    void* (*func97)(void *param0, void *param1);
 } *Relay8_orig = NULL;
 
 /*
@@ -639,6 +645,12 @@ struct Relay9_table
     void* (WINAPI *func101)(void *param0, void *param1);
     void* (WINAPI *func102)(void *param0, void *param1);
     void* (WINAPI *func103)(void *param0, void *param1);
+    void* (WINAPI *func104)(void *param0, void *param1);
+    void* (WINAPI *func105)(void *param0, void *param1);
+    void* (WINAPI *func106)(void *param0, void *param1);
+    void* (WINAPI *func107)(void *param0, void *param1);
+    void* (WINAPI *func108)(void *param0, void *param1);
+    void* (WINAPI *func109)(void *param0, void *param1);
 };
 static const struct
 {
@@ -747,6 +759,12 @@ static const struct
     void* (*func101)(void *param0, void *param1);
     void* (*func102)(void *param0, void *param1);
     void* (*func103)(void *param0, void *param1);
+    void* (*func104)(void *param0, void *param1);
+    void* (*func105)(void *param0, void *param1);
+    void* (*func106)(void *param0, void *param1);
+    void* (*func107)(void *param0, void *param1);
+    void* (*func108)(void *param0, void *param1);
+    void* (*func109)(void *param0, void *param1);
 } *Relay9_orig = NULL;
 
 /*
@@ -1901,6 +1919,24 @@ static void* WINAPI Relay8_func94(void *param0, void *param1)
     return Relay8_orig->func94(param0, param1);
 }
 
+static void* WINAPI Relay8_func95(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay8_orig->func95(param0, param1);
+}
+
+static void* WINAPI Relay8_func96(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay8_orig->func96(param0, param1);
+}
+
+static void* WINAPI Relay8_func97(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay8_orig->func97(param0, param1);
+}
+
 static struct Relay8_table Relay8_Impl =
 {
     sizeof(struct Relay8_table),
@@ -1999,6 +2035,9 @@ static struct Relay8_table Relay8_Impl =
     Relay8_func92,
     Relay8_func93,
     Relay8_func94,
+    Relay8_func95,
+    Relay8_func96,
+    Relay8_func97,
 };
 
 static void* WINAPI Relay9_func0(void *param0, void *param1)
@@ -2639,6 +2678,42 @@ static void* WINAPI Relay9_func103(void *param0, void *param1)
     return Relay9_orig->func103(param0, param1);
 }
 
+static void* WINAPI Relay9_func104(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay9_orig->func104(param0, param1);
+}
+
+static void* WINAPI Relay9_func105(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay9_orig->func105(param0, param1);
+}
+
+static void* WINAPI Relay9_func106(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay9_orig->func106(param0, param1);
+}
+
+static void* WINAPI Relay9_func107(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay9_orig->func107(param0, param1);
+}
+
+static void* WINAPI Relay9_func108(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay9_orig->func108(param0, param1);
+}
+
+static void* WINAPI Relay9_func109(void *param0, void *param1)
+{
+    TRACE("(%p, %p)\n", param0, param1);
+    return Relay9_orig->func109(param0, param1);
+}
+
 static struct Relay9_table Relay9_Impl =
 {
     sizeof(struct Relay9_table),
@@ -2746,6 +2821,12 @@ static struct Relay9_table Relay9_Impl =
     Relay9_func101,
     Relay9_func102,
     Relay9_func103,
+    Relay9_func104,
+    Relay9_func105,
+    Relay9_func106,
+    Relay9_func107,
+    Relay9_func108,
+    Relay9_func109,
 };
 
 static void* WINAPI Relay10_func0(void *param0)

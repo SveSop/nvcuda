@@ -869,12 +869,22 @@ static CUresult (*pcuLogicalEndpointGetLimits)(cuuint64_t* bindAlignment, cuuint
 static CUresult (*pcuLogicalEndpointQuery)(CUlogicalEndpointId leId, cuuint32_t count, int* queryStatus);
 static CUresult (*pcuStreamBeginRecaptureToGraph)(CUstream hStream, CUstreamCaptureMode mode, CUgraph hGraph, CUgraphRecaptureCallback callbackFunc, void* userData);
 static CUresult (*pcuStreamBeginRecaptureToGraph_ptsz)(CUstream hStream, CUstreamCaptureMode mode, CUgraph hGraph, CUgraphRecaptureCallback callbackFunc, void* userData);
+static CUresult (*pcuGraphAddNode_v3)(CUgraphNode *phGraphNode, CUgraph hGraph, const CUgraphNode *dependencies, const void *dependencyData, size_t numDependencies, void *nodeParams);
+static CUresult (*pcuGraphNodeSetParams_v2)(CUgraphNode hNode, void *nodeParams);
+static CUresult (*pcuDeviceGetFabricClusterUuid)(CUuuid* uuid, CUdevice dev);
+static CUresult (*pcuDeviceGetCliqueCount)(size_t* count, CUdevice dev);
+static CUresult (*pcuDeviceGetCliqueInfo)(CUcliqueInfo* cliqueInfo, size_t* count, CUdevice dev);
+static CUresult (*pcuMemGetLocationInfo)(CUdeviceptr_v2 ptr, size_t size, size_t summaryGranularity, size_t samplingGranularity, CUmemLocation_v1* location_out);
+static CUresult (*pcuCheckpointOperationComplete)(CUcheckpointOperationHandle handle);
 
-// Unknown so far - Possibly TILE related - Not documented
+/* Unknown so far - Possibly TILE related - Not documented */
 static CUresult (*pcuDriverGetGpuCodeIsaVersion)(void* param0, void* param1);
 static CUresult (*pcuSubgridCreate)(void* param0, void* param1);
 static CUresult (*pcuSubgridWorkerGridCreate)(void* param0, void* param1);
 static CUresult (*pcuSubgridWorksetCreate)(void* param0, void* param1);
+/* Unknown added in SDK 13.4 */
+static CUresult (*pNVAON_SharedMemory_Destroy)(void* param0, void* param1);
+static CUresult (*pNVAON_SharedMemory_ImportReadOnly)(void* param0, void* param1);
 
 static void *cuda_handle = NULL;
 
@@ -1597,12 +1607,23 @@ static BOOL load_functions(void)
     TRY_LOAD_FUNCPTR(cuLogicalEndpointQuery);
     TRY_LOAD_FUNCPTR(cuStreamBeginRecaptureToGraph);
     TRY_LOAD_FUNCPTR(cuStreamBeginRecaptureToGraph_ptsz);
+    TRY_LOAD_FUNCPTR(cuGraphAddNode_v3);
+    TRY_LOAD_FUNCPTR(cuGraphNodeSetParams);
+    TRY_LOAD_FUNCPTR(cuDeviceGetFabricClusterUuid);
+    TRY_LOAD_FUNCPTR(cuDeviceGetCliqueCount);
+    TRY_LOAD_FUNCPTR(cuDeviceGetCliqueInfo);
+    TRY_LOAD_FUNCPTR(cuMemGetLocationInfo);
+    TRY_LOAD_FUNCPTR(cuCheckpointOperationComplete);
 
-    // Undocumented - TILE related?
+    /* Undocumented - TILE related? */
     TRY_LOAD_FUNCPTR(cuDriverGetGpuCodeIsaVersion);
     TRY_LOAD_FUNCPTR(cuSubgridCreate);
     TRY_LOAD_FUNCPTR(cuSubgridWorkerGridCreate);
     TRY_LOAD_FUNCPTR(cuSubgridWorksetCreate);
+
+    /* Unknown added in SDK 13.4 */
+    TRY_LOAD_FUNCPTR(NVAON_SharedMemory_Destroy);
+    TRY_LOAD_FUNCPTR(NVAON_SharedMemory_ImportReadOnly);
 
     #undef LOAD_FUNCPTR
     #undef TRY_LOAD_FUNCPTR
@@ -6392,7 +6413,56 @@ CUresult WINAPI wine_cuStreamBeginRecaptureToGraph_ptsz(CUstream hStream, CUstre
     return pcuStreamBeginRecaptureToGraph_ptsz(hStream, mode, hGraph, callbackFunc, userData);
 }
 
-// Unknown so far - Possibly TILE related...?
+CUresult WINAPI wine_cuGraphAddNode_v3(CUgraphNode *phGraphNode, CUgraph hGraph, const CUgraphNode *dependencies, const void *dependencyData, size_t numDependencies, void *nodeParams)
+{
+    TRACE("(%p, %p, %p, %p, %zu, %p)\n", phGraphNode, hGraph, dependencies, dependencyData, numDependencies, nodeParams);
+    CHECK_FUNCPTR(cuGraphAddNode_v3);
+    return pcuGraphAddNode_v3(phGraphNode, hGraph, dependencies, dependencyData, numDependencies, nodeParams);
+}
+
+CUresult WINAPI wine_cuGraphNodeSetParams_v2(CUgraphNode hNode, void *nodeParams)
+{
+    TRACE("(%p, %p)\n", hNode, nodeParams);
+    CHECK_FUNCPTR(cuGraphNodeSetParams_v2);
+    return pcuGraphNodeSetParams_v2(hNode, nodeParams);
+}
+
+CUresult WINAPI wine_cuDeviceGetFabricClusterUuid(CUuuid* uuid, CUdevice dev)
+{
+    TRACE("(%p, %d)\n", uuid, dev);
+    CHECK_FUNCPTR(cuDeviceGetFabricClusterUuid);
+    return pcuDeviceGetFabricClusterUuid(uuid, dev);
+}
+
+CUresult WINAPI wine_cuDeviceGetCliqueCount(size_t* count, CUdevice dev)
+{
+    TRACE("(%p, %d)\n", count, dev);
+    CHECK_FUNCPTR(cuDeviceGetCliqueCount);
+    return pcuDeviceGetCliqueCount(count, dev);
+}
+
+CUresult WINAPI wine_cuDeviceGetCliqueInfo(CUcliqueInfo* cliqueInfo, size_t* count, CUdevice dev)
+{
+    TRACE("(%p, %p, %d)\n", cliqueInfo, count, dev);
+    CHECK_FUNCPTR(cuDeviceGetCliqueInfo);
+    return pcuDeviceGetCliqueInfo(cliqueInfo, count, dev);
+}
+
+CUresult WINAPI wine_cuMemGetLocationInfo(CUdeviceptr_v2 ptr, size_t size, size_t summaryGranularity, size_t samplingGranularity, CUmemLocation_v1* location_out)
+{
+    TRACE("(" DEV_PTR ", %zu, %zu, %zu, %p)\n", ptr, size, summaryGranularity, samplingGranularity, location_out);
+    CHECK_FUNCPTR(cuMemGetLocationInfo);
+    return pcuMemGetLocationInfo(ptr, size, summaryGranularity, samplingGranularity, location_out);
+}
+
+CUresult WINAPI wine_cuCheckpointOperationComplete(CUcheckpointOperationHandle handle)
+{
+    TRACE("(%p)\n", handle);
+    CHECK_FUNCPTR(cuCheckpointOperationComplete);
+    return pcuCheckpointOperationComplete(handle);
+}
+
+/* Unknown so far - Possibly TILE related...? */
 CUresult WINAPI wine_cuDriverGetGpuCodeIsaVersion(void* param0, void* param1)
 {
     FIXME("(%p, %p)\n", param0, param1);
@@ -6418,6 +6488,21 @@ CUresult WINAPI wine_cuSubgridWorksetCreate(void* param0, void* param1)
 {
     FIXME("(%p, %p)\n", param0, param1);
     CHECK_FUNCPTR(cuSubgridWorksetCreate);
+    return CUDA_ERROR_UNKNOWN;
+}
+
+/* Unkown - Added in SDK 13.4 */
+CUresult WINAPI wine_NVAON_SharedMemory_Destroy(void* param0, void* param1)
+{
+    FIXME("(%p, %p)\n", param0, param1);
+    CHECK_FUNCPTR(NVAON_SharedMemory_Destroy);
+    return CUDA_ERROR_UNKNOWN;
+}
+
+CUresult WINAPI wine_NVAON_SharedMemory_ImportReadOnly(void* param0, void* param1)
+{
+    FIXME("(%p, %p)\n", param0, param1);
+    CHECK_FUNCPTR(NVAON_SharedMemory_ImportReadOnly);
     return CUDA_ERROR_UNKNOWN;
 }
 

@@ -134,6 +134,7 @@ typedef void *CUdevResource;
 typedef void* CUgraphNodeParams;
 typedef void* CUlogicalEndpointProp;
 typedef void (CUDA_CB* CUcoredumpStatusCallback)(void* userData, int pid, CUdevice dev);
+typedef void* CUcliqueInfo;
 
 typedef unsigned long long CUsurfObject;
 typedef unsigned long long CUtexObject;
@@ -141,6 +142,7 @@ typedef CUmemcpyAttributes_v1 CUmemcpyAttributes;
 typedef CUDA_MEMCPY3D_BATCH_OP_v1 CUDA_MEMCPY3D_BATCH_OP;
 typedef CUmemLocation_v1 CUmemLocation;
 typedef struct CUcoredumpCallbackEntry_st* CUcoredumpCallbackHandle;
+typedef struct CUIcheckpointOperation_st* CUcheckpointOperationHandle;
 
 typedef enum CUexternalMemoryHandleType_enum
 {
@@ -234,6 +236,13 @@ typedef struct CUstreamCigParam_st {
 typedef struct CUstreamCigCaptureParams_st {
     CUstreamCigParam* streamCigParams;
 } CUstreamCigCaptureParams;
+
+typedef struct CUgraphEdgeData_st {
+    unsigned char from_port;
+    unsigned char to_port;
+    unsigned char type;
+    unsigned char reserved[5];
+} CUgraphEdgeData;
 
 typedef struct CUipcEventHandle_st
 {

@@ -498,7 +498,9 @@ extern void wine_cuMemPrefetchAsync_v2(void);
 extern void wine_cuMemPrefetchAsync_v2_ptsz(void);
 extern void wine_cuGraphAddNode(void);
 extern void wine_cuGraphAddNode_v2(void);
+extern void wine_cuGraphAddNode_v3(void);
 extern void wine_cuGraphNodeSetParams(void);
+extern void wine_cuGraphNodeSetParams_v2(void);
 extern void wine_cuGraphExecNodeSetParams(void);
 extern void wine_cuKernelGetName(void);
 extern void wine_cuFuncGetName(void);
@@ -725,12 +727,20 @@ extern void wine_cuLogicalEndpointQuery(void);
 extern void wine_cuStreamBeginRecaptureToGraph(void);
 extern void wine_cuStreamBeginRecaptureToGraph_ptsz(void);
 extern void wine_cuDeviceGetNvSciSyncAttributes(void);
+extern void wine_cuDeviceGetFabricClusterUuid(void);
+extern void wine_cuDeviceGetCliqueCount(void);
+extern void wine_cuDeviceGetCliqueInfo(void);
+extern void wine_cuMemGetLocationInfo(void);
+extern void wine_cuCheckpointOperationComplete(void);
 
-// Unknown calls - possibly TILE related ?
+/* Unknown calls - possibly TILE related ? */
 extern void wine_cuDriverGetGpuCodeIsaVersion(void);
 extern void wine_cuSubgridCreate(void);
 extern void wine_cuSubgridWorkerGridCreate(void);
 extern void wine_cuSubgridWorksetCreate(void);
+/* Unknown - Added in SDK 13.4 */
+extern void wine_NVAON_SharedMemory_Destroy(void);
+extern void wine_NVAON_SharedMemory_ImportReadOnly(void);
 
 const FunctionMapping mappings[] =
 {
@@ -1229,7 +1239,9 @@ const FunctionMapping mappings[] =
     {"cuMemPrefetchAsync", 12020, 2, wine_cuMemPrefetchAsync_v2_ptsz},
     {"cuGraphAddNode", 12020, 0, wine_cuGraphAddNode},
     {"cuGraphAddNode", 12030, 0, wine_cuGraphAddNode_v2},
+    {"cuGraphAddNode", 13040, 0, wine_cuGraphAddNode_v3},
     {"cuGraphNodeSetParams", 12020, 0, wine_cuGraphNodeSetParams},
+    {"cuGraphNodeSetParams", 13040, 0, wine_cuGraphNodeSetParams_v2},
     {"cuGraphExecNodeSetParams", 12020, 0, wine_cuGraphExecNodeSetParams},
     {"cuKernelGetName", 12030, 0, wine_cuKernelGetName},
     {"cuFuncGetName", 12030, 0, wine_cuFuncGetName},
@@ -1452,11 +1464,19 @@ const FunctionMapping mappings[] =
     {"cuStreamBeginRecaptureToGraph", 13030, 0, wine_cuStreamBeginRecaptureToGraph},
     {"cuStreamBeginRecaptureToGraph", 13030, 2, wine_cuStreamBeginRecaptureToGraph_ptsz},
     {"cuDeviceGetNvSciSyncAttributes", 10020, 0, wine_cuDeviceGetNvSciSyncAttributes},
-    // Unknown - possibly TILE related
+    {"cuDeviceGetFabricClusterUuid", 13040, 0, wine_cuDeviceGetFabricClusterUuid},
+    {"cuDeviceGetCliqueCount", 13040, 0, wine_cuDeviceGetCliqueCount},
+    {"cuDeviceGetCliqueInfo", 13040, 0, wine_cuDeviceGetCliqueInfo},
+    {"cuMemGetLocationInfo", 13040, 0, wine_cuMemGetLocationInfo},
+    {"cuCheckpointOperationComplete", 13040, 0, wine_cuCheckpointOperationComplete},
+    /* Unknown - possibly TILE related */
     {"cuDriverGetGpuCodeIsaVersion", 13000, 0, wine_cuDriverGetGpuCodeIsaVersion},
     {"cuSubgridCreate", 13030, 0, wine_cuSubgridCreate},
     {"cuSubgridWorkerGridCreate", 13030, 0, wine_cuSubgridWorkerGridCreate},
     {"cuSubgridWorksetCreate", 13030, 0, wine_cuSubgridWorksetCreate},
-};
+    /* Unknown - Added in SDK 13.4 */
+    {"NVAON_SharedMemory_Destroy", 13040, 0, wine_NVAON_SharedMemory_Destroy},
+    {"NVAON_SharedMemory_ImportReadOnly", 13040, 0, wine_NVAON_SharedMemory_ImportReadOnly},
+ };
 
 const size_t mappings_count = sizeof(mappings) / sizeof(mappings[0]);

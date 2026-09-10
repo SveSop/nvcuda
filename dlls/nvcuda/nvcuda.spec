@@ -668,6 +668,7 @@
 @ stdcall cuGraphKernelNodeGetParams_v2(ptr ptr) wine_cuGraphKernelNodeGetParams_v2
 @ stdcall cuGraphKernelNodeSetParams_v2(ptr ptr) wine_cuGraphKernelNodeSetParams_v2
 @ stdcall cuGraphNodeSetParams(ptr ptr) wine_cuGraphNodeSetParams
+@ stdcall cuGraphNodeSetParams_v2(ptr ptr) wine_cuGraphNodeSetParams_v2
 @ stdcall cuMemAdvise_v2(double long ptr ptr) wine_cuMemAdvise_v2
 @ stub cuMemGetAttribute
 @ stub cuMemGetAttribute_v2
@@ -697,6 +698,7 @@
 @ stdcall cuStreamUpdateCaptureDependencies_v2(ptr ptr ptr long long) wine_cuStreamUpdateCaptureDependencies_v2
 @ stdcall cuStreamUpdateCaptureDependencies_v2_ptsz(ptr ptr ptr long long) wine_cuStreamUpdateCaptureDependencies_v2_ptsz
 @ stdcall cuGraphAddNode_v2(ptr ptr ptr ptr long ptr) wine_cuGraphAddNode_v2
+@ stdcall cuGraphAddNode_v3(ptr ptr ptr ptr long ptr) wine_cuGraphAddNode_v3
 @ stdcall cuGraphConditionalHandleCreate(ptr ptr ptr long long) wine_cuGraphConditionalHandleCreate
 @ stdcall cuFuncGetParamInfo(ptr long ptr ptr) wine_cuFuncGetParamInfo
 @ stdcall cuFuncIsLoaded(ptr ptr) wine_cuFuncIsLoaded
@@ -803,3 +805,10 @@
 @ stdcall cuSubgridCreate(ptr ptr) wine_cuSubgridCreate
 @ stdcall cuSubgridWorkerGridCreate(ptr ptr) wine_cuSubgridWorkerGridCreate
 @ stdcall cuSubgridWorksetCreate(ptr ptr) wine_cuSubgridWorksetCreate
+@ stdcall cuDeviceGetFabricClusterUuid(ptr long) wine_cuDeviceGetFabricClusterUuid
+@ stdcall cuDeviceGetCliqueCount(ptr long) wine_cuDeviceGetCliqueCount
+@ stdcall cuDeviceGetCliqueInfo(ptr ptr long) wine_cuDeviceGetCliqueInfo
+@ stdcall cuMemGetLocationInfo(long long long long ptr) wine_cuMemGetLocationInfo
+@ stdcall cuCheckpointOperationComplete(ptr) wine_cuCheckpointOperationComplete
+@ stdcall NVAON_SharedMemory_Destroy(ptr ptr) wine_NVAON_SharedMemory_Destroy
+@ stdcall NVAON_SharedMemory_ImportReadOnly(ptr ptr) wine_NVAON_SharedMemory_ImportReadOnly
