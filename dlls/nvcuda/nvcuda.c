@@ -4121,16 +4121,31 @@ CUresult WINAPI wine_cuMemGetAllocationGranularity(size_t *granularity, const CU
     return pcuMemGetAllocationGranularity(granularity, prop, option);
 }
 
+/* Some hackery here, as CUhostFn will probably point to a win64 ABI address */
+static void* (WINAPI *CUhostFn_wine)(void* userData);
+
+static void CUhostFn_cuda(void* userData)
+{
+    TRACE("(%p)\n", userData);
+    CUhostFn_wine(userData);
+}
+
 CUresult WINAPI wine_cuLaunchHostFunc(CUstream hStream, CUhostFn fn, void *userData)
 {
     TRACE("(%p, %p, %p)\n", hStream, fn, userData);
-    return pcuLaunchHostFunc(hStream, fn, userData);
+    /* Set CUhostFn_wine to the address fn */
+    CUhostFn_wine = (void* (WINAPI *)(void*))fn;
+    /* Return the address to CUhostFn_cuda */
+    return pcuLaunchHostFunc(hStream, CUhostFn_cuda, userData);
 }
 
 CUresult WINAPI wine_cuLaunchHostFunc_ptsz(CUstream hStream, CUhostFn fn, void *userData)
 {
     TRACE("(%p, %p, %p)\n", hStream, fn, userData);
-    return pcuLaunchHostFunc_ptsz(hStream, fn, userData);
+    /* Set CUhostFn_wine to the address fn */
+    CUhostFn_wine = (void* (WINAPI *)(void*))fn;
+    /* Return the address to CUhostFn_cuda */
+    return pcuLaunchHostFunc_ptsz(hStream, CUhostFn_cuda, userData);
 }
 
 CUresult WINAPI wine_cuImportExternalMemory(void *extMem_out, const CUDA_EXTERNAL_MEMORY_HANDLE_DESC *memHandleDesc)
@@ -6305,14 +6320,20 @@ CUresult WINAPI wine_cuLaunchHostFunc_v2(CUstream hStream, CUhostFn fn, void* us
 {
     TRACE("(%p, %p, %p, %u)\n", hStream, fn, userData, syncMode);
     CHECK_FUNCPTR(cuLaunchHostFunc_v2);
-    return pcuLaunchHostFunc_v2(hStream, fn, userData, syncMode);
+    /* Set CUhostFn_wine to the address fn */
+    CUhostFn_wine = (void* (WINAPI *)(void*))fn;
+    /* Return the address to CUhostFn_cuda */
+    return pcuLaunchHostFunc_v2(hStream, CUhostFn_cuda, userData, syncMode);
 }
 
 CUresult WINAPI wine_cuLaunchHostFunc_v2_ptsz(CUstream hStream, CUhostFn fn, void* userData, unsigned int syncMode)
 {
     TRACE("(%p, %p, %p, %u)\n", hStream, fn, userData, syncMode);
     CHECK_FUNCPTR(cuLaunchHostFunc_v2_ptsz);
-    return pcuLaunchHostFunc_v2_ptsz(hStream, fn, userData, syncMode);
+    /* Set CUhostFn_wine to the address fn */
+    CUhostFn_wine = (void* (WINAPI *)(void*))fn;
+    /* Return the address to CUhostFn_cuda */
+    return pcuLaunchHostFunc_v2_ptsz(hStream, CUhostFn_cuda, userData, syncMode);
 }
 
 CUresult WINAPI wine_cuLogicalEndpointIdReserve(CUlogicalEndpointId* leId, cuuint32_t count)
