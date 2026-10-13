@@ -1592,7 +1592,7 @@ static BOOL load_functions(void)
     TRY_LOAD_FUNCPTR(cuCoredumpDeregisterStartCallback);
     TRY_LOAD_FUNCPTR(cuCoredumpDeregisterCompleteCallback);
     TRY_LOAD_FUNCPTR(cuLaunchHostFunc_v2);
-    TRY_LOAD_FUNCPTR(cuLaunchHostFunc_v2);
+    TRY_LOAD_FUNCPTR(cuLaunchHostFunc_v2_ptsz);
     TRY_LOAD_FUNCPTR(cuLogicalEndpointIdReserve);
     TRY_LOAD_FUNCPTR(cuLogicalEndpointIdRelease);
     TRY_LOAD_FUNCPTR(cuLogicalEndpointCreate);
