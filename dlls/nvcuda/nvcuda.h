@@ -28,5 +28,8 @@ void __attribute((visibility("hidden"))) cuda_process_tls_callbacks(DWORD reason
 CUresult __attribute((visibility("hidden"))) cuda_get_table(const void **table, const CUuuid *uuid, const void *orig_table, CUresult orig_result);
 int __attribute((visibility("hidden"))) get_shared_resource_fd(HANDLE win32_handle);
 HANDLE __attribute((visibility("hidden"))) get_shared_resource_kmt_handle(HANDLE shared_resource);
+HANDLE __attribute((visibility("hidden"))) open_shared_resource(HANDLE kmt_handle);
+HANDLE __attribute((visibility("hidden"))) get_shared_resource_handle(int fd);
+HANDLE __attribute((visibility("hidden"))) create_shared_resource_from_fd(int fd, size_t size);
 
 #endif

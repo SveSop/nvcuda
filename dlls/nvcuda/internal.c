@@ -97,16 +97,91 @@ void cuda_process_tls_callbacks(DWORD reason)
 
 #define IOCTL_SHARED_GPU_RESOURCE_GET_UNIX_RESOURCE CTL_CODE(FILE_DEVICE_VIDEO, 3, METHOD_BUFFERED, FILE_READ_ACCESS)
 #define IOCTL_SHARED_GPU_RESOURCE_GETKMT CTL_CODE(FILE_DEVICE_VIDEO, 2, METHOD_BUFFERED, FILE_READ_ACCESS)
+#define IOCTL_SHARED_GPU_RESOURCE_OPEN CTL_CODE(FILE_DEVICE_VIDEO, 1, METHOD_BUFFERED, FILE_WRITE_ACCESS)
+#define IOCTL_SHARED_GPU_RESOURCE_CREATE CTL_CODE(FILE_DEVICE_VIDEO, 0, METHOD_BUFFERED, FILE_WRITE_ACCESS)
+
+struct shared_resource_create
+{
+    UINT64 resource_size;
+    obj_handle_t unix_handle;
+    WCHAR name[1];
+};
+
+struct shared_resource_open
+{
+    obj_handle_t kmt_handle;
+    WCHAR name[1];
+};
+
+HANDLE open_shared_resource(HANDLE kmt_handle)
+{
+    static const WCHAR shared_gpu_resourceW[] =
+        {'\\', '?', '?', '\\',
+         'S', 'h', 'a', 'r', 'e', 'd', 'G', 'p', 'u', 'R', 'e', 's', 'o', 'u', 'r', 'c', 'e', 0};
+
+    UNICODE_STRING name;
+    OBJECT_ATTRIBUTES attr;
+    IO_STATUS_BLOCK iosb;
+    struct shared_resource_open input = {0};
+    HANDLE shared_resource;
+    NTSTATUS status;
+
+    TRACE("Opening shared resource from KMT handle %p\n", kmt_handle);
+
+    RtlInitUnicodeString(&name, shared_gpu_resourceW);
+    attr.Length = sizeof(attr);
+    attr.RootDirectory = 0;
+    attr.Attributes = 0;
+    attr.ObjectName = &name;
+    attr.SecurityDescriptor = NULL;
+    attr.SecurityQualityOfService = NULL;
+
+    status = NtCreateFile(&shared_resource, GENERIC_READ | GENERIC_WRITE, &attr, &iosb, NULL, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ | FILE_SHARE_WRITE, FILE_OPEN, 0, NULL, 0);
+    if (status)
+    {
+        ERR("NtCreateFile for SharedGpuResource failed: 0x%08x\n", (unsigned int)status);
+        return INVALID_HANDLE_VALUE;
+    }
+
+    input.kmt_handle = wine_server_obj_handle(kmt_handle);
+
+    TRACE("Sending OPEN IOCTL for KMT handle %p\n", kmt_handle);
+
+    status = NtDeviceIoControlFile(shared_resource, NULL, NULL, NULL, &iosb, IOCTL_SHARED_GPU_RESOURCE_OPEN, &input, sizeof(input), NULL, 0);
+    if (status)
+    {
+        ERR("OPEN IOCTL failed for KMT handle %p: status=0x%08x, iosb.Status=0x%08x\n", kmt_handle, (unsigned int)status, (unsigned int)iosb.Status);
+        NtClose(shared_resource);
+        return INVALID_HANDLE_VALUE;
+    }
+
+    TRACE("Successfully opened shared resource: %p\n", shared_resource);
+    return shared_resource;
+}
 
 HANDLE get_shared_resource_kmt_handle(HANDLE shared_resource)
 {
     IO_STATUS_BLOCK iosb;
     obj_handle_t kmt_handle;
+    NTSTATUS status;
+    char buffer[1024];
+    ULONG return_length = 0;
+    OBJECT_TYPE_INFORMATION *type_info = (OBJECT_TYPE_INFORMATION *)buffer;
 
-    if (NtDeviceIoControlFile(shared_resource, NULL, NULL, NULL, &iosb, IOCTL_SHARED_GPU_RESOURCE_GETKMT,
-            NULL, 0, &kmt_handle, sizeof(kmt_handle)))
+    status = NtQueryObject(shared_resource, ObjectTypeInformation, buffer, sizeof(buffer), &return_length);
+    if (status)
     {
-        ERR("NtDeviceIoControlFile failed for kmt object %p\n", shared_resource);
+        ERR("NtQueryObject failed for handle %p - Status: 0x%08x\n", shared_resource, (unsigned int)status);
+    }
+    else
+    {
+        TRACE("NtQueryObject succeeded for handle %p; TypeName.Length=%u bytes\n", shared_resource, (unsigned int)type_info->TypeName.Length);
+    }
+
+    status = NtDeviceIoControlFile(shared_resource, NULL, NULL, NULL, &iosb, IOCTL_SHARED_GPU_RESOURCE_GETKMT, NULL, 0, &kmt_handle, sizeof(kmt_handle));
+    if (status)
+    {
+        ERR("GETKMT failed for handle %p - Status: 0x%08x\n", shared_resource, (unsigned int)status);
         return INVALID_HANDLE_VALUE;
     }
 
@@ -121,28 +196,118 @@ int get_shared_resource_fd(HANDLE win32_handle)
     int unix_fd = -1;
     HANDLE new_handle = NULL;
 
-    if(NtDuplicateObject(NtCurrentProcess(), win32_handle, NtCurrentProcess(), &new_handle, 0, 0, DUPLICATE_SAME_ACCESS))
+    status = NtDuplicateObject(NtCurrentProcess(), win32_handle, NtCurrentProcess(), &new_handle, 0, 0, DUPLICATE_SAME_ACCESS);
+    if (status)
     {
-       ERR("NtDuplicateObject failed to create handle for %p\n", win32_handle);
-       return -1;
+        ERR("NtDuplicateObject failed for handle %p - Status: 0x%08x\n", win32_handle, (unsigned int)status);
+        return -1;
     }
 
-    if (NtDeviceIoControlFile(new_handle, NULL, NULL, NULL, &iosb, IOCTL_SHARED_GPU_RESOURCE_GET_UNIX_RESOURCE,
-                              NULL, 0, &unix_resource, sizeof(unix_resource)))
+    status = NtDeviceIoControlFile(new_handle, NULL, NULL, NULL, &iosb, IOCTL_SHARED_GPU_RESOURCE_GET_UNIX_RESOURCE, NULL, 0, &unix_resource, sizeof(unix_resource));
+    if (status)
     {
-        ERR("NtDeviceIoControlFile failed for handle %p\n", new_handle);
+        ERR("GET_UNIX_RESOURCE failed for handle %p - Status: 0x%08x, iosb.Status: 0x%08x\n", new_handle, (unsigned int)status, (unsigned int)iosb.Status);
+        NtClose(new_handle);
         return -1;
     }
 
     status = wine_server_handle_to_fd(wine_server_ptr_handle(unix_resource), FILE_READ_DATA, &unix_fd, NULL);
     if (status != STATUS_SUCCESS || unix_fd < 0)
     {
-        ERR("Failed to convert Unix resource to FD for handle %p - Status: 0x%x\n", win32_handle, status);
+        ERR("wine_server_handle_to_fd failed for handle %p - Status: 0x%08x\n", win32_handle, (unsigned int)status);
+        NtClose(wine_server_ptr_handle(unix_resource));
+        NtClose(new_handle);
         return -1;
     }
-    NtClose(wine_server_ptr_handle(unix_resource));
 
+    TRACE("get_shared_resource_fd: returning FD %d for handle %p\n", unix_fd, win32_handle);
+
+    NtClose(wine_server_ptr_handle(unix_resource));
+    NtClose(new_handle);
     return unix_fd;
+}
+
+HANDLE get_shared_resource_handle(int fd)
+{
+    HANDLE handle = NULL;
+    NTSTATUS status;
+    status = wine_server_fd_to_handle(fd, GENERIC_ALL, 0, &handle);
+
+    if (status != STATUS_SUCCESS)
+    {
+        ERR("wine_server_fd_to_handle failed for FD %d - Status: 0x%08x\n", fd, (unsigned int)status);
+        return INVALID_HANDLE_VALUE;
+    }
+
+    TRACE("get_shared_resource_handle: returning handle %p for FD %d\n", handle, fd);
+
+    return handle;
+}
+
+HANDLE create_shared_resource_from_fd(int fd, size_t size)
+{
+    static const WCHAR shared_gpu_resourceW[] =
+        {'\\', '?', '?', '\\',
+         'S', 'h', 'a', 'r', 'e', 'd', 'G', 'p', 'u', 'R', 'e', 's', 'o', 'u', 'r', 'c', 'e', 0};
+
+    HANDLE unix_resource = INVALID_HANDLE_VALUE;
+    HANDLE shared_resource = INVALID_HANDLE_VALUE;
+    struct shared_resource_create *inbuff;
+    UNICODE_STRING shared_gpu_resource_us;
+    OBJECT_ATTRIBUTES attr;
+    IO_STATUS_BLOCK iosb;
+    NTSTATUS status;
+
+    TRACE("Creating shared resource from FD %d, size %zu.\n", fd, size);
+
+    status = wine_server_fd_to_handle(fd, GENERIC_ALL, 0, &unix_resource);
+    if (status != STATUS_SUCCESS)
+    {
+        ERR("wine_server_fd_to_handle failed: %#lx\n", (long int)status);
+        return INVALID_HANDLE_VALUE;
+    }
+
+    RtlInitUnicodeString(&shared_gpu_resource_us, shared_gpu_resourceW);
+    attr.Length = sizeof(attr);
+    attr.RootDirectory = 0;
+    attr.Attributes = 0;
+    attr.ObjectName = &shared_gpu_resource_us;
+    attr.SecurityDescriptor = NULL;
+    attr.SecurityQualityOfService = NULL;
+
+    status = NtCreateFile(&shared_resource, GENERIC_READ | GENERIC_WRITE, &attr, &iosb, NULL, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ | FILE_SHARE_WRITE, FILE_OPEN, 0, NULL, 0);
+    if (status)
+    {
+        ERR("NtCreateFile for SharedGpuResource failed: %#lx\n", (long int)status);
+        NtClose(unix_resource);
+        return INVALID_HANDLE_VALUE;
+    }
+
+    inbuff = calloc(1, sizeof(*inbuff));
+    if (!inbuff)
+    {
+        NtClose(unix_resource);
+        NtClose(shared_resource);
+        ERR("Failed to allocate memory for buffer.\n");
+        return INVALID_HANDLE_VALUE;
+    }
+
+    inbuff->unix_handle = wine_server_obj_handle(unix_resource);
+    inbuff->resource_size = size;
+
+    status = NtDeviceIoControlFile(shared_resource, NULL, NULL, NULL, &iosb, IOCTL_SHARED_GPU_RESOURCE_CREATE, inbuff, sizeof(*inbuff), NULL, 0);
+    free(inbuff);
+    NtClose(unix_resource);
+    if (status)
+    {
+        ERR("IOCTL_SHARED_GPU_RESOURCE_CREATE failed: %#lx\n", (long int)status);
+        NtClose(shared_resource);
+        return INVALID_HANDLE_VALUE;
+    }
+
+    TRACE("Created SharedGpuResource handle %p for FD %d.\n", shared_resource, fd);
+
+    return shared_resource;
 }
 
 static const CUuuid UUID_Relay1                     = {{0x6B, 0xD5, 0xFB, 0x6C, 0x5B, 0xF4, 0xE7, 0x4A,

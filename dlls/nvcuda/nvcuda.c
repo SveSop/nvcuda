@@ -23,6 +23,7 @@
 #include <stdarg.h>
 #include <assert.h>
 #include <inttypes.h>
+#include <unistd.h>
 
 #ifdef HAVE_PTHREAD_H
 #include <pthread.h>
@@ -525,10 +526,10 @@ static CUresult (*pcuExternalMemoryGetMappedBuffer)(CUdeviceptr_v2 *devPtr, void
 static CUresult (*pcuExternalMemoryGetMappedMipmappedArray)(CUmipmappedArray *mipmap, void *extMem, const void *mipmapDesc);
 static CUresult (*pcuDestroyExternalMemory)(void *extMem);
 static CUresult (*pcuImportExternalSemaphore)(CUexternalSemaphore *extSem_out, const CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC *semHandleDesc);
-static CUresult (*pcuSignalExternalSemaphoresAsync)(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream);
-static CUresult (*pcuSignalExternalSemaphoresAsync_ptsz)(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream);
-static CUresult (*pcuWaitExternalSemaphoresAsync)(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream);
-static CUresult (*pcuWaitExternalSemaphoresAsync_ptsz)(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream);
+static CUresult (*pcuSignalExternalSemaphoresAsync)(const CUexternalSemaphore *extSemArray, const CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS *paramsArray, unsigned int numExtSems, CUstream stream);
+static CUresult (*pcuSignalExternalSemaphoresAsync_ptsz)(const CUexternalSemaphore *extSemArray, const CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS *paramsArray, unsigned int numExtSems, CUstream stream);
+static CUresult (*pcuWaitExternalSemaphoresAsync)(const CUexternalSemaphore *extSemArray, const CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS *paramsArray, unsigned int numExtSems, CUstream stream);
+static CUresult (*pcuWaitExternalSemaphoresAsync_ptsz)(const CUexternalSemaphore *extSemArray, const CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS *paramsArray, unsigned int numExtSems, CUstream stream);
 static CUresult (*pcuDestroyExternalSemaphore)(CUexternalSemaphore extSem);
 static CUresult (*pcuOccupancyAvailableDynamicSMemPerBlock)(size_t *dynamicSmemSize, CUfunction func, int numBlocks, int blockSize);
 static CUresult (*pcuGraphKernelNodeGetParams)(CUgraphNode hNode, void *nodeParams);
@@ -558,18 +559,18 @@ static CUresult (*pcuGraphExecUpdate)(CUgraphExec hGraphExec, CUgraph hGraph, CU
 static CUresult (*pcuMemSetAccess)(CUdeviceptr_v2 ptr, size_t size, const void *desc, size_t count);
 static CUresult (*pcuStreamBeginCapture)(CUstream hStream);
 static CUresult (*pcuStreamBeginCapture_ptsz)(CUstream hStream);
-static CUresult (*pcuMemCreate)(CUmemGenericAllocationHandle_v1 *handle, size_t size, const void *prop, unsigned long long flags);
-static CUresult (*pcuMemRelease)(CUmemGenericAllocationHandle_v1 handle);
+static CUresult (*pcuMemCreate)(CUmemGenericAllocationHandle *handle, size_t size, const CUmemAllocationProp *prop, unsigned long long flags);
+static CUresult (*pcuMemRelease)(CUmemGenericAllocationHandle handle);
 static CUresult (*pcuMemAddressFree)(CUdeviceptr_v2 ptr, size_t size);
 static CUresult (*pcuMemGetAccess)(unsigned long long *flags, const void *location, CUdeviceptr_v2 ptr);
-static CUresult (*pcuMemMap)(CUdeviceptr_v2 ptr, size_t size, size_t offset, CUmemGenericAllocationHandle_v1 handle, unsigned long long flags);
+static CUresult (*pcuMemMap)(CUdeviceptr_v2 ptr, size_t size, size_t offset, CUmemGenericAllocationHandle handle, unsigned long long flags);
 static CUresult (*pcuMemUnmap)(CUdeviceptr_v2 ptr, size_t size);
 static CUresult (*pcuStreamGetCaptureInfo)(CUstream hStream, CUstreamCaptureStatus *captureStatus_out, cuuint64_t *id_out);
 static CUresult (*pcuStreamGetCaptureInfo_ptsz)(CUstream hStream, CUstreamCaptureStatus *captureStatus_out, cuuint64_t *id_out);
 static CUresult (*pcuMemAddressReserve)(CUdeviceptr_v2 *ptr, size_t size, size_t alignment, CUdeviceptr_v2 addr, unsigned long long flags);
-static CUresult (*pcuMemExportToShareableHandle)(void* shareableHandle, void* handle, void* handleType, unsigned long long flags);
-static CUresult (*pcuMemGetAllocationPropertiesFromHandle)(void* prop, CUmemGenericAllocationHandle_v1 handle);
-static CUresult (*pcuMemImportFromShareableHandle)(void* handle, void* osHandle, void* shHandleType);
+static CUresult (*pcuMemExportToShareableHandle)(void* shareableHandle, CUmemGenericAllocationHandle handle, CUmemAllocationHandleType handleType, unsigned long long flags);
+static CUresult (*pcuMemGetAllocationPropertiesFromHandle)(void *prop, CUmemGenericAllocationHandle handle);
+static CUresult (*pcuMemImportFromShareableHandle)(CUmemGenericAllocationHandle *handle, void* osHandle, CUmemAllocationHandleType shHandleType);
 static CUresult (*pcuDeviceGetNvSciSyncAttributes)(void *nvSciSyncAttrList, CUdevice_v1 dev, int flags);
 
 /* Cuda 11 */
@@ -687,7 +688,7 @@ static CUresult (*pcuGraphBatchMemOpNodeSetParams)(CUgraphNode hNode, const void
 static CUresult (*pcuGraphExecBatchMemOpNodeSetParams)(CUgraphExec graphExec, CUgraphNode node, const void *nodeParams);
 static CUresult (*pcuMemMapArrayAsync)(void* mapInfoList, unsigned int count, CUstream hStream);
 static CUresult (*pcuMemMapArrayAsync_ptsz)(void* mapInfoList, unsigned int count, CUstream hStream);
-static CUresult (*pcuMemRetainAllocationHandle)(CUmemGenericAllocationHandle_v1* handle, void* addr);
+static CUresult (*pcuMemRetainAllocationHandle)(CUmemGenericAllocationHandle *handle, void *addr);
 
 /* Cuda 12 */
 static CUresult (*pcuLibraryLoadData)(CUlibrary *library, const void *code, CUjit_option *jitOptions, void **jitOptionsValues, unsigned int numJitOptions,
@@ -1855,6 +1856,11 @@ CUresult WINAPI wine_cuDeviceGetAttribute(int *pi, CUdevice_attribute attrib, CU
     CUresult ret = pcuDeviceGetAttribute(pi, attrib, dev);
     if(ret != CUDA_SUCCESS) TRACE("Attribute: %d, Returned error: %d\n", attrib, ret);
     else TRACE("(Device: %d, Attribute: %d) Value: (%d)\n", dev, attrib, *pi);
+    if(attrib == 104)
+    {
+        TRACE("Returning 1 for attribute: %d\n", attrib);
+        *pi = 1;
+    }
     return ret;
 }
 
@@ -4135,28 +4141,56 @@ CUresult WINAPI wine_cuLaunchHostFunc_ptsz(CUstream hStream, CUhostFn fn, void *
 
 CUresult WINAPI wine_cuImportExternalMemory(void *extMem_out, const CUDA_EXTERNAL_MEMORY_HANDLE_DESC *memHandleDesc)
 {
-    TRACE("(%p, %p)\n", extMem_out, memHandleDesc);
+    if (!memHandleDesc)
+    {
+        ERR("memHandleDesc is NULL\n");
+        return CUDA_ERROR_INVALID_VALUE;
+    }
+
+    TRACE("External memory descriptor: type=%u, handle=%p, name=%p, size=%llu, flags=0x%x\n", (unsigned int)memHandleDesc->type, memHandleDesc->handle.win32.handle, memHandleDesc->handle.win32.name, memHandleDesc->size, memHandleDesc->flags);
 
     CUDA_EXTERNAL_MEMORY_HANDLE_DESC linuxHandleDesc = *memHandleDesc;
     HANDLE handle;
+    CUresult ret;
 
-    /* Linux libcuda does not work win32 handles */
+    /* Linux libcuda does not work with Win32 handles. */
     switch (linuxHandleDesc.type)
     {
         case CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32:
+            TRACE("Converting OPAQUE_WIN32 handle %p\n", linuxHandleDesc.handle.win32.handle);
             linuxHandleDesc.handle.fd = get_shared_resource_fd(linuxHandleDesc.handle.win32.handle);
+            if (linuxHandleDesc.handle.fd < 0)
+            {
+                ERR("Failed to convert OPAQUE_WIN32 handle to FD\n");
+                return CUDA_ERROR_UNKNOWN;
+            }
             linuxHandleDesc.type = CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD;
             break;
         case CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT:
-            handle = get_shared_resource_kmt_handle(linuxHandleDesc.handle.win32.handle);
+            TRACE("Converting OPAQUE_WIN32_KMT handle %p\n", linuxHandleDesc.handle.win32.handle);
+            handle = open_shared_resource(linuxHandleDesc.handle.win32.handle);
+            if (handle == INVALID_HANDLE_VALUE)
+            {
+                ERR("Failed to open shared resource from KMT handle\n");
+                return CUDA_ERROR_UNKNOWN;
+            }
             linuxHandleDesc.handle.fd = get_shared_resource_fd(handle);
+            NtClose(handle);
+            if (linuxHandleDesc.handle.fd < 0)
+            {
+                ERR("Failed to convert KMT shared resource to FD\n");
+                return CUDA_ERROR_UNKNOWN;
+            }
             linuxHandleDesc.type = CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD;
+            break;
         default:
+            ERR("Unsupported external memory handle type: %u\n", (unsigned int)linuxHandleDesc.type);
             break;
     }
 
-    CUresult ret = pcuImportExternalMemory(extMem_out, &linuxHandleDesc);
+    ret = pcuImportExternalMemory(extMem_out, &linuxHandleDesc);
     if(ret) ERR("Returned error: %d\n", ret);
+
     return ret;
 }
 
@@ -4211,8 +4245,22 @@ CUresult WINAPI wine_cuImportExternalSemaphore(CUexternalSemaphore *extSem_out, 
             linuxHandleDesc.type = CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD;
             break;
         case CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT:
-            handle = get_shared_resource_kmt_handle(linuxHandleDesc.handle.win32.handle);
+            TRACE("Converting OPAQUE_WIN32_KMT semaphore handle %p\n", linuxHandleDesc.handle.win32.handle);
+            handle = open_shared_resource(linuxHandleDesc.handle.win32.handle);
+            if (handle == INVALID_HANDLE_VALUE)
+            {
+                ERR("Failed to open shared resource from KMT semaphore handle\n");
+                return CUDA_ERROR_UNKNOWN;
+            }
+
             linuxHandleDesc.handle.fd = get_shared_resource_fd(handle);
+            NtClose(handle);
+            if (linuxHandleDesc.handle.fd < 0)
+            {
+                ERR("Failed to convert KMT semaphore shared resource to FD\n");
+                return CUDA_ERROR_UNKNOWN;
+            }
+
             linuxHandleDesc.type = CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD;
             break;
         case CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_TIMELINE_SEMAPHORE_WIN32:
@@ -4230,25 +4278,25 @@ CUresult WINAPI wine_cuImportExternalSemaphore(CUexternalSemaphore *extSem_out, 
     return ret;
 }
 
-CUresult WINAPI wine_cuSignalExternalSemaphoresAsync(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream)
+CUresult WINAPI wine_cuSignalExternalSemaphoresAsync(const CUexternalSemaphore *extSemArray, const CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS *paramsArray, unsigned int numExtSems, CUstream stream)
 {
     TRACE("(%p, %p, %u, %p)\n", extSemArray, paramsArray, numExtSems, stream);
     return pcuSignalExternalSemaphoresAsync(extSemArray, paramsArray, numExtSems, stream);
 }
 
-CUresult WINAPI wine_cuSignalExternalSemaphoresAsync_ptsz(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream)
+CUresult WINAPI wine_cuSignalExternalSemaphoresAsync_ptsz(const CUexternalSemaphore *extSemArray, const CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS *paramsArray, unsigned int numExtSems, CUstream stream)
 {
     TRACE("(%p, %p, %u, %p)\n", extSemArray, paramsArray, numExtSems, stream);
     return pcuSignalExternalSemaphoresAsync_ptsz(extSemArray, paramsArray, numExtSems, stream);
 }
 
-CUresult WINAPI wine_cuWaitExternalSemaphoresAsync(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream)
+CUresult WINAPI wine_cuWaitExternalSemaphoresAsync(const CUexternalSemaphore *extSemArray, const CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS *paramsArray, unsigned int numExtSems, CUstream stream)
 {
     TRACE("(%p, %p, %u, %p)\n", extSemArray, paramsArray, numExtSems, stream);
     return pcuWaitExternalSemaphoresAsync(extSemArray, paramsArray, numExtSems, stream);
 }
 
-CUresult WINAPI wine_cuWaitExternalSemaphoresAsync_ptsz(const CUexternalSemaphore *extSemArray, const void *paramsArray, unsigned int numExtSems, CUstream stream)
+CUresult WINAPI wine_cuWaitExternalSemaphoresAsync_ptsz(const CUexternalSemaphore *extSemArray, const CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS *paramsArray, unsigned int numExtSems, CUstream stream)
 {
     TRACE("(%p, %p, %u, %p)\n", extSemArray, paramsArray, numExtSems, stream);
     return pcuWaitExternalSemaphoresAsync_ptsz(extSemArray, paramsArray, numExtSems, stream);
@@ -4428,16 +4476,191 @@ CUresult WINAPI wine_cuStreamBeginCapture_ptsz(CUstream hStream)
     return pcuStreamBeginCapture_ptsz(hStream);
 }
 
-CUresult WINAPI wine_cuMemCreate(CUmemGenericAllocationHandle_v1 *handle, size_t size, const void *prop, unsigned long long flags)
+/*
+ * Tracks CUDA generic allocation handles and their allocation sizes.
+ *
+ * This is metadata only. It does not track GPU memory contents.
+ */
+struct allocation_info
 {
-    TRACE("(%p, %zu, %p, %llu)\n", handle, size, prop, flags);
-    return pcuMemCreate(handle, size, prop, flags);
+    CUmemGenericAllocationHandle handle;
+    size_t size;
+    struct allocation_info *next;
+};
+
+static struct allocation_info *allocationList = NULL;
+static pthread_mutex_t allocationMutex = PTHREAD_MUTEX_INITIALIZER;
+
+/*
+ * Record an allocation.
+ *
+ * Returns 0 on success, -1 if the bookkeeping allocation fails
+ * or the handle is already present in the list.
+ */
+static int allocation_tracker_add(CUmemGenericAllocationHandle handle, size_t size)
+{
+    struct allocation_info *entry;
+    struct allocation_info *current;
+
+    entry = malloc(sizeof(*entry));
+    if (!entry)
+        return -1;
+
+    entry->handle = handle;
+    entry->size = size;
+
+    pthread_mutex_lock(&allocationMutex);
+
+    /* A live handle should only be recorded once. */
+    for (current = allocationList; current; current = current->next)
+    {
+        if (current->handle == handle)
+        {
+            pthread_mutex_unlock(&allocationMutex);
+            free(entry);
+            return -1;
+        }
+    }
+
+    entry->next = allocationList;
+    allocationList = entry;
+
+    pthread_mutex_unlock(&allocationMutex);
+
+    return 0;
 }
 
-CUresult WINAPI wine_cuMemRelease(CUmemGenericAllocationHandle_v1 handle)
+/*
+ * Retrieve an allocation's size.
+ *
+ * Returns 0 if found, -1 if the handle is not tracked.
+ * The size is copied out while the list is locked.
+ */
+static int allocation_tracker_get_size(CUmemGenericAllocationHandle handle, size_t *size)
 {
-    TRACE("(%lld)\n", handle);
-    return pcuMemRelease(handle);
+    struct allocation_info *current;
+    if (!size)
+        return -1;
+
+    pthread_mutex_lock(&allocationMutex);
+
+    for (current = allocationList; current; current = current->next)
+    {
+        if (current->handle == handle)
+        {
+            *size = current->size;
+            pthread_mutex_unlock(&allocationMutex);
+            return 0;
+        }
+    }
+
+    pthread_mutex_unlock(&allocationMutex);
+    return -1;
+}
+
+/*
+ * Remove an allocation from the list.
+ *
+ * Returns 0 if removed, -1 if the handle was not found.
+ */
+static int allocation_tracker_remove(CUmemGenericAllocationHandle handle)
+{
+    struct allocation_info **current;
+    struct allocation_info *entry;
+
+    pthread_mutex_lock(&allocationMutex);
+
+    current = &allocationList;
+
+    while (*current)
+    {
+        if ((*current)->handle == handle)
+        {
+            entry = *current;
+            *current = entry->next;
+
+            pthread_mutex_unlock(&allocationMutex);
+
+            free(entry);
+            return 0;
+        }
+        current = &(*current)->next;
+    }
+
+    pthread_mutex_unlock(&allocationMutex);
+    return -1;
+}
+
+CUresult WINAPI wine_cuMemCreate(CUmemGenericAllocationHandle *handle, size_t size, const CUmemAllocationProp *prop, unsigned long long flags)
+{
+    CUmemAllocationProp native_prop;
+    CUresult ret;
+
+    TRACE("(%p, %zu, %p, %llu)\n", handle, size, prop, flags);
+
+    if (prop->requestedHandleTypes == CU_MEM_HANDLE_TYPE_NONE)
+        return pcuMemCreate(handle, size, prop, flags);
+
+    if (prop->requestedHandleTypes == CU_MEM_HANDLE_TYPE_WIN32)
+    {
+        native_prop = *prop;
+        native_prop.requestedHandleTypes = CU_MEM_HANDLE_TYPE_POSIX_FILE_DESCRIPTOR;
+        native_prop.win32HandleMetaData = NULL;
+
+        TRACE("Using POSIX file descriptor instead of WIN32\n");
+
+        ret = pcuMemCreate(handle, size, &native_prop, flags);
+    }
+    else
+    {
+        FIXME("Possible problem if WIN32_KMT (4): %u\n", prop->requestedHandleTypes);
+        ret = pcuMemCreate(handle, size, prop, flags);
+    }
+
+    if (ret)
+    {
+        ERR("Failed with error: %d\n", ret);
+        return ret;
+    }
+
+    if (allocation_tracker_add(*handle, size) != 0)
+    {
+        ERR("Failed to track CUDA allocation %llu (%zu bytes)\n", (unsigned long long)*handle, size);
+        /*
+         * The allocation succeeded, but we cannot track its size.
+         * Clean it up and report an allocation failure.
+         */
+        CUresult release_ret = pcuMemRelease(*handle);
+        if (release_ret)
+        {
+            ERR("Cleanup cuMemRelease failed: %d\n", release_ret);
+        }
+
+        return CUDA_ERROR_OUT_OF_MEMORY;
+    }
+
+    return ret;
+}
+
+CUresult WINAPI wine_cuMemRelease(CUmemGenericAllocationHandle handle)
+{
+    CUresult ret;
+
+    TRACE("(%llu)\n", handle);
+
+    ret = pcuMemRelease(handle);
+    if (ret)
+    {
+        ERR("cuMemRelease failed for handle %llu: %d\n", handle, ret);
+        return ret;
+    }
+
+    if (allocation_tracker_remove(handle) != 0)
+    {
+        WARN("Released CUDA handle %llu was not tracked\n", handle);
+    }
+
+    return ret;
 }
 
 CUresult WINAPI wine_cuMemAddressFree(CUdeviceptr_v2 ptr, size_t size)
@@ -4452,7 +4675,7 @@ CUresult WINAPI wine_cuMemGetAccess(unsigned long long *flags, const void *locat
     return pcuMemGetAccess(flags, location, ptr);
 }
 
-CUresult WINAPI wine_cuMemMap(CUdeviceptr_v2 ptr, size_t size, size_t offset, CUmemGenericAllocationHandle_v1 handle, unsigned long long flags)
+CUresult WINAPI wine_cuMemMap(CUdeviceptr_v2 ptr, size_t size, size_t offset, CUmemGenericAllocationHandle handle, unsigned long long flags)
 {
     TRACE("(" DEV_PTR ", %zu, %zu, %lld, %llu)\n", ptr, size, offset, handle, flags);
     return pcuMemMap(ptr, size, offset, handle, flags);
@@ -4482,22 +4705,94 @@ CUresult WINAPI wine_cuMemAddressReserve(CUdeviceptr_v2 *ptr, size_t size, size_
     return pcuMemAddressReserve(ptr, size, alignment, addr, flags);
 }
 
-CUresult WINAPI wine_cuMemExportToShareableHandle(void* shareableHandle, void* handle, void* handleType, unsigned long long flags)
+CUresult WINAPI wine_cuMemExportToShareableHandle(void *shareableHandle, CUmemGenericAllocationHandle handle, CUmemAllocationHandleType handleType, unsigned long long flags)
 {
-    TRACE("(%p, %p, %p, %llu)\n", shareableHandle, handle, handleType, flags);
-    return pcuMemExportToShareableHandle(shareableHandle, handle, handleType, flags);
+    CUresult ret;
+
+    TRACE("(%p, %llu, %u, %llu)\n", shareableHandle, handle, handleType, flags);
+
+    if (handleType == CU_MEM_HANDLE_TYPE_WIN32)
+    {
+        int fd;
+        HANDLE win_handle;
+        size_t size;
+
+        if (allocation_tracker_get_size(handle, &size) != 0)
+        {
+            ERR("No tracked allocation size for CUDA handle %llu\n", (unsigned long long)handle);
+            return CUDA_ERROR_INVALID_VALUE;
+        }
+
+        ret = pcuMemExportToShareableHandle(&fd, handle, CU_MEM_HANDLE_TYPE_POSIX_FILE_DESCRIPTOR, flags);
+        if (ret)
+        {
+            ERR("POSIX-FD export failed: %d\n", ret);
+            return ret;
+        }
+
+        win_handle = create_shared_resource_from_fd(fd, size);
+        close(fd);
+        if (win_handle == INVALID_HANDLE_VALUE)
+        {
+            ERR("Failed to create Wine shared resource for CUDA handle %llu\n", (unsigned long long)handle);
+            return CUDA_ERROR_INVALID_VALUE;
+        }
+
+        *(HANDLE *)shareableHandle = win_handle;
+
+        return ret;
+    }
+    /* Log this - in case we need to treat WIN32_KMT in the future */
+    else FIXME("HandleType: %u\n", handleType);
+
+    ret = pcuMemExportToShareableHandle(shareableHandle, handle, handleType, flags);
+    if (ret)
+        ERR("Returned error: %d\n", ret);
+
+    return ret;
 }
 
-CUresult WINAPI wine_cuMemGetAllocationPropertiesFromHandle(void* prop, CUmemGenericAllocationHandle_v1 handle)
+CUresult WINAPI wine_cuMemGetAllocationPropertiesFromHandle(void* prop, CUmemGenericAllocationHandle handle)
 {
     TRACE("(%p, %llu)\n", prop, handle);
     return pcuMemGetAllocationPropertiesFromHandle(prop, handle);
 }
 
-CUresult WINAPI wine_cuMemImportFromShareableHandle(void* handle, void* osHandle, void* shHandleType)
+CUresult WINAPI wine_cuMemImportFromShareableHandle(CUmemGenericAllocationHandle *handle, void* osHandle, CUmemAllocationHandleType shHandleType)
 {
-    TRACE("(%p, %p, %p)\n", handle, osHandle, shHandleType);
-    return pcuMemImportFromShareableHandle(handle, osHandle, shHandleType);
+    CUresult ret;
+
+    TRACE("(%p, %p, %u)\n", handle, osHandle, shHandleType);
+
+    if (shHandleType == CU_MEM_HANDLE_TYPE_WIN32)
+    {
+        int fd;
+
+        fd = get_shared_resource_fd((HANDLE)osHandle);
+        if (fd < 0)
+        {
+            ERR("Failed to convert WIN32 shared handle %p to POSIX FD\n", osHandle);
+            return CUDA_ERROR_INVALID_VALUE;
+        }
+
+        ret = pcuMemImportFromShareableHandle(handle, (void *)(uintptr_t)fd, CU_MEM_HANDLE_TYPE_POSIX_FILE_DESCRIPTOR);
+        if (ret)
+        {
+            ERR("POSIX-FD import failed: %d (FD %d)\n", ret, fd);
+            close(fd);
+        }
+
+        TRACE("Converted WIN32 handle %p to POSIX FD %d\n", osHandle, fd);
+        return ret;
+    }
+    /* Log this - in case we need to treat WIN32_KMT in the future */
+    else FIXME("HandleType: %u\n", shHandleType);
+
+    ret = pcuMemImportFromShareableHandle(handle, osHandle, shHandleType);
+    if (ret)
+        ERR("Returned error: %d\n", ret);
+
+    return ret;
 }
 
 CUresult WINAPI wine_cuDeviceGetNvSciSyncAttributes(void *nvSciSyncAttrList, CUdevice_v1 dev, int flags)
@@ -5197,7 +5492,7 @@ CUresult WINAPI wine_cuMemMapArrayAsync_ptsz(void* mapInfoList, unsigned int cou
     return pcuMemMapArrayAsync_ptsz(mapInfoList, count, hStream);
 }
 
-CUresult WINAPI wine_cuMemRetainAllocationHandle(CUmemGenericAllocationHandle_v1* handle, void* addr)
+CUresult WINAPI wine_cuMemRetainAllocationHandle(CUmemGenericAllocationHandle *handle, void *addr)
 {
     TRACE("(%p, %p)\n", handle, addr);
     return pcuMemRetainAllocationHandle(handle, addr);
@@ -6058,21 +6353,21 @@ CUresult WINAPI wine_cuMemcpy3DBatchAsync_v2_ptsz(size_t numParams, CUDA_MEMCPY3
 
 CUresult WINAPI wine_cuMemGetDefaultMemPool(CUmemoryPool* pool_out, CUmemLocation* location, CUmemAllocationType type)
 {
-    TRACE("(%p, %p, %p)\n", pool_out, location, type);
+    TRACE("(%p, %p, %d)\n", pool_out, location, type);
     CHECK_FUNCPTR(cuMemGetDefaultMemPool);
     return pcuMemGetDefaultMemPool(pool_out, location, type);
 }
 
 CUresult WINAPI wine_cuMemGetMemPool(CUmemoryPool* pool_out, CUmemLocation* location, CUmemAllocationType type)
 {
-    TRACE("(%p, %p, %p)\n", pool_out, location, type);
+    TRACE("(%p, %p, %d)\n", pool_out, location, type);
     CHECK_FUNCPTR(cuMemGetMemPool);
     return pcuMemGetMemPool(pool_out, location, type);
 }
 
 CUresult WINAPI wine_cuMemSetMemPool(CUmemLocation* location, CUmemAllocationType type, CUmemoryPool pool)
 {
-    TRACE("(%p, %p, %p)\n", location, type, pool);
+    TRACE("(%p, %d, %p)\n", location, type, pool);
     CHECK_FUNCPTR(cuMemSetMemPool);
     return pcuMemSetMemPool(location, type, pool);
 }

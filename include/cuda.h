@@ -112,7 +112,6 @@ typedef void *CUgraph;
 typedef void *CUgraphExec;
 typedef void *CUgraphNode;
 typedef void *CUmemoryPool;
-typedef void *CUmemAllocationProp;
 typedef void *CUmoduleLoadingMode;
 typedef void (CUDA_CB *CUhostFn)(void *userData);
 typedef void *CUlaunchConfig;
@@ -128,8 +127,6 @@ typedef void *CUcheckpointRestoreArgs;
 typedef void *CUcheckpointUnlockArgs;
 typedef void *CUlogsCallback;
 typedef void *CUlogsCallbackHandle;
-typedef void *CUmemLocation_v1;
-typedef void *CUmemAllocationType;
 typedef void *CUdevResource;
 typedef void* CUgraphNodeParams;
 typedef void* CUlogicalEndpointProp;
@@ -140,7 +137,6 @@ typedef unsigned long long CUsurfObject;
 typedef unsigned long long CUtexObject;
 typedef CUmemcpyAttributes_v1 CUmemcpyAttributes;
 typedef CUDA_MEMCPY3D_BATCH_OP_v1 CUDA_MEMCPY3D_BATCH_OP;
-typedef CUmemLocation_v1 CUmemLocation;
 typedef struct CUcoredumpCallbackEntry_st* CUcoredumpCallbackHandle;
 typedef struct CUIcheckpointOperation_st* CUcheckpointOperationHandle;
 
@@ -227,6 +223,35 @@ typedef CUresult(CUDA_CB* CUgraphRecaptureCallback)(void* data, CUgraphNode node
 typedef enum CUstreamCigDataType_enum {
     STREAM_CIG_DATA_TYPE_D3D12_COMMAND_LIST = 0x1,
 } CUstreamCigDataType;
+
+typedef enum CUmemAllocationHandleType_enum {
+    CU_MEM_HANDLE_TYPE_NONE                  = 0x0,
+    CU_MEM_HANDLE_TYPE_POSIX_FILE_DESCRIPTOR = 0x1,
+    CU_MEM_HANDLE_TYPE_WIN32                 = 0x2,
+    CU_MEM_HANDLE_TYPE_WIN32_KMT             = 0x4,
+    CU_MEM_HANDLE_TYPE_FABRIC                = 0x8,
+    CU_MEM_HANDLE_TYPE_MAX                   = 0x7FFFFFFF
+} CUmemAllocationHandleType;
+
+typedef enum CUmemAllocationType_enum {
+    CU_MEM_ALLOCATION_TYPE_INVALID = 0x0,
+
+    CU_MEM_ALLOCATION_TYPE_PINNED  = 0x1,
+    CU_MEM_ALLOCATION_TYPE_MANAGED = 0x2,
+    CU_MEM_ALLOCATION_TYPE_MAX     = 0x7FFFFFFF
+} CUmemAllocationType;
+
+typedef enum CUmemLocationType_enum {
+    CU_MEM_LOCATION_TYPE_INVALID                = 0x0,
+    CU_MEM_LOCATION_TYPE_NONE                   = 0x0,
+    CU_MEM_LOCATION_TYPE_DEVICE                 = 0x1,
+    CU_MEM_LOCATION_TYPE_HOST                   = 0x2,
+    CU_MEM_LOCATION_TYPE_HOST_NUMA              = 0x3,
+    CU_MEM_LOCATION_TYPE_HOST_NUMA_CURRENT      = 0x4,
+    CU_MEM_LOCATION_TYPE_INVISIBLE              = 0x5,
+    CU_MEM_LOCATION_TYPE_DEVICE_LOCALITY_DOMAIN = 0x6,
+    CU_MEM_LOCATION_TYPE_MAX                  = 0x7FFFFFFF
+} CUmemLocationType;
 
 typedef struct CUstreamCigParam_st {
     CUstreamCigDataType streamSharedDataType;
@@ -358,6 +383,25 @@ typedef struct CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_st
 } CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_v1;
 typedef CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_v1 CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC;
 
+typedef struct CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_st {
+    struct {
+        struct {
+            unsigned long long value;
+        } fence;
+        union {
+            void *fence;
+            unsigned long long reserved;
+        } nvSciSync;
+        struct {
+            unsigned long long key;
+        } keyedMutex;
+        unsigned int reserved[12];
+    } params;
+    unsigned int flags;
+    unsigned int reserved[16];
+} CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1;
+typedef CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1 CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS;
+
 typedef struct CU_DEV_SM_RESOURCE_GROUP_PARAMS_st {
     unsigned int smCount;
     unsigned int coscheduledSmCount;
@@ -374,5 +418,31 @@ typedef struct CUDA_GET_PROC_ADDRESS_PARAMS_st
     cuuint32_t reserved1;  // offset 0x0C
     cuuint32_t cudaVer;    // offset 0x10
 } CUDA_GET_PROC_ADDRESS_PARAMS;
+
+typedef struct CUmemLocation_st {
+    CUmemLocationType type;
+    union {
+        int id;
+        struct {
+            unsigned char deviceId;
+            unsigned char localityDomainId;
+        } localized;
+    };
+} CUmemLocation_v1;
+typedef CUmemLocation_v1 CUmemLocation;
+
+typedef struct CUmemAllocationProp_st {
+    CUmemAllocationType type;
+    CUmemAllocationHandleType requestedHandleTypes;
+    CUmemLocation location;
+    void *win32HandleMetaData;
+    struct {
+         unsigned char compressionType;
+         unsigned char gpuDirectRDMACapable;
+         unsigned short usage;
+         unsigned char reserved[4];
+    } allocFlags;
+} CUmemAllocationProp_v1;
+typedef CUmemAllocationProp_v1 CUmemAllocationProp;
 
 #endif /* __WINE_CUDA_H */
