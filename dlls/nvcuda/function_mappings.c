@@ -726,6 +726,32 @@ extern void wine_cuMemGetLocationInfo(void);
 extern void wine_cuCheckpointOperationComplete(void);
 
 /* D3D Emulated calls */
+extern void wine_cuD3D9CtxCreate(void);
+extern void wine_cuD3D9CtxCreate_v2(void);
+extern void wine_cuD3D9GetDevices(void);
+extern void wine_cuD3D9CtxCreateOnDevice(void);
+extern void wine_cuD3D9GetDirect3DDevice(void);
+extern void wine_cuD3D9RegisterResource(void);
+extern void wine_cuD3D9UnregisterResource(void);
+extern void wine_cuD3D9MapResources(void);
+extern void wine_cuD3D9UnmapResources(void);
+extern void wine_cuD3D9ResourceSetMapFlags(void);
+extern void wine_cuD3D9ResourceGetSurfaceDimensions(void);
+extern void wine_cuD3D9ResourceGetSurfaceDimensions_v2(void);
+extern void wine_cuD3D9ResourceGetMappedArray(void);
+extern void wine_cuD3D9ResourceGetMappedPointer(void);
+extern void wine_cuD3D9ResourceGetMappedPointer_v2(void);
+extern void wine_cuD3D9ResourceGetMappedSize(void);
+extern void wine_cuD3D9ResourceGetMappedSize_v2(void);
+extern void wine_cuD3D9ResourceGetMappedPitch(void);
+extern void wine_cuD3D9ResourceGetMappedPitch_v2(void);
+extern void wine_cuD3D9Begin(void);
+extern void wine_cuD3D9End(void);
+extern void wine_cuD3D9RegisterVertexBuffer(void);
+extern void wine_cuD3D9MapVertexBuffer(void);
+extern void wine_cuD3D9MapVertexBuffer_v2(void);
+extern void wine_cuD3D9UnmapVertexBuffer(void);
+extern void wine_cuD3D9UnregisterVertexBuffer(void);
 extern void wine_cuD3D11GetDevice(void);
 extern void wine_cuGraphicsD3D11RegisterResource(void);
 extern void wine_cuD3D10GetDevice(void);
@@ -1486,12 +1512,38 @@ const FunctionMapping mappings[] =
     {"cuMemGetLocationInfo", 13040, 0, wine_cuMemGetLocationInfo},
     {"cuCheckpointOperationComplete", 13040, 0, wine_cuCheckpointOperationComplete},
     /* Emulated D3D functions */
+    {"cuD3D9CtxCreate", 2000, 0, wine_cuD3D9CtxCreate},
+    {"cuD3D9CtxCreate", 3020, 0, wine_cuD3D9CtxCreate_v2},
+    {"cuD3D9GetDevice", 2000, 0, wine_cuD3D9GetDevice},
+    {"cuD3D9GetDevices", 3020, 0, wine_cuD3D9GetDevices},
+    {"cuGraphicsD3D9RegisterResource", 3000, 0, wine_cuGraphicsD3D9RegisterResource},
+    {"cuD3D9CtxCreateOnDevice", 3020, 0, wine_cuD3D9CtxCreateOnDevice},
+    {"cuD3D9GetDirect3DDevice", 2000, 0, wine_cuD3D9GetDirect3DDevice},
+    {"cuD3D9RegisterResource", 2000, 0, wine_cuD3D9RegisterResource},
+    {"cuD3D9UnregisterResource", 2000, 0, wine_cuD3D9UnregisterResource},
+    {"cuD3D9MapResources", 2000, 0, wine_cuD3D9MapResources},
+    {"cuD3D9UnmapResources", 2000, 0, wine_cuD3D9UnmapResources},
+    {"cuD3D9ResourceSetMapFlags", 2000, 0, wine_cuD3D9ResourceSetMapFlags},
+    {"cuD3D9ResourceGetSurfaceDimensions", 2000, 0, wine_cuD3D9ResourceGetSurfaceDimensions},
+    {"cuD3D9ResourceGetSurfaceDimensions", 3020, 0, wine_cuD3D9ResourceGetSurfaceDimensions_v2},
+    {"cuD3D9ResourceGetMappedArray", 2010, 0, wine_cuD3D9ResourceGetMappedArray},
+    {"cuD3D9ResourceGetMappedPointer", 2000, 0, wine_cuD3D9ResourceGetMappedPointer},
+    {"cuD3D9ResourceGetMappedPointer", 3020, 0, wine_cuD3D9ResourceGetMappedPointer_v2},
+    {"cuD3D9ResourceGetMappedSize", 2000, 0, wine_cuD3D9ResourceGetMappedSize},
+    {"cuD3D9ResourceGetMappedSize", 3020, 0, wine_cuD3D9ResourceGetMappedSize_v2},
+    {"cuD3D9ResourceGetMappedPitch", 2000, 0, wine_cuD3D9ResourceGetMappedPitch},
+    {"cuD3D9ResourceGetMappedPitch", 3020, 0, wine_cuD3D9ResourceGetMappedPitch_v2},
+    {"cuD3D9Begin", 2000, 0, wine_cuD3D9Begin},
+    {"cuD3D9End", 2000, 0, wine_cuD3D9End},
+    {"cuD3D9RegisterVertexBuffer", 2000, 0, wine_cuD3D9RegisterVertexBuffer},
+    {"cuD3D9MapVertexBuffer", 2000, 0, wine_cuD3D9MapVertexBuffer},
+    {"cuD3D9MapVertexBuffer", 3020, 0, wine_cuD3D9MapVertexBuffer_v2},
+    {"cuD3D9UnmapVertexBuffer", 2000, 0, wine_cuD3D9UnmapVertexBuffer},
+    {"cuD3D9UnregisterVertexBuffer", 2000, 0, wine_cuD3D9UnregisterVertexBuffer},
     {"cuD3D11GetDevice", 3000, 0, wine_cuD3D11GetDevice},
     {"cuGraphicsD3D11RegisterResource", 3000, 0, wine_cuGraphicsD3D11RegisterResource},
     {"cuD3D10GetDevice", 2010, 0, wine_cuD3D10GetDevice},
     {"cuGraphicsD3D10RegisterResource", 3000, 0, wine_cuGraphicsD3D10RegisterResource},
-    {"cuD3D9GetDevice", 2000, 0, wine_cuD3D9GetDevice},
-    {"cuGraphicsD3D9RegisterResource", 3000, 0, wine_cuGraphicsD3D9RegisterResource},
     {"cuD3D11CtxCreate", 3000, 0, wine_cuD3D11CtxCreate},
     {"cuD3D11CtxCreate", 3020, 0, wine_cuD3D11CtxCreate_v2},
     {"cuD3D11GetDevices", 3020, 0, wine_cuD3D11GetDevices},

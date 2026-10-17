@@ -60,33 +60,33 @@
 @ stdcall cuD3D11GetDevice(ptr ptr) wine_cuD3D11GetDevice
 @ stdcall cuD3D11GetDevices(ptr ptr long ptr long) wine_cuD3D11GetDevices
 @ stdcall cuD3D11GetDirect3DDevice(ptr) wine_cuD3D11GetDirect3DDevice
-@ stub cuD3D9Begin
+@ stdcall cuD3D9Begin(ptr) wine_cuD3D9Begin
 @ stdcall cuD3D9CtxCreate(ptr ptr long ptr) wine_cuD3D9CtxCreate
-@ stub cuD3D9CtxCreateOnDevice
-@ stub cuD3D9CtxCreate_v2
-@ stub cuD3D9End
+@ stdcall cuD3D9CtxCreateOnDevice(ptr long ptr long) wine_cuD3D9CtxCreateOnDevice
+@ stdcall cuD3D9CtxCreate_v2(ptr ptr long ptr) wine_cuD3D9CtxCreate_v2
+@ stdcall cuD3D9End(ptr) wine_cuD3D9End
 @ stdcall cuD3D9GetDevice(ptr str) wine_cuD3D9GetDevice
-@ stub cuD3D9GetDevices
-@ stub cuD3D9GetDirect3DDevice
-@ stub cuD3D9MapResources
-@ stub cuD3D9MapVertexBuffer
-@ stub cuD3D9MapVertexBuffer_v2
-@ stub cuD3D9RegisterResource
-@ stub cuD3D9RegisterVertexBuffer
-@ stub cuD3D9ResourceGetMappedArray
-@ stub cuD3D9ResourceGetMappedPitch
-@ stub cuD3D9ResourceGetMappedPitch_v2
-@ stub cuD3D9ResourceGetMappedPointer
-@ stub cuD3D9ResourceGetMappedPointer_v2
-@ stub cuD3D9ResourceGetMappedSize
-@ stub cuD3D9ResourceGetMappedSize_v2
-@ stub cuD3D9ResourceGetSurfaceDimensions
-@ stub cuD3D9ResourceGetSurfaceDimensions_v2
-@ stub cuD3D9ResourceSetMapFlags
-@ stub cuD3D9UnmapResources
-@ stub cuD3D9UnmapVertexBuffer
-@ stub cuD3D9UnregisterResource
-@ stub cuD3D9UnregisterVertexBuffer
+@ stdcall cuD3D9GetDevices(ptr ptr long ptr long) wine_cuD3D9GetDevices
+@ stdcall cuD3D9GetDirect3DDevice(ptr) wine_cuD3D9GetDirect3DDevice
+@ stdcall cuD3D9MapResources(long ptr) wine_cuD3D9MapResources
+@ stdcall cuD3D9MapVertexBuffer(ptr ptr ptr) wine_cuD3D9MapVertexBuffer
+@ stdcall cuD3D9MapVertexBuffer_v2(ptr ptr ptr) wine_cuD3D9MapVertexBuffer_v2
+@ stdcall cuD3D9RegisterResource(ptr long) wine_cuD3D9RegisterResource
+@ stdcall cuD3D9RegisterVertexBuffer(ptr) wine_cuD3D9RegisterVertexBuffer
+@ stdcall cuD3D9ResourceGetMappedArray(ptr ptr long long) wine_cuD3D9ResourceGetMappedArray
+@ stdcall cuD3D9ResourceGetMappedPitch(ptr ptr ptr long long) wine_cuD3D9ResourceGetMappedPitch
+@ stdcall cuD3D9ResourceGetMappedPitch_v2(ptr ptr ptr long long) wine_cuD3D9ResourceGetMappedPitch_v2
+@ stdcall cuD3D9ResourceGetMappedPointer(ptr ptr long long) wine_cuD3D9ResourceGetMappedPointer
+@ stdcall cuD3D9ResourceGetMappedPointer_v2(ptr ptr long long) wine_cuD3D9ResourceGetMappedPointer_v2
+@ stdcall cuD3D9ResourceGetMappedSize(ptr ptr long long) wine_cuD3D9ResourceGetMappedSize
+@ stdcall cuD3D9ResourceGetMappedSize_v2(ptr ptr long long) wine_cuD3D9ResourceGetMappedSize_v2
+@ stdcall cuD3D9ResourceGetSurfaceDimensions(ptr ptr ptr ptr long long) wine_cuD3D9ResourceGetSurfaceDimensions
+@ stdcall cuD3D9ResourceGetSurfaceDimensions_v2(ptr ptr ptr ptr long long) wine_cuD3D9ResourceGetSurfaceDimensions_v2
+@ stdcall cuD3D9ResourceSetMapFlags(ptr long) wine_cuD3D9ResourceSetMapFlags
+@ stdcall cuD3D9UnmapResources(long ptr) wine_cuD3D9UnmapResources
+@ stdcall cuD3D9UnmapVertexBuffer(ptr) wine_cuD3D9UnmapVertexBuffer
+@ stdcall cuD3D9UnregisterResource(ptr) wine_cuD3D9UnregisterResource
+@ stdcall cuD3D9UnregisterVertexBuffer(ptr) wine_cuD3D9UnregisterVertexBuffer
 @ stdcall cuDestroyExternalMemory(ptr) wine_cuDestroyExternalMemory
 @ stdcall cuDestroyExternalSemaphore(ptr) wine_cuDestroyExternalSemaphore
 @ stdcall cuDeviceCanAccessPeer(ptr long long) wine_cuDeviceCanAccessPeer
