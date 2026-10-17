@@ -3,6 +3,7 @@ nvcuda_src = [
   'nvcuda.c',
   'function_mappings.c',
   'encryption.c',
+  'd3d.c',
 ]
 
 thread_dep = dependency('threads')

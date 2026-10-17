@@ -36,7 +36,6 @@
 #include "wine/wgl.h"
 #include "cuda.h"
 #include "nvcuda.h"
-#include "d3d9.h"
 #include "d3d11.h"
 #include "function_mappings.h"
 
@@ -6507,117 +6506,6 @@ CUresult WINAPI wine_NVAON_SharedMemory_ImportReadOnly(void* param0, void* param
 }
 
 #undef CHECK_FUNCPTR
-
-
-/*
- * Direct3D emulated functions
- */
-
-CUresult WINAPI wine_cuD3D9CtxCreate(CUcontext *pCtx, CUdevice *pCudaDevice, unsigned int Flags, IDirect3DDevice9 *pD3DDevice)
-{
-    CUresult ret;
-    CUdevice dev;
-
-    FIXME("(%p, %p, %u, %p) - semi-stub\n", pCtx, pCudaDevice, Flags, pD3DDevice);
-
-    ret = pcuDeviceGet(&dev, 0);
-    if (ret) return ret;
-
-    ret = pcuCtxCreate(pCtx, Flags, dev);
-    if (ret) return ret;
-
-    if (pCudaDevice)
-        *pCudaDevice = dev;
-
-    return CUDA_SUCCESS;
-}
-
-CUresult WINAPI wine_cuD3D9GetDevice(CUdevice *pCudaDevice, const char *pszAdapterName)
-{
-    FIXME("(%p, %s) - semi-stub\n", pCudaDevice, pszAdapterName);
-    return pcuDeviceGet(pCudaDevice, 0);
-}
-
-CUresult WINAPI wine_cuGraphicsD3D9RegisterResource(CUgraphicsResource *pCudaResource, IDirect3DResource9 *pD3DResource, unsigned int Flags)
-{
-    FIXME("(%p, %p, %u) - semi-stub\n", pCudaResource, pD3DResource, Flags);
-    /* Not able to handle spesific flags at this time */
-    if(Flags > 0)
-      return CUDA_ERROR_INVALID_VALUE;
-
-    /* pD3DResource is unknown at this time and cannot be "registered" */
-    return CUDA_ERROR_UNKNOWN;
-}
-
-CUresult WINAPI wine_cuD3D10GetDevice(CUdevice *pCudaDevice, IDXGIAdapter *pAdapter)
-{
-    FIXME("(%p, %p) - semi-stub\n", pCudaDevice, pAdapter);
-    /* DXGI adapters don't have an OpenGL context assigned yet, otherwise we could use cuGLGetDevices */
-    return pcuDeviceGet(pCudaDevice, 0);
-}
-
-CUresult WINAPI wine_cuGraphicsD3D10RegisterResource(CUgraphicsResource *pCudaResource, ID3D10Resource *pD3DResource, unsigned int Flags)
-{
-    FIXME("(%p, %p, %u) - semi-stub\n", pCudaResource, pD3DResource, Flags);
-    /* Not able to handle spesific flags at this time */
-    if(Flags > 0)
-      return CUDA_ERROR_INVALID_VALUE;
-
-    /* pD3DResource is unknown at this time and cannot be "registered" */
-    return CUDA_ERROR_UNKNOWN;
-}
-
-CUresult WINAPI wine_cuD3D11GetDevice(CUdevice *pCudaDevice, IDXGIAdapter *pAdapter)
-{
-    FIXME("(%p, %p) - semi-stub\n", pCudaDevice, pAdapter);
-    /* DXGI adapters don't have an OpenGL context assigned yet, otherwise we could use cuGLGetDevices */
-    return pcuDeviceGet(pCudaDevice, 0);
-}
-
-CUresult WINAPI wine_cuGraphicsD3D11RegisterResource(CUgraphicsResource *pCudaResource, ID3D11Resource *pD3DResource, unsigned int Flags)
-{
-    FIXME("(%p, %p, %u) - semi-stub\n", pCudaResource, pD3DResource, Flags);
-    /* Not able to handle spesific flags at this time */
-    if(Flags > 0)
-      return CUDA_ERROR_INVALID_VALUE;
-
-    /* pD3DResource is unknown at this time and cannot be "registered" */
-    return CUDA_ERROR_UNKNOWN;
-}
-
-CUresult WINAPI wine_cuD3D11CtxCreate(CUcontext* pCtx, CUdevice* pCudaDevice, unsigned int Flags, ID3D11Device* pD3DDevice)
-{
-    FIXME("(%p, %p, %u, %p) - semi-stub\n", pCtx, pCudaDevice, Flags, pD3DDevice);
-    /* Create a cuda context on the device - This will NOT actually be registered to the D3D11 device. */
-    CUresult ret;
-
-    ret = pcuDeviceGet(pCudaDevice, 0);
-    if (ret)
-    {
-        ERR("Failed to get CUDA device, error: %d\n", ret);
-        return ret;
-    }
-    ret = pcuCtxCreate(pCtx, Flags, *pCudaDevice);
-    if (ret) ERR("Failed to create cuda context, error: %d\n", ret);
-    return ret;
-}
-
-CUresult WINAPI wine_cuD3D11CtxCreate_v2(CUcontext* pCtx, CUdevice* pCudaDevice, unsigned int Flags, ID3D11Device* pD3DDevice)
-{
-    FIXME("(%p, %p, %u, %p) - semi-stub\n", pCtx, pCudaDevice, Flags, pD3DDevice);
-    /* Create a cuda context on the device - This will NOT actually be registered to the D3D11 device. */
-    CUresult ret;
-
-    ret = pcuDeviceGet(pCudaDevice, 0);
-    if (ret)
-    {
-        ERR("Failed to get CUDA device, error: %d\n", ret);
-        return ret;
-    }
-    ret = pcuCtxCreate_v2(pCtx, Flags, *pCudaDevice);
-    if (ret) ERR("Failed to create cuda context, error: %d\n", ret);
-    return ret;
-}
 
 /* Function checker used by CUDA Runtime API */
 static void get_addr(const char* symbol, int driverVersion, size_t flags, void** pfn)

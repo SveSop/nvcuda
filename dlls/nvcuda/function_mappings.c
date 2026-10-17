@@ -368,12 +368,6 @@ extern void wine_cuGraphicsResourceGetMappedPointer_v2(void);
 extern void wine_cuProfilerInitialize(void);
 extern void wine_cuProfilerStart(void);
 extern void wine_cuProfilerStop(void);
-extern void wine_cuD3D11GetDevice(void);
-extern void wine_cuGraphicsD3D11RegisterResource(void);
-extern void wine_cuD3D10GetDevice(void);
-extern void wine_cuGraphicsD3D10RegisterResource(void);
-extern void wine_cuD3D9GetDevice(void);
-extern void wine_cuGraphicsD3D9RegisterResource(void);
 extern void wine_cuGetExportTable(void);
 extern void wine_cuOccupancyMaxActiveBlocksPerMultiprocessor(void);
 extern void wine_cuOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(void);
@@ -665,8 +659,6 @@ extern void wine_cuLogsUnregisterCallback(void);
 extern void wine_cuLogsCurrent(void);
 extern void wine_cuLogsDumpToFile(void);
 extern void wine_cuLogsDumpToMemory(void);
-extern void wine_cuD3D11CtxCreate(void);
-extern void wine_cuD3D11CtxCreate_v2(void);
 extern void wine_cuGreenCtxGetId(void);
 extern void wine_cuDeviceGetHostAtomicCapabilities(void);
 extern void wine_cuMemGetDefaultMemPool(void);
@@ -732,6 +724,16 @@ extern void wine_cuDeviceGetCliqueCount(void);
 extern void wine_cuDeviceGetCliqueInfo(void);
 extern void wine_cuMemGetLocationInfo(void);
 extern void wine_cuCheckpointOperationComplete(void);
+
+/* D3D Emulated calls */
+extern void wine_cuD3D11GetDevice(void);
+extern void wine_cuGraphicsD3D11RegisterResource(void);
+extern void wine_cuD3D10GetDevice(void);
+extern void wine_cuGraphicsD3D10RegisterResource(void);
+extern void wine_cuD3D9GetDevice(void);
+extern void wine_cuGraphicsD3D9RegisterResource(void);
+extern void wine_cuD3D11CtxCreate(void);
+extern void wine_cuD3D11CtxCreate_v2(void);
 
 /* Unknown calls - possibly TILE related ? */
 extern void wine_cuDriverGetGpuCodeIsaVersion(void);
