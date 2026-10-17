@@ -752,17 +752,10 @@ extern void wine_cuD3D9MapVertexBuffer(void);
 extern void wine_cuD3D9MapVertexBuffer_v2(void);
 extern void wine_cuD3D9UnmapVertexBuffer(void);
 extern void wine_cuD3D9UnregisterVertexBuffer(void);
-extern void wine_cuD3D11GetDevice(void);
-extern void wine_cuGraphicsD3D11RegisterResource(void);
-extern void wine_cuD3D10GetDevice(void);
-extern void wine_cuGraphicsD3D10RegisterResource(void);
 extern void wine_cuD3D9GetDevice(void);
 extern void wine_cuGraphicsD3D9RegisterResource(void);
-extern void wine_cuD3D11CtxCreate(void);
-extern void wine_cuD3D11CtxCreate_v2(void);
-extern void wine_cuD3D11GetDevices(void);
-extern void wine_cuD3D11CtxCreateOnDevice(void);
-extern void wine_cuD3D11GetDirect3DDevice(void);
+extern void wine_cuD3D10GetDevice(void);
+extern void wine_cuGraphicsD3D10RegisterResource(void);
 extern void wine_cuD3D10GetDevices(void);
 extern void wine_cuD3D10CtxCreate(void);
 extern void wine_cuD3D10CtxCreate_v2(void);
@@ -782,6 +775,13 @@ extern void wine_cuD3D10ResourceGetMappedPitch(void);
 extern void wine_cuD3D10ResourceGetMappedPitch_v2(void);
 extern void wine_cuD3D10ResourceGetSurfaceDimensions(void);
 extern void wine_cuD3D10ResourceGetSurfaceDimensions_v2(void);
+extern void wine_cuD3D11GetDevice(void);
+extern void wine_cuGraphicsD3D11RegisterResource(void);
+extern void wine_cuD3D11CtxCreate(void);
+extern void wine_cuD3D11CtxCreate_v2(void);
+extern void wine_cuD3D11GetDevices(void);
+extern void wine_cuD3D11CtxCreateOnDevice(void);
+extern void wine_cuD3D11GetDirect3DDevice(void);
 
 /* Unknown calls - possibly TILE related ? */
 extern void wine_cuDriverGetGpuCodeIsaVersion(void);
@@ -1540,15 +1540,8 @@ const FunctionMapping mappings[] =
     {"cuD3D9MapVertexBuffer", 3020, 0, wine_cuD3D9MapVertexBuffer_v2},
     {"cuD3D9UnmapVertexBuffer", 2000, 0, wine_cuD3D9UnmapVertexBuffer},
     {"cuD3D9UnregisterVertexBuffer", 2000, 0, wine_cuD3D9UnregisterVertexBuffer},
-    {"cuD3D11GetDevice", 3000, 0, wine_cuD3D11GetDevice},
-    {"cuGraphicsD3D11RegisterResource", 3000, 0, wine_cuGraphicsD3D11RegisterResource},
     {"cuD3D10GetDevice", 2010, 0, wine_cuD3D10GetDevice},
     {"cuGraphicsD3D10RegisterResource", 3000, 0, wine_cuGraphicsD3D10RegisterResource},
-    {"cuD3D11CtxCreate", 3000, 0, wine_cuD3D11CtxCreate},
-    {"cuD3D11CtxCreate", 3020, 0, wine_cuD3D11CtxCreate_v2},
-    {"cuD3D11GetDevices", 3020, 0, wine_cuD3D11GetDevices},
-    {"cuD3D11CtxCreateOnDevice", 3020, 0, wine_cuD3D11CtxCreateOnDevice},
-    {"cuD3D11GetDirect3DDevice", 3020, 0, wine_cuD3D11GetDirect3DDevice},
     {"cuD3D10GetDevices", 3020, 0, wine_cuD3D10GetDevices},
     {"cuD3D10CtxCreate", 2010, 0, wine_cuD3D10CtxCreate},
     {"cuD3D10CtxCreate", 3020, 0, wine_cuD3D10CtxCreate_v2},
@@ -1568,6 +1561,13 @@ const FunctionMapping mappings[] =
     {"cuD3D10ResourceGetMappedPitch", 3020, 0, wine_cuD3D10ResourceGetMappedPitch_v2},
     {"cuD3D10ResourceGetSurfaceDimensions", 2010, 0, wine_cuD3D10ResourceGetSurfaceDimensions},
     {"cuD3D10ResourceGetSurfaceDimensions", 3020, 0, wine_cuD3D10ResourceGetSurfaceDimensions_v2},
+    {"cuD3D11GetDevice", 3000, 0, wine_cuD3D11GetDevice},
+    {"cuGraphicsD3D11RegisterResource", 3000, 0, wine_cuGraphicsD3D11RegisterResource},
+    {"cuD3D11CtxCreate", 3000, 0, wine_cuD3D11CtxCreate},
+    {"cuD3D11CtxCreate", 3020, 0, wine_cuD3D11CtxCreate_v2},
+    {"cuD3D11GetDevices", 3020, 0, wine_cuD3D11GetDevices},
+    {"cuD3D11CtxCreateOnDevice", 3020, 0, wine_cuD3D11CtxCreateOnDevice},
+    {"cuD3D11GetDirect3DDevice", 3020, 0, wine_cuD3D11GetDirect3DDevice},
     /* Unknown - possibly TILE related */
     {"cuDriverGetGpuCodeIsaVersion", 13000, 0, wine_cuDriverGetGpuCodeIsaVersion},
     {"cuSubgridCreate", 13030, 0, wine_cuSubgridCreate},

@@ -635,7 +635,6 @@
 @ stdcall cuCtxGetId(ptr ptr) wine_cuCtxGetId
 @ stdcall cuStreamGetId(ptr ptr) wine_cuStreamGetId
 @ stdcall cuStreamGetId_ptsz(ptr ptr) wine_cuStreamGetId_ptsz
-@ stub cuGraphAddKernelnNode
 @ stdcall cuGraphExecGetFlags(ptr ptr) wine_cuGraphExecGetFlags
 @ stdcall cuTensorMapEncodeTiled(ptr ptr long ptr ptr ptr ptr ptr ptr ptr ptr ptr) wine_cuTensorMapEncodeTiled
 @ stdcall cuTensorMapEncodeIm2col(ptr ptr long ptr ptr ptr ptr ptr long long ptr ptr ptr ptr ptr) wine_cuTensorMapEncodeIm2col
