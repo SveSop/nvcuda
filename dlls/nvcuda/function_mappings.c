@@ -734,6 +734,9 @@ extern void wine_cuD3D9GetDevice(void);
 extern void wine_cuGraphicsD3D9RegisterResource(void);
 extern void wine_cuD3D11CtxCreate(void);
 extern void wine_cuD3D11CtxCreate_v2(void);
+extern void wine_cuD3D11GetDevices(void);
+extern void wine_cuD3D11CtxCreateOnDevice(void);
+extern void wine_cuD3D11GetDirect3DDevice(void);
 
 /* Unknown calls - possibly TILE related ? */
 extern void wine_cuDriverGetGpuCodeIsaVersion(void);
@@ -1107,12 +1110,6 @@ const FunctionMapping mappings[] =
     {"cuProfilerInitialize", 4000, 0, wine_cuProfilerInitialize},
     {"cuProfilerStart", 4000, 0, wine_cuProfilerStart},
     {"cuProfilerStop", 4000, 0, wine_cuProfilerStop},
-    {"cuD3D11GetDevice", 3000, 0, wine_cuD3D11GetDevice},
-    {"cuGraphicsD3D11RegisterResource", 3000, 0, wine_cuGraphicsD3D11RegisterResource},
-    {"cuD3D10GetDevice", 2010, 0, wine_cuD3D10GetDevice},
-    {"cuGraphicsD3D10RegisterResource", 3000, 0, wine_cuGraphicsD3D10RegisterResource},
-    {"cuD3D9GetDevice", 2000, 0, wine_cuD3D9GetDevice},
-    {"cuGraphicsD3D9RegisterResource", 3000, 0, wine_cuGraphicsD3D9RegisterResource},
     {"cuGetExportTable", 3000, 0, wine_cuGetExportTable},
     {"cuGetExportTable", 13000, 0, wine_cuGetExportTable},
     {"cuOccupancyMaxActiveBlocksPerMultiprocessor", 6050, 0, wine_cuOccupancyMaxActiveBlocksPerMultiprocessor},
@@ -1404,8 +1401,6 @@ const FunctionMapping mappings[] =
     {"cuLogsCurrent", 12090, 0, wine_cuLogsCurrent},
     {"cuLogsDumpToFile", 12090, 0, wine_cuLogsDumpToFile},
     {"cuLogsDumpToMemory", 12090, 0, wine_cuLogsDumpToMemory},
-    {"cuD3D11CtxCreate", 3000, 0, wine_cuD3D11CtxCreate},
-    {"cuD3D11CtxCreate", 3020, 0, wine_cuD3D11CtxCreate_v2},
     {"cuGreenCtxGetId", 12090, 0, wine_cuGreenCtxGetId},
     {"cuDeviceGetHostAtomicCapabilities", 13000, 0, wine_cuDeviceGetHostAtomicCapabilities},
     {"cuMemGetDefaultMemPool", 13000, 0, wine_cuMemGetDefaultMemPool},
@@ -1471,6 +1466,18 @@ const FunctionMapping mappings[] =
     {"cuDeviceGetCliqueInfo", 13040, 0, wine_cuDeviceGetCliqueInfo},
     {"cuMemGetLocationInfo", 13040, 0, wine_cuMemGetLocationInfo},
     {"cuCheckpointOperationComplete", 13040, 0, wine_cuCheckpointOperationComplete},
+    /* Emulated D3D functions */
+    {"cuD3D11GetDevice", 3000, 0, wine_cuD3D11GetDevice},
+    {"cuGraphicsD3D11RegisterResource", 3000, 0, wine_cuGraphicsD3D11RegisterResource},
+    {"cuD3D10GetDevice", 2010, 0, wine_cuD3D10GetDevice},
+    {"cuGraphicsD3D10RegisterResource", 3000, 0, wine_cuGraphicsD3D10RegisterResource},
+    {"cuD3D9GetDevice", 2000, 0, wine_cuD3D9GetDevice},
+    {"cuGraphicsD3D9RegisterResource", 3000, 0, wine_cuGraphicsD3D9RegisterResource},
+    {"cuD3D11CtxCreate", 3000, 0, wine_cuD3D11CtxCreate},
+    {"cuD3D11CtxCreate", 3020, 0, wine_cuD3D11CtxCreate_v2},
+    {"cuD3D11GetDevices", 3020, 0, wine_cuD3D11GetDevices},
+    {"cuD3D11CtxCreateOnDevice", 3020, 0, wine_cuD3D11CtxCreateOnDevice},
+    {"cuD3D11GetDirect3DDevice", 3020, 0, wine_cuD3D11GetDirect3DDevice},
     /* Unknown - possibly TILE related */
     {"cuDriverGetGpuCodeIsaVersion", 13000, 0, wine_cuDriverGetGpuCodeIsaVersion},
     {"cuSubgridCreate", 13030, 0, wine_cuSubgridCreate},

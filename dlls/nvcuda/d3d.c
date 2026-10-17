@@ -36,6 +36,10 @@ WINE_DEFAULT_DEBUG_CHANNEL(nvcuda);
  * Direct3D emulated functions
  */
 
+/*
+ * Direct3D 9
+ */
+
 CUresult WINAPI wine_cuD3D9CtxCreate(CUcontext *pCtx, CUdevice *pCudaDevice, unsigned int Flags, IDirect3DDevice9 *pD3DDevice)
 {
     CUresult ret;
@@ -69,8 +73,12 @@ CUresult WINAPI wine_cuGraphicsD3D9RegisterResource(CUgraphicsResource *pCudaRes
       return CUDA_ERROR_INVALID_VALUE;
 
     /* pD3DResource is unknown at this time and cannot be "registered" */
-    return CUDA_ERROR_UNKNOWN;
+    return CUDA_ERROR_NOT_SUPPORTED;
 }
+
+/*
+ * Direct3D 10
+ */
 
 CUresult WINAPI wine_cuD3D10GetDevice(CUdevice *pCudaDevice, IDXGIAdapter *pAdapter)
 {
@@ -81,16 +89,20 @@ CUresult WINAPI wine_cuD3D10GetDevice(CUdevice *pCudaDevice, IDXGIAdapter *pAdap
 
 CUresult WINAPI wine_cuGraphicsD3D10RegisterResource(CUgraphicsResource *pCudaResource, ID3D10Resource *pD3DResource, unsigned int Flags)
 {
-    FIXME("(%p, %p, %u) - semi-stub\n", pCudaResource, pD3DResource, Flags);
+    ERR("(%p, %p, %u) - Not supported\n", pCudaResource, pD3DResource, Flags);
     /* Not able to handle spesific flags at this time */
     if(Flags > 0)
       return CUDA_ERROR_INVALID_VALUE;
 
     /* pD3DResource is unknown at this time and cannot be "registered" */
-    return CUDA_ERROR_UNKNOWN;
+    return CUDA_ERROR_NOT_SUPPORTED;
 }
 
-CUresult WINAPI wine_cuD3D11GetDevice(CUdevice *pCudaDevice, IDXGIAdapter *pAdapter)
+/*
+ * Direct3D 11
+ */
+
+CUresult WINAPI wine_cuD3D11GetDevice(CUdevice_v1 *pCudaDevice, IDXGIAdapter *pAdapter)
 {
     FIXME("(%p, %p) - semi-stub\n", pCudaDevice, pAdapter);
     /* DXGI adapters don't have an OpenGL context assigned yet, otherwise we could use cuGLGetDevices */
@@ -99,13 +111,13 @@ CUresult WINAPI wine_cuD3D11GetDevice(CUdevice *pCudaDevice, IDXGIAdapter *pAdap
 
 CUresult WINAPI wine_cuGraphicsD3D11RegisterResource(CUgraphicsResource *pCudaResource, ID3D11Resource *pD3DResource, unsigned int Flags)
 {
-    FIXME("(%p, %p, %u) - semi-stub\n", pCudaResource, pD3DResource, Flags);
+    ERR("(%p, %p, %u) - Not supported\n", pCudaResource, pD3DResource, Flags);
     /* Not able to handle spesific flags at this time */
     if(Flags > 0)
       return CUDA_ERROR_INVALID_VALUE;
 
     /* pD3DResource is unknown at this time and cannot be "registered" */
-    return CUDA_ERROR_UNKNOWN;
+    return CUDA_ERROR_NOT_SUPPORTED;
 }
 
 CUresult WINAPI wine_cuD3D11CtxCreate(CUcontext* pCtx, CUdevice* pCudaDevice, unsigned int Flags, ID3D11Device* pD3DDevice)
@@ -140,4 +152,22 @@ CUresult WINAPI wine_cuD3D11CtxCreate_v2(CUcontext* pCtx, CUdevice* pCudaDevice,
     ret = wine_cuCtxCreate_v2(pCtx, Flags, *pCudaDevice);
     if (ret) ERR("Failed to create cuda context, error: %d\n", ret);
     return ret;
+}
+
+CUresult WINAPI wine_cuD3D11GetDevices(unsigned int *pCudaDeviceCount, CUdevice_v1 *pCudaDevices, unsigned int cudaDeviceCount, ID3D11Device *pD3D11Device, CUd3d11DeviceList deviceList)
+{
+    ERR("(%p, %p, %u, %p, %u) - Not supported.\n", pCudaDeviceCount, pCudaDevices, cudaDeviceCount, pD3D11Device, deviceList);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D11CtxCreateOnDevice(CUcontext *pCtx, unsigned int flags, ID3D11Device *pD3DDevice, CUdevice_v1 cudaDevice)
+{
+    ERR("(%p, %u, %p, %d) - Not supported.\n", pCtx, flags, pD3DDevice, cudaDevice);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D11GetDirect3DDevice(ID3D11Device **ppD3DDevice)
+{
+    ERR("(%p) - Not supported.\n", ppD3DDevice);
+    return CUDA_ERROR_NOT_SUPPORTED;
 }

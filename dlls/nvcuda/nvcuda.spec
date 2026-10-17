@@ -56,10 +56,10 @@
 @ stub cuD3D10UnregisterResource
 @ stdcall cuD3D11CtxCreate(ptr ptr long ptr) wine_cuD3D11CtxCreate
 @ stdcall cuD3D11CtxCreate_v2(ptr ptr long ptr) wine_cuD3D11CtxCreate_v2
-@ stub cuD3D11CtxCreateOnDevice
+@ stdcall cuD3D11CtxCreateOnDevice(ptr ptr long ptr) wine_cuD3D11CtxCreateOnDevice
 @ stdcall cuD3D11GetDevice(ptr ptr) wine_cuD3D11GetDevice
-@ stub cuD3D11GetDevices
-@ stub cuD3D11GetDirect3DDevice
+@ stdcall cuD3D11GetDevices(ptr ptr long ptr long) wine_cuD3D11GetDevices
+@ stdcall cuD3D11GetDirect3DDevice(ptr) wine_cuD3D11GetDirect3DDevice
 @ stub cuD3D9Begin
 @ stdcall cuD3D9CtxCreate(ptr ptr long ptr) wine_cuD3D9CtxCreate
 @ stub cuD3D9CtxCreateOnDevice

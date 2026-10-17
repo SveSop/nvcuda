@@ -23,4 +23,10 @@ CUresult WINAPI wine_cuCtxCreate(CUcontext *pctx, unsigned int flags, CUdevice d
 CUresult WINAPI wine_cuCtxCreate_v2(CUcontext *pctx, unsigned int flags, CUdevice dev);
 CUresult WINAPI wine_cuDeviceGet(CUdevice *device, int ordinal);
 
+typedef enum CUd3d11DeviceList_enum {
+    CU_D3D11_DEVICE_LIST_ALL            = 0x01, /**< The CUDA devices for all GPUs used by a D3D11 device */
+    CU_D3D11_DEVICE_LIST_CURRENT_FRAME  = 0x02, /**< The CUDA devices for the GPUs used by a D3D11 device in its currently rendering frame */
+    CU_D3D11_DEVICE_LIST_NEXT_FRAME     = 0x03, /**< The CUDA devices for the GPUs to be used by a D3D11 device in the next frame */
+} CUd3d11DeviceList;
+
 #endif
