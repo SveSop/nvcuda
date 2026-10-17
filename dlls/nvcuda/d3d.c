@@ -98,6 +98,120 @@ CUresult WINAPI wine_cuGraphicsD3D10RegisterResource(CUgraphicsResource *pCudaRe
     return CUDA_ERROR_NOT_SUPPORTED;
 }
 
+CUresult WINAPI wine_cuD3D10GetDevices(unsigned int *pCudaDeviceCount, CUdevice_v1 *pCudaDevices, unsigned int cudaDeviceCount, ID3D10Device *pD3D10Device, CUd3d10DeviceList deviceList)
+{
+    ERR("(%p, %p, %u, %p, %u) - Not supported.\n", pCudaDeviceCount, pCudaDevices, cudaDeviceCount, pD3D10Device, deviceList);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10CtxCreate(CUcontext *pCtx, CUdevice_v1 *pCudaDevice, unsigned int Flags, ID3D10Device *pD3DDevice)
+{
+    ERR("(%p, %p, %u, %p) - Not supported\n", pCtx, pCudaDevice, Flags, pD3DDevice);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10CtxCreate_v2(CUcontext *pCtx, CUdevice_v1 *pCudaDevice, unsigned int Flags, ID3D10Device *pD3DDevice)
+{
+    ERR("(%p, %p, %u, %p) - Not supported\n", pCtx, pCudaDevice, Flags, pD3DDevice);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10CtxCreateOnDevice(CUcontext *pCtx, unsigned int flags, ID3D10Device *pD3DDevice, CUdevice_v1 cudaDevice)
+{
+    ERR("(%p, %u, %p, %d) - Not supported.\n", pCtx, flags, pD3DDevice, cudaDevice);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10GetDirect3DDevice(ID3D10Device **ppD3DDevice)
+{
+    ERR("(%p) - Not supported.\n", ppD3DDevice);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10RegisterResource(ID3D10Resource *pResource, unsigned int Flags)
+{
+    ERR("(%p, %u) - Not supported.\n", pResource, Flags);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10UnregisterResource(ID3D10Resource *pResource)
+{
+    ERR("(%p) - Not supported.\n", pResource);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10MapResources(unsigned int count, ID3D10Resource **ppResources)
+{
+    ERR("(%u, %p) - Not supported.\n", count, ppResources);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10UnmapResources(unsigned int count, ID3D10Resource **ppResources)
+{
+    ERR("(%u, %p) - Not supported.\n", count, ppResources);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10ResourceSetMapFlags(ID3D10Resource *pResource, unsigned int Flags)
+{
+    ERR("(%p, %u) Not supported.\n", pResource, Flags);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10ResourceGetMappedArray(CUarray *pArray, ID3D10Resource *pResource, unsigned int SubResource)
+{
+    ERR("(%p, %p, %u) - Not supported.\n", pArray, pResource, SubResource);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10ResourceGetMappedPointer(CUdeviceptr_v1 *pDevPtr, ID3D10Resource *pResource, unsigned int SubResource)
+{
+    ERR("(%p, %p, %u) - Not supported.\n", pDevPtr, pResource, SubResource);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10ResourceGetMappedPointer_v2(CUdeviceptr_v2 *pDevPtr, ID3D10Resource *pResource, unsigned int SubResource)
+{
+    ERR("(%p, %p, %u) - Not supported.\n", pDevPtr, pResource, SubResource);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10ResourceGetMappedSize(unsigned int *pSize, ID3D10Resource *pResource, unsigned int SubResource)
+{
+    ERR("(%p, %p, %u) - Not supported.\n", pSize, pResource, SubResource);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10ResourceGetMappedSize_v2(size_t *pSize, ID3D10Resource *pResource, unsigned int SubResource)
+{
+    ERR("(%p, %p, %u) - Not supported.\n", pSize, pResource, SubResource);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10ResourceGetMappedPitch(unsigned int *pPitch, unsigned int *pPitchSlice, ID3D10Resource *pResource, unsigned int SubResource)
+{
+    ERR("(%p, %p, %p, %u) - Not supported.\n", pPitch, pPitchSlice, pResource, SubResource);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10ResourceGetMappedPitch_v2(size_t *pPitch, size_t *pPitchSlice, ID3D10Resource *pResource, unsigned int SubResource)
+{
+    ERR("(%p, %p, %p, %u) - Not supported.\n", pPitch, pPitchSlice, pResource, SubResource);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10ResourceGetSurfaceDimensions(unsigned int *pWidth, unsigned int *pHeight, unsigned int *pDepth, ID3D10Resource *pResource, unsigned int SubResource)
+{
+    ERR("(%p, %p, %p, %p, %u) - Not supported.\n", pWidth, pHeight, pDepth, pResource, SubResource);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
+CUresult WINAPI wine_cuD3D10ResourceGetSurfaceDimensions_v2(size_t *pWidth, size_t *pHeight, size_t *pDepth, ID3D10Resource *pResource, unsigned int SubResource)
+{
+    ERR("(%p, %p, %p, %p, %u) - Not supported.\n", pWidth, pHeight, pDepth, pResource, SubResource);
+    return CUDA_ERROR_NOT_SUPPORTED;
+}
+
 /*
  * Direct3D 11
  */

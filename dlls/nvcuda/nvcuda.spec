@@ -34,26 +34,26 @@
 @ stdcall cuCtxSetLimit(long long) wine_cuCtxSetLimit
 @ stdcall cuCtxSetSharedMemConfig(long) wine_cuCtxSetSharedMemConfig
 @ stdcall cuCtxSynchronize() wine_cuCtxSynchronize
-@ stub cuD3D10CtxCreate
-@ stub cuD3D10CtxCreateOnDevice
-@ stub cuD3D10CtxCreate_v2
+@ stdcall cuD3D10CtxCreateOnDevice(ptr long ptr long) wine_cuD3D10CtxCreateOnDevice
+@ stdcall cuD3D10CtxCreate(ptr ptr long ptr) wine_cuD3D10CtxCreate
+@ stdcall cuD3D10CtxCreate_v2(ptr ptr long ptr) wine_cuD3D10CtxCreate_v2
 @ stdcall cuD3D10GetDevice(ptr ptr) wine_cuD3D10GetDevice
-@ stub cuD3D10GetDevices
-@ stub cuD3D10GetDirect3DDevice
-@ stub cuD3D10MapResources
-@ stub cuD3D10RegisterResource
-@ stub cuD3D10ResourceGetMappedArray
-@ stub cuD3D10ResourceGetMappedPitch
-@ stub cuD3D10ResourceGetMappedPitch_v2
-@ stub cuD3D10ResourceGetMappedPointer
-@ stub cuD3D10ResourceGetMappedPointer_v2
-@ stub cuD3D10ResourceGetMappedSize
-@ stub cuD3D10ResourceGetMappedSize_v2
-@ stub cuD3D10ResourceGetSurfaceDimensions
-@ stub cuD3D10ResourceGetSurfaceDimensions_v2
-@ stub cuD3D10ResourceSetMapFlags
-@ stub cuD3D10UnmapResources
-@ stub cuD3D10UnregisterResource
+@ stdcall cuD3D10GetDevices(ptr ptr long ptr long) wine_cuD3D10GetDevices
+@ stdcall cuD3D10GetDirect3DDevice(ptr) wine_cuD3D10GetDirect3DDevice
+@ stdcall cuD3D10MapResources(long ptr) wine_cuD3D10MapResources
+@ stdcall cuD3D10RegisterResource(ptr long) wine_cuD3D10RegisterResource
+@ stdcall cuD3D10ResourceGetMappedArray(ptr ptr long) wine_cuD3D10ResourceGetMappedArray
+@ stdcall cuD3D10ResourceGetMappedPitch(ptr ptr ptr long) wine_cuD3D10ResourceGetMappedPitch
+@ stdcall cuD3D10ResourceGetMappedPitch_v2(ptr ptr ptr long) wine_cuD3D10ResourceGetMappedPitch_v2
+@ stdcall cuD3D10ResourceGetMappedPointer(ptr ptr long) wine_cuD3D10ResourceGetMappedPointer
+@ stdcall cuD3D10ResourceGetMappedPointer_v2(ptr ptr long) wine_cuD3D10ResourceGetMappedPointer_v2
+@ stdcall cuD3D10ResourceGetMappedSize(ptr ptr long) wine_cuD3D10ResourceGetMappedSize
+@ stdcall cuD3D10ResourceGetMappedSize_v2(ptr ptr long) wine_cuD3D10ResourceGetMappedSize_v2
+@ stdcall cuD3D10ResourceGetSurfaceDimensions(ptr ptr ptr ptr long) wine_cuD3D10ResourceGetSurfaceDimensions
+@ stdcall cuD3D10ResourceGetSurfaceDimensions_v2(ptr ptr ptr ptr long) wine_cuD3D10ResourceGetSurfaceDimensions_v2
+@ stdcall cuD3D10ResourceSetMapFlags(ptr long) wine_cuD3D10ResourceSetMapFlags
+@ stdcall cuD3D10UnmapResources(long ptr) wine_cuD3D10UnmapResources
+@ stdcall cuD3D10UnregisterResource(ptr) wine_cuD3D10UnregisterResource
 @ stdcall cuD3D11CtxCreate(ptr ptr long ptr) wine_cuD3D11CtxCreate
 @ stdcall cuD3D11CtxCreate_v2(ptr ptr long ptr) wine_cuD3D11CtxCreate_v2
 @ stdcall cuD3D11CtxCreateOnDevice(ptr ptr long ptr) wine_cuD3D11CtxCreateOnDevice

@@ -737,6 +737,25 @@ extern void wine_cuD3D11CtxCreate_v2(void);
 extern void wine_cuD3D11GetDevices(void);
 extern void wine_cuD3D11CtxCreateOnDevice(void);
 extern void wine_cuD3D11GetDirect3DDevice(void);
+extern void wine_cuD3D10GetDevices(void);
+extern void wine_cuD3D10CtxCreate(void);
+extern void wine_cuD3D10CtxCreate_v2(void);
+extern void wine_cuD3D10CtxCreateOnDevice(void);
+extern void wine_cuD3D10GetDirect3DDevice(void);
+extern void wine_cuD3D10RegisterResource(void);
+extern void wine_cuD3D10UnregisterResource(void);
+extern void wine_cuD3D10MapResources(void);
+extern void wine_cuD3D10UnmapResources(void);
+extern void wine_cuD3D10ResourceSetMapFlags(void);
+extern void wine_cuD3D10ResourceGetMappedArray(void);
+extern void wine_cuD3D10ResourceGetMappedPointer(void);
+extern void wine_cuD3D10ResourceGetMappedPointer_v2(void);
+extern void wine_cuD3D10ResourceGetMappedSize(void);
+extern void wine_cuD3D10ResourceGetMappedSize_v2(void);
+extern void wine_cuD3D10ResourceGetMappedPitch(void);
+extern void wine_cuD3D10ResourceGetMappedPitch_v2(void);
+extern void wine_cuD3D10ResourceGetSurfaceDimensions(void);
+extern void wine_cuD3D10ResourceGetSurfaceDimensions_v2(void);
 
 /* Unknown calls - possibly TILE related ? */
 extern void wine_cuDriverGetGpuCodeIsaVersion(void);
@@ -1478,6 +1497,25 @@ const FunctionMapping mappings[] =
     {"cuD3D11GetDevices", 3020, 0, wine_cuD3D11GetDevices},
     {"cuD3D11CtxCreateOnDevice", 3020, 0, wine_cuD3D11CtxCreateOnDevice},
     {"cuD3D11GetDirect3DDevice", 3020, 0, wine_cuD3D11GetDirect3DDevice},
+    {"cuD3D10GetDevices", 3020, 0, wine_cuD3D10GetDevices},
+    {"cuD3D10CtxCreate", 2010, 0, wine_cuD3D10CtxCreate},
+    {"cuD3D10CtxCreate", 3020, 0, wine_cuD3D10CtxCreate_v2},
+    {"cuD3D10CtxCreateOnDevice", 3020, 0, wine_cuD3D10CtxCreateOnDevice},
+    {"cuD3D10GetDirect3DDevice", 3020, 0, wine_cuD3D10GetDirect3DDevice},
+    {"cuD3D10RegisterResource", 2010, 0, wine_cuD3D10RegisterResource},
+    {"cuD3D10UnregisterResource", 2010, 0, wine_cuD3D10UnregisterResource},
+    {"cuD3D10MapResources", 2010, 0, wine_cuD3D10MapResources},
+    {"cuD3D10UnmapResources", 2010, 0, wine_cuD3D10UnmapResources},
+    {"cuD3D10ResourceSetMapFlags", 2010, 0, wine_cuD3D10ResourceSetMapFlags},
+    {"cuD3D10ResourceGetMappedArray", 2010, 0, wine_cuD3D10ResourceGetMappedArray},
+    {"cuD3D10ResourceGetMappedPointer", 2010, 0, wine_cuD3D10ResourceGetMappedPointer},
+    {"cuD3D10ResourceGetMappedPointer", 3020, 0, wine_cuD3D10ResourceGetMappedPointer_v2},
+    {"cuD3D10ResourceGetMappedSize", 2010, 0, wine_cuD3D10ResourceGetMappedSize},
+    {"cuD3D10ResourceGetMappedSize", 3020, 0, wine_cuD3D10ResourceGetMappedSize_v2},
+    {"cuD3D10ResourceGetMappedPitch", 2010, 0, wine_cuD3D10ResourceGetMappedPitch},
+    {"cuD3D10ResourceGetMappedPitch", 3020, 0, wine_cuD3D10ResourceGetMappedPitch_v2},
+    {"cuD3D10ResourceGetSurfaceDimensions", 2010, 0, wine_cuD3D10ResourceGetSurfaceDimensions},
+    {"cuD3D10ResourceGetSurfaceDimensions", 3020, 0, wine_cuD3D10ResourceGetSurfaceDimensions_v2},
     /* Unknown - possibly TILE related */
     {"cuDriverGetGpuCodeIsaVersion", 13000, 0, wine_cuDriverGetGpuCodeIsaVersion},
     {"cuSubgridCreate", 13030, 0, wine_cuSubgridCreate},
