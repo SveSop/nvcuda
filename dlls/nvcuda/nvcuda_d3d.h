@@ -22,6 +22,8 @@
 CUresult WINAPI wine_cuCtxCreate(CUcontext *pctx, unsigned int flags, CUdevice dev);
 CUresult WINAPI wine_cuCtxCreate_v2(CUcontext *pctx, unsigned int flags, CUdevice dev);
 CUresult WINAPI wine_cuDeviceGet(CUdevice *device, int ordinal);
+CUresult WINAPI wine_cuDeviceGetLuid(char *luid, unsigned int *deviceNodeMask, CUdevice dev);
+CUresult WINAPI wine_cuDeviceGetCount(int *count);
 
 typedef enum CUd3d11DeviceList_enum {
     CU_D3D11_DEVICE_LIST_ALL            = 0x01, /**< The CUDA devices for all GPUs used by a D3D11 device */

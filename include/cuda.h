@@ -29,6 +29,7 @@ typedef uint64_t cuuint64_t;
 #define CUDA_SUCCESS                 0
 #define CUDA_ERROR_INVALID_VALUE     1
 #define CUDA_ERROR_OUT_OF_MEMORY     2
+#define CUDA_ERROR_NO_DEVICE         100
 #define CUDA_ERROR_INVALID_CONTEXT   201
 #define CUDA_ERROR_NO_BINARY_FOR_GPU 209
 #define CUDA_ERROR_FILE_NOT_FOUND    301

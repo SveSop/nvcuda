@@ -16,6 +16,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+#define COBJMACROS
+
 #include "config.h"
 
 #ifdef HAVE_PTHREAD_H
@@ -28,6 +30,7 @@
 #include "nvcuda_d3d.h"
 #include "d3d9.h"
 #include "d3d11.h"
+#include "dxgi.h"
 #include "function_mappings.h"
 
 WINE_DEFAULT_DEBUG_CHANNEL(nvcuda);
@@ -245,9 +248,62 @@ CUresult WINAPI wine_cuD3D9UnregisterVertexBuffer(IDirect3DVertexBuffer9 *pVB)
 
 CUresult WINAPI wine_cuD3D10GetDevice(CUdevice *pCudaDevice, IDXGIAdapter *pAdapter)
 {
-    FIXME("(%p, %p) - semi-stub\n", pCudaDevice, pAdapter);
-    /* DXGI adapters don't have an OpenGL context assigned yet, otherwise we could use cuGLGetDevices */
-    return wine_cuDeviceGet(pCudaDevice, 0);
+    DXGI_ADAPTER_DESC desc;
+    CUdevice device;
+    CUresult ret;
+    LUID cuda_luid;
+    unsigned int node_mask;
+    int count, i;
+
+    TRACE("(%p, %p)\n", pCudaDevice, pAdapter);
+
+    if (!pCudaDevice || !pAdapter)
+        return CUDA_ERROR_INVALID_VALUE;
+
+    if (FAILED(IDXGIAdapter_GetDesc(pAdapter, &desc)))
+    {
+        ERR("IDXGIAdapter_GetDesc failed.\n");
+        return CUDA_ERROR_INVALID_VALUE;
+    }
+
+    ret = wine_cuDeviceGetCount(&count);
+    if (ret)
+    {
+        ERR("cuDeviceGetCount failed: %d\n", ret);
+        return ret;
+    }
+
+    TRACE("DXGI adapter LUID: %02x%02x%02x%02x-%02x%02x%02x%02x, CUDA device count: %d\n",
+                (unsigned char)((char *)&desc.AdapterLuid)[0], (unsigned char)((char *)&desc.AdapterLuid)[1], (unsigned char)((char *)&desc.AdapterLuid)[2], (unsigned char)((char *)&desc.AdapterLuid)[3],
+                (unsigned char)((char *)&desc.AdapterLuid)[4], (unsigned char)((char *)&desc.AdapterLuid)[5], (unsigned char)((char *)&desc.AdapterLuid)[6], (unsigned char)((char *)&desc.AdapterLuid)[7], count);
+
+    for (i = 0; i < count; ++i)
+    {
+        ret = wine_cuDeviceGet(&device, i);
+        if (ret)
+        {
+            TRACE("cuDeviceGet failed for ordinal %d: %d\n", i, ret);
+            continue;
+        }
+
+        ret = wine_cuDeviceGetLuid((char *)&cuda_luid, &node_mask, device);
+        if (ret)
+        {
+            TRACE("cuDeviceGetLuid failed for ordinal %d: %d\n", i, ret);
+            continue;
+        }
+
+        if (memcmp(&desc.AdapterLuid, &cuda_luid, sizeof(LUID)) == 0)
+        {
+            *pCudaDevice = device;
+
+            TRACE("Matched DXGI adapter to CUDA device %d\n", i);
+            return CUDA_SUCCESS;
+        }
+    }
+
+    ERR("No CUDA device matches the DXGI adapter LUID\n");
+    return CUDA_ERROR_NO_DEVICE;
 }
 
 CUresult WINAPI wine_cuGraphicsD3D10RegisterResource(CUgraphicsResource *pCudaResource, ID3D10Resource *pD3DResource, unsigned int Flags)
@@ -379,12 +435,67 @@ CUresult WINAPI wine_cuD3D10ResourceGetSurfaceDimensions_v2(size_t *pWidth, size
  * Direct3D 11
  */
 
+
 CUresult WINAPI wine_cuD3D11GetDevice(CUdevice_v1 *pCudaDevice, IDXGIAdapter *pAdapter)
 {
-    FIXME("(%p, %p) - semi-stub\n", pCudaDevice, pAdapter);
-    /* DXGI adapters don't have an OpenGL context assigned yet, otherwise we could use cuGLGetDevices */
-    return wine_cuDeviceGet(pCudaDevice, 0);
+    DXGI_ADAPTER_DESC desc;
+    CUdevice device;
+    CUresult ret;
+    LUID cuda_luid;
+    unsigned int node_mask;
+    int count, i;
+
+    TRACE("(%p, %p)\n", pCudaDevice, pAdapter);
+
+    if (!pCudaDevice || !pAdapter)
+        return CUDA_ERROR_INVALID_VALUE;
+
+    if (FAILED(IDXGIAdapter_GetDesc(pAdapter, &desc)))
+    {
+        ERR("IDXGIAdapter_GetDesc failed.\n");
+        return CUDA_ERROR_INVALID_VALUE;
+    }
+
+    ret = wine_cuDeviceGetCount(&count);
+    if (ret)
+    {
+        ERR("cuDeviceGetCount failed: %d\n", ret);
+        return ret;
+    }
+
+    TRACE("DXGI adapter LUID: %02x%02x%02x%02x-%02x%02x%02x%02x, CUDA device count: %d\n",
+                (unsigned char)((char *)&desc.AdapterLuid)[0], (unsigned char)((char *)&desc.AdapterLuid)[1], (unsigned char)((char *)&desc.AdapterLuid)[2], (unsigned char)((char *)&desc.AdapterLuid)[3],
+                (unsigned char)((char *)&desc.AdapterLuid)[4], (unsigned char)((char *)&desc.AdapterLuid)[5], (unsigned char)((char *)&desc.AdapterLuid)[6], (unsigned char)((char *)&desc.AdapterLuid)[7], count);
+
+    for (i = 0; i < count; ++i)
+    {
+        ret = wine_cuDeviceGet(&device, i);
+        if (ret)
+        {
+            TRACE("cuDeviceGet failed for ordinal %d: %d\n", i, ret);
+            continue;
+        }
+
+        ret = wine_cuDeviceGetLuid((char *)&cuda_luid, &node_mask, device);
+        if (ret)
+        {
+            TRACE("cuDeviceGetLuid failed for ordinal %d: %d\n", i, ret);
+            continue;
+        }
+
+        if (memcmp(&desc.AdapterLuid, &cuda_luid, sizeof(LUID)) == 0)
+        {
+            *pCudaDevice = device;
+
+            TRACE("Matched DXGI adapter to CUDA device %d\n", i);
+            return CUDA_SUCCESS;
+        }
+    }
+
+    ERR("No CUDA device matches the DXGI adapter LUID\n");
+    return CUDA_ERROR_NO_DEVICE;
 }
+
 
 CUresult WINAPI wine_cuGraphicsD3D11RegisterResource(CUgraphicsResource *pCudaResource, ID3D11Resource *pD3DResource, unsigned int Flags)
 {
