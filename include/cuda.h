@@ -41,6 +41,8 @@ typedef uint64_t cuuint64_t;
 #define CU_DEVICE_ATTRIBUTE_PCI_BUS_ID     33
 #define CU_DEVICE_ATTRIBUTE_PCI_DEVICE_ID  34
 #define CU_DEVICE_ATTRIBUTE_PCI_DOMAIN_ID  50
+#define CU_STREAM_CAPTURE_STATUS_NONE      0
+#define CU_STREAM_CAPTURE_STATUS_ACTIVE    1
 
 typedef enum CUdriverProcAddressQueryResult_enum
 {
