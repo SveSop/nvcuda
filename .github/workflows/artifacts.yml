@@ -40,13 +40,13 @@ jobs:
       uses: SveSop/ubuntu-mingw-github-action@v3
       with:
         command: |
-          ./package-release.sh "${{ env.VERSION }}" build
+          ./package-release.sh "${{ env.VERSION }}" build --enable-tests
 
     - name: Build (fakedll)
       uses: SveSop/ubuntu-mingw-github-action@v3
       with:
         command: |
-          ./package-release.sh "${{ env.VERSION }}-fakedll" build --fakedll
+          ./package-release.sh "${{ env.VERSION }}-fakedll" build --enable-tests --fakedll
 
     - name: Upload artifacts (default)
       uses: actions/upload-artifact@v6

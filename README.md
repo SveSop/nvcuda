@@ -1,5 +1,5 @@
 # nvcuda
-Version: v0.6  
+Version: v0.7  
 
 Standalone version of nvcuda based from Wine-Staging  
 This builds ONLY the 64bit version of nvcuda. For 32bit version  
